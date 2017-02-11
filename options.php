@@ -7,6 +7,7 @@ class UpdatesNotifier_Settings extends UpdatesNotifier {
 				add_action( 'admin_menu',            array( $this, 'add_plugin_page' ) );
 
 				$this->init();
+
 			}
 
 	public function init() {
@@ -49,10 +50,6 @@ class UpdatesNotifier_Settings extends UpdatesNotifier {
 						);
 
 						print_r( $updates_notifier->$updates . 'ASDasdasdfasdf' );
-
-						//settings_fields( 'php_notifier_settings_group' );
-
-						//do_settings_sections( 'php-notifier' );
 
 						submit_button();
 
