@@ -157,7 +157,7 @@ class UpdatesNotifier {
 
 			}
 
-			update_option( 'php_notifier_prevent_cron', true );
+			update_option( 'php_notifier_prevent_cron', true ); a
 
 			wp_schedule_event( time(), $new_input['email_frequency'], 'php_notifier_email_cron' );
 
