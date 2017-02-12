@@ -17,8 +17,6 @@ class UpdatesNotifier {
 
 		add_action( 'admin_bar_menu', [ $this, 'un_check_for_updates' ] );
 
-		include_once( plugin_dir_path( __FILE__ ) . '/options.php' );
-
 	}
 
 	public function un_check_for_updates() {
