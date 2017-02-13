@@ -12,6 +12,8 @@ class UpdatesNotifier {
 
 	public static $updates;
 
+	public static $options;
+
 	public function __construct() {
 
 		add_action( 'admin_bar_menu', [ $this, 'un_check_for_updates' ] );
@@ -130,12 +132,23 @@ class UpdatesNotifier {
 		register_setting(
 			'updates_notifier_settings_group',
 			'updates_notifier_settings',
-			array( $this, 'sanitize' )
+			[ $this, 'sanitize' ]
 		);
 
-		add_settings_section( 'updates-notifier-id', 'Watch These For Updates:', array( $this, 'print_section_info' ), 'updates-notifier' );
+		add_settings_section(
+			'updates-notifier-id',
+			'Watch These For Updates:',
+			[ $this, 'print_section_info' ],
+			'updates-notifier'
+		);
 
-		add_settings_field( 'un-check-plugins', 'Plugin Updates', array( $this, 'updates-notifier'), 'updates-notifier', 'updates-notifier' );
+		add_settings_field(
+			'un-check-plugins-id',
+			'Plugin Updates',
+			[ $this, 'check_plugins_callback' ],
+			'updates-notifier',
+			'updates-notifier-id'
+		);
 
 	}
 
@@ -148,7 +161,10 @@ class UpdatesNotifier {
 	*/
 	public function sanitize( $input ) {
 
-		$new_input = $input;
+		$new_input = array();
+
+		$new_input['un-check-plugins-id'] = $input['un-check-plugins-id'];
+		self::$options['un-check-plugins-id'] = $input['un-check-plugins-id'];
 
 		return $new_input;
 
@@ -161,7 +177,7 @@ class UpdatesNotifier {
 	*/
 	public function print_section_info() {
 
-		echo 'Adjust the settings below:';
+		echo 'Choose which types of updates to be alerted about:';
 
 	}
 
@@ -170,9 +186,9 @@ class UpdatesNotifier {
 	*
 	* @since 1.0.0
 	*/
-	public function send_email_callback() {
+	public function check_plugins_callback() {
 
-		printf('<input type="checkbox" id="send_email" name="php_notifier_settings[send_email]" value="1" />');
+		print( '<input type="text" value="' . self::$options['un-check-plugins-id'] . '" />' );
 
 	}
 
