@@ -7,7 +7,7 @@
  * Author URI:  http://www.BenRothman.org
  * License:     GPL-2.0+
  */
-
+ 
 class UpdatesNotifier {
 
 	public static $updates;
@@ -122,11 +122,6 @@ class UpdatesNotifier {
 
 	}
 
-	/**
-	* Register and add settings
-	*
-	* @since 1.0.0
-	*/
 	public function page_init() {
 
 		register_setting(
@@ -152,13 +147,7 @@ class UpdatesNotifier {
 
 	}
 
-	/**
-	* Sanitize each setting field as needed
-	*
-	* @param array $input Contains all settings fields as array keys
-	*
-	* @since 1.0.0
-	*/
+
 	public function sanitize( $input ) {
 
 		$new_input = array();
@@ -170,22 +159,14 @@ class UpdatesNotifier {
 
 	}
 
-	/**
-	* Print the Section text
-	*
-	* @since 1.0.0
-	*/
+
 	public function print_section_info() {
 
 		echo 'Choose which types of updates to be alerted about:';
 
 	}
 
-	/**
-	* Get the settings option array and print one of its values
-	*
-	* @since 1.0.0
-	*/
+
 	public function check_plugins_callback() {
 
 		print( '<input type="text" value="' . self::$options['un-check-plugins-id'] . '" />' );
