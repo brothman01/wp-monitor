@@ -7,7 +7,7 @@
  * Author URI:  http://www.BenRothman.org
  * License:     GPL-2.0+
  */
- 
+
 class UpdatesNotifier {
 
 	public static $updates;
@@ -28,7 +28,7 @@ class UpdatesNotifier {
 
 	public function un_check_for_updates() {
 
-		if( ! current_user_can( 'install_plugins' ) ) {
+		if( ! current_user_can( 'administrator' ) ) {
 
 			return;
 
@@ -45,67 +45,68 @@ class UpdatesNotifier {
 
 			print_r( self::$updates);
 
+			echo '<div class="notice notice-error">'.
+			'<b>Available Updates:</b><br />' .
+			'Plugins: ' . self::$updates['plugins'] . '<br />' .
+			'Themes: ' . self::$updates['themes'] . '<br />' .
+			'WordPress: ' . self::$updates['WordPress'] . '<br />' .
+			'Translations: ' . self::$updates['translations'] .
+			'</div>';
+
 			if (self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['translations'] != 0) {
 
 				$message =
 					'<b>Available Updates:</b>' .
 					'<p>Plugin Updates: ' . self::$updates['plugins'] . '<br />Theme Updates: ' . self::$updates['themes'] . '<br />WordPress Core Updates: ' . self::$updates['WordPress'] . '<br />Translation Updates: ' . self::$updates['translations'];
 
-				wp_mail( get_option( 'admin_email' ), 'Updates for ' . get_option( 'siteurl' ) . ' available', $message );
+				// wp_mail( get_option( 'admin_email' ), 'Updates for ' . get_option( 'siteurl' ) . ' available', $message );
 			}
 
 	}
 
 	/**
-	* Add options page
+	* Add menu page
 	*
 	* @since 1.0.0
 	*/
 	public function add_plugin_page() {
 
-		add_options_page(
-			'Updates Notifier Settings',
-			'Updates Notifier',
-			'manage_options',
-			'updates-notifier',
-			[ $this, 'create_admin_page' ]
-		);
+		//create new top-level menu
+	add_menu_page('My Cool Plugin Settings', 'Cool Settings', 'administrator', 'my_cool_plugin_settings_page' , [ $this, 'create_admin_page' ] );
 
 	}
 
 	public function create_admin_page() {
-
 		?>
+<div class="wrap">
+<h1>Updates Notifier</h1>
 
-			<div class="wrap">
+<form method="post" action="options.php">
+    <?php settings_fields( 'my-cool-plugin-settings-group' ); ?>
+    <?php do_settings_sections( 'my-cool-plugin-settings-group' ); ?>
+    <table class="form-table">
+        <tr valign="top">
+        <th scope="row">New Option Name</th>
+        <td><input type="text" name="new_option_name" value="<?php echo esc_attr( get_option('new_option_name') ); ?>" /></td>
+        </tr>
 
-				<h1><?php esc_html_e( 'Updates Notifier', 'updates-notifier' ); ?></h1>
+        <tr valign="top">
+        <th scope="row">Some Other Option</th>
+        <td><input type="text" name="some_other_option" value="<?php echo esc_attr( get_option('some_other_option') ); ?>" /></td>
+        </tr>
 
-				<form method="post" action="options.php">
+        <tr valign="top">
+        <th scope="row">Options, Etc.</th>
+        <td><input type="text" name="option_etc" value="<?php echo esc_attr( get_option('option_etc') ); ?>" /></td>
+        </tr>
+    </table>
 
-					<?php
+    <?php submit_button(); ?>
 
-						printf(
-							'<div class="notice notice-' . $this->alert_type() . ' is-dismissible">' .
-							'<b>Available Updates:</b>' .
-							'<p>Plugin Updates: ' . self::$updates['plugins'] . '<br />Theme Updates: ' . self::$updates['themes'] . '<br />WordPress Core Updates: ' . self::$updates['WordPress'] . '<br />Translation Updates: ' . self::$updates['translations'] .
-							'</p></div>'
-						);
+</form>
+</div>
+<?php }
 
-						settings_fields( 'updates_notifier_settings_group' );
-
-						do_settings_sections( 'updates-notifier' );
-
-						submit_button();
-
-					?>
-
-				</form>
-
-			</div>
-
-		<?php
-	}
 
 	public function alert_type() {
 
@@ -124,26 +125,9 @@ class UpdatesNotifier {
 
 	public function page_init() {
 
-		register_setting(
-			'updates_notifier_settings_group',
-			'updates_notifier_settings',
-			[ $this, 'sanitize' ]
-		);
-
-		add_settings_section(
-			'updates-notifier-id',
-			'Watch These For Updates:',
-			[ $this, 'print_section_info' ],
-			'updates-notifier'
-		);
-
-		add_settings_field(
-			'un-check-plugins-id',
-			'Plugin Updates',
-			[ $this, 'check_plugins_callback' ],
-			'updates-notifier',
-			'updates-notifier-id'
-		);
+		register_setting( 'my-cool-plugin-settings-group', 'new_option_name' );
+		register_setting( 'my-cool-plugin-settings-group', 'some_other_option' );
+		register_setting( 'my-cool-plugin-settings-group', 'option_etc' );
 
 	}
 
@@ -156,20 +140,6 @@ class UpdatesNotifier {
 		self::$options['un-check-plugins-id'] = $input['un-check-plugins-id'];
 
 		return $new_input;
-
-	}
-
-
-	public function print_section_info() {
-
-		echo 'Choose which types of updates to be alerted about:';
-
-	}
-
-
-	public function check_plugins_callback() {
-
-		print( '<input type="text" value="' . self::$options['un-check-plugins-id'] . '" />' );
 
 	}
 
