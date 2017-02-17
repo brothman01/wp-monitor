@@ -22,9 +22,10 @@ class UpdatesNotifier {
 		add_action( 'admin_menu', [ $this, 'add_plugin_page' ] );
 
 		// create and add the fields to the options page
-		add_action( 'admin_init', [ $this, 'page_init' ] );
+		//add_action( 'admin_init', [ $this, 'page_init' ] );
 
 	}
+
 
 	public function un_check_for_updates() {
 
@@ -63,134 +64,78 @@ class UpdatesNotifier {
 	*/
 	public function add_plugin_page() {
 
-		add_options_page(
-			'Updates Notifier Settings',
-			'Updates Notifier',
-			'manage_options',
-			'updates-notifier',
-			[ $this, 'create_admin_page' ]
-		);
+		// add_options_page(
+		// 	'Updates Notifier Settings',
+		// 	'Updates Notifier',
+		// 	'manage_options',
+		// 	'updates-notifier',
+		// 	[ $this, 'create_admin_page' ]
+		// );
+
+
+
+	register_setting(
+	'writing',                 // settings page
+	'brothman_check_plugins',          // option name
+	[ $this, 'ozhwpe_validate_options' ]  // validation callback
+);
+
+	add_settings_field(
+		'brothman_check_plugins',      // id
+		'Check Plugin Updates?',              // setting title
+		[ $this, 'brothman_check_plugins_callback' ],    // display callback
+		'writing',                 // settings page
+		'default'                  // settings section
+	);
+
+
+
+	register_setting(
+	'writing',                 // settings page
+	'brothman_check_themes',          // option name
+	[ $this, 'ozhwpe_validate_options' ]  // validation callback
+);
+
+	add_settings_field(
+		'brothman_check_themes',      // id
+		'Check Theme Updates?',              // setting title
+		[ $this, 'brothman_check_themes_callback' ],    // display callback
+		'writing',                 // settings page
+		'default'                  // settings section
+	);
 
 	}
 
-	public function create_admin_page() {
 
+
+	public function brothman_check_plugins_callback() {
+		// get option 'boss_email' value from the database
+		$options = get_option( 'brothman_options' );
+
+		$value = $options['brothman_check_plugins'];
+
+		// echo the field
 		?>
-
-			<div class="wrap">
-
-				<h1><?php esc_html_e( 'Updates Notifier', 'updates-notifier' ); ?></h1>
-
-				<form method="post" action="options.php">
-
-					<?php
-
-						printf(
-							'<div class="notice notice-' . $this->alert_type() . ' is-dismissible">' .
-							'<b>Available Updates:</b>' .
-							'<p>Plugin Updates: ' . self::$updates['plugins'] . '<br />Theme Updates: ' . self::$updates['themes'] . '<br />WordPress Core Updates: ' . self::$updates['WordPress'] . '<br />Translation Updates: ' . self::$updates['translations'] .
-							'</p></div>'
-						);
-
-						settings_fields( 'updates_notifier_settings_group' );
-
-						do_settings_sections( 'updates-notifier' );
-
-						submit_button();
-
-					?>
-
-				</form>
-
-			</div>
+	<input id='brothman_check_plugins' name='brothman_options[brothman_check_plugins]'
+	 type="checkbox" value="1" <?php echo checked( 1, $value, false ); ?> />
 
 		<?php
 	}
 
-	public function alert_type() {
+	public function brothman_check_themes_callback() {
+		// get option 'boss_email' value from the database
+		$options = get_option( 'brothman_options' );
 
-		// return 'info' or 'error'
-		if (self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['translations'] == 0) {
+		$value = $options['brothman_check_themes'];
 
-		return 'info';
+		// echo the field
+		?>
+	<input id='brothman_check_themes' name='brothman_options[brothman_check_themes]'
+	 type="checkbox" value="1" <?php echo checked( 1, $value, false ); ?> />
 
-	} else {
-
-		return 'error';
-
+		<?php
 	}
 
-	}
-
-	/**
-	* Register and add settings
-	*
-	* @since 1.0.0
-	*/
-	public function page_init() {
-
-		register_setting(
-			'updates_notifier_settings_group',
-			'updates_notifier_settings',
-			[ $this, 'sanitize' ]
-		);
-
-		add_settings_section(
-			'updates-notifier-id',
-			'Watch These For Updates:',
-			[ $this, 'print_section_info' ],
-			'updates-notifier'
-		);
-
-		add_settings_field(
-			'un-check-plugins-id',
-			'Plugin Updates',
-			[ $this, 'check_plugins_callback' ],
-			'updates-notifier',
-			'updates-notifier-id'
-		);
-
-	}
-
-	/**
-	* Sanitize each setting field as needed
-	*
-	* @param array $input Contains all settings fields as array keys
-	*
-	* @since 1.0.0
-	*/
-	public function sanitize( $input ) {
-
-		$new_input = array();
-
-		$new_input['un-check-plugins-id'] = $input['un-check-plugins-id'];
-		self::$options['un-check-plugins-id'] = $input['un-check-plugins-id'];
-
-		return $new_input;
-
-	}
-
-	/**
-	* Print the Section text
-	*
-	* @since 1.0.0
-	*/
-	public function print_section_info() {
-
-		echo 'Choose which types of updates to be alerted about:';
-
-	}
-
-	/**
-	* Get the settings option array and print one of its values
-	*
-	* @since 1.0.0
-	*/
-	public function check_plugins_callback() {
-
-		print( '<input type="text" value="' . self::$options['un-check-plugins-id'] . '" />' );
-
-	}
 
 }
 
