@@ -72,8 +72,6 @@ class UpdatesNotifier {
 		// 	[ $this, 'create_admin_page' ]
 		// );
 
-
-
 	register_setting(
 	'writing',                 // settings page
 	'brothman_check_plugins',          // option name
@@ -94,9 +92,9 @@ class UpdatesNotifier {
 
 	public function brothman_check_plugins_callback() {
 		// get option 'boss_email' value from the database
-		$options = get_option( 'brothman_options' );
+		self::$options = get_option( 'brothman_options' );
 
-		$value = $options['brothman_check_plugins'];
+		$value = (bool) empty( self::$options['brothman_check_plugins'] ) ? false : true;
 
 		// echo the field !!
 		printf(
