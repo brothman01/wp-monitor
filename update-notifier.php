@@ -88,22 +88,6 @@ class UpdatesNotifier {
 		'default'                  // settings section
 	);
 
-
-
-// 	register_setting(
-// 	'writing',                 // settings page
-// 	'brothman_check_themes',          // option name
-// 	[ $this, 'brothman_check_themes_validate' ]  // validation callback
-// );
-//
-// 	add_settings_field(
-// 		'brothman_check_themes',      // id
-// 		'Check Theme Updates?',              // setting title
-// 		[ $this, 'brothman_check_themes_callback' ],    // display callback
-// 		'writing',                 // settings page
-// 		'default'                  // settings section
-// 	);
-
 	}
 
 
@@ -115,41 +99,19 @@ class UpdatesNotifier {
 		$value = $options['brothman_check_plugins'];
 
 		// echo the field !!
-		?>
-	<input id='brothman_check_plugins' name='brothman_options[brothman_check_plugins]'
-	 type="checkbox" value="1" <?php echo checked( 1, $value, false ); ?> />
+		printf(
+				'<input id="brothman_check_plugins" name="brothman_options[brothman_check_plugins]" type="checkbox" value="1" %s />',
+				checked( 1, $value, false )
+		);
 
-		<?php
 	}
 
-	public function brothman_check_themes_callback() {
-
-		// get option 'boss_email' value from the database !!
-		$options = get_option( 'brothman_options' );
-
-		$value = $options['brothman_check_themes'];
-
-		// echo the field !!
-		?>
-	<input id='brothman_check_themes' name='brothman_options[brothman_check_themes]'
-	 type="checkbox" value="1" <?php echo checked( 1, $value, false ); ?> />
-
-		<?php
-	}
 
 	// Validate user input
 	public function brothman_check_plugins_validate( $input ) {
 		$valid = array();
 
 		$valid['brothman_check_plugins'] = (bool) empty( $input['brothman_check_plugins'] ) ? false : true;
-
-		return $valid;
-	}
-
-	public function brothman_check_themes_validate( $input ) {
-		$valid = array();
-
-		$valid['brothman_check_themes'] = $input['brothman_check_themes'];
 
 		return $valid;
 	}
