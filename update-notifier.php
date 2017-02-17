@@ -96,11 +96,12 @@ class UpdatesNotifier {
 
 		$value = (bool) empty( self::$options['brothman_check_plugins'] ) ? false : true;
 
-		// echo the field !!
+		// print the field !!
 		printf(
 				'<input id="brothman_check_plugins" name="brothman_options[brothman_check_plugins]" type="checkbox" value="1" %s />',
 				checked( 1, $value, false )
 		);
+
 
 	}
 
@@ -110,6 +111,7 @@ class UpdatesNotifier {
 		$valid = array();
 
 		$valid['brothman_check_plugins'] = (bool) empty( $input['brothman_check_plugins'] ) ? false : true;
+		self::$options['brothman_check_plugins'] = (bool) empty( $input['brothman_check_plugins'] ) ? false : true;
 
 		return $valid;
 	}
