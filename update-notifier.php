@@ -141,7 +141,7 @@ class UpdatesNotifier {
 	public function brothman_check_plugins_validate( $input ) {
 		$valid = array();
 
-		$valid['brothman_check_plugins'] = $input['brothman_check_plugins'];
+		$valid['brothman_check_plugins'] = (bool) empty( $input['brothman_check_plugins'] ) ? false : true;
 
 		return $valid;
 	}
