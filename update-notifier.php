@@ -45,6 +45,10 @@ class UpdatesNotifier {
 		// add action to send email when cron task is triggered
 		add_action( 'send_my_updates_notification', [ $this, 'un_send_email' ] );
 
+
+		// enqueue the admin stylesheet
+		add_action( 'admin_enqueue_scripts', [ $this, 'un_enqueue_admin_styles' ] );
+
 	}
 
 
@@ -112,17 +116,20 @@ class UpdatesNotifier {
 	* @since 1.0.0
 	*/
 	public function add_plugin_page() {
+//1. Add the page to settings
+		add_options_page(
+			'Updates Notifier Settings', // page title
+			'Updates Notifier', // menu title
+			'manage_options', // required capability of user
+			'updates-notifier', // menu slug
+			[ $this, 'create_admin_page' ] // callback function to build and display the page
+		);
 
+
+
+// 2. Add settings to the page
 // each setting needs register_setting() and add_settings_field() to appear on the correct page and allow changes to be saved
 // each option has a callback() to create the field and a sanitize() to save the input in a clean way
-
-		// add_options_page(
-		// 	'Updates Notifier Settings',
-		// 	'Updates Notifier',
-		// 	'manage_options',
-		// 	'updates-notifier',
-		// 	[ $this, 'create_admin_page' ]
-		// );
 
 
 		register_setting(
@@ -177,6 +184,49 @@ class UpdatesNotifier {
 			'default'                  // settings section
 		);
 
+	}
+
+	/**
+	* Options page callback
+	*
+	* @since 1.0.0
+	*/
+	public function create_admin_page() {
+
+		?>
+
+			<div class="wrap">
+
+				<h1>Updates Notifier</h1>
+
+				<form method="post" action="options.php">
+
+					<?php
+
+						printf(
+							'<div class="notice notice-info updates_notifier">' .
+									'<b>Updates Available:</b>' .
+									'<p>' .
+										'Plugins: ' . self::$updates['plugins'] . '<br />' .
+										'Themes: ' . self::$updates['themes'] . '<br />' .
+										'WordPress: ' . self::$updates['themes'] . '<br />' .
+									'</p>' .
+							'</div>'
+						);
+
+						//settings_fields( 'php_notifier_settings_group' );
+
+					//	do_settings_sections( 'php-notifier' );
+
+						submit_button();
+
+					?>
+
+				</form>
+
+			</div>
+
+		<?php
 	}
 
 
@@ -300,6 +350,14 @@ class UpdatesNotifier {
 		$valid['brothman_how_often'] = (bool) isset( $input['brothman_check_wordpress'] ) ? true : false;
 
 		return $valid;
+
+	}
+
+	public function un_enqueue_admin_styles() {
+
+		wp_register_style( 'un_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
+
+		wp_enqueue_style( 'un_admin_css' );
 
 	}
 
