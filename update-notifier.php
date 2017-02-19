@@ -38,7 +38,7 @@ class UpdatesNotifier {
 
 	public function un_check_for_updates() {
 
-		if( ! current_user_can( 'install_plugins' ) ) {
+		if ( ! current_user_can( 'install_plugins' ) ) {
 
 			return;
 
@@ -56,7 +56,6 @@ class UpdatesNotifier {
 
 			}
 
-	}
 
 	public function un_send_email() {
 		// send email about selected updates here
