@@ -16,130 +16,348 @@ class UpdatesNotifier {
 
 	public function __construct() {
 
+		// check for updates
 		add_action( 'admin_bar_menu', [ $this, 'un_check_for_updates' ] );
 
 		// add the options page
 		add_action( 'admin_menu', [ $this, 'add_plugin_page' ] );
 
-		// create and add the fields to the options page
-		add_action( 'admin_init', [ $this, 'page_init' ] );
+		// other stuff
+		$this->init();
 
 	}
 
+	public function init() {
+
+		// get the option that is set when the crontask is scheduled
+		$prevent_email_cron = get_option( 'prevent_email_cron' );
+
+		// schedule crontask if it has not already been scheduled
+		if ( $prevent_email_cron == 0 ) {
+
+				wp_schedule_event(time(), 'daily', 'send_my_updates_notification');
+
+				//set the option to say the crontask has already been scheduled
+				update_option( 'prevent_email_cron', 1, true );
+
+	}
+
+		// add action to send email when cron task is triggered
+		add_action( 'send_my_updates_notification', [ $this, 'un_send_email' ] );
+
+
+		// enqueue the admin stylesheet
+		add_action( 'admin_enqueue_scripts', [ $this, 'un_enqueue_admin_styles' ] );
+
+	}
+
+
 	public function un_check_for_updates() {
 
-		if( ! current_user_can( 'administrator' ) ) {
+		if ( ! current_user_can( 'install_plugins' ) ) {
 
 			return;
 
 		}
-
+		// get update data (only after role of user has been checked)
 			$update_data = wp_get_update_data();
 
 			self::$updates = array(
 				'plugins'	=>	$update_data['counts']['plugins'],
 				'themes'	=>	$update_data['counts']['themes'],
 				'WordPress'	=>	$update_data['counts']['themes'],
-				'translations' =>	$update_data['counts']['themes'],
 			);
 
-			print_r( self::$updates);
+	}
 
-			echo '<div class="notice notice-error">'.
-			'<b>Available Updates:</b><br />' .
-			'Plugins: ' . self::$updates['plugins'] . '<br />' .
-			'Themes: ' . self::$updates['themes'] . '<br />' .
-			'WordPress: ' . self::$updates['WordPress'] . '<br />' .
-			'Translations: ' . self::$updates['translations'] .
-			'</div>';
 
-			if (self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['translations'] != 0) {
+	public function un_send_email() {
 
-				$message =
-					'<b>Available Updates:</b>' .
-					'<p>Plugin Updates: ' . self::$updates['plugins'] . '<br />Theme Updates: ' . self::$updates['themes'] . '<br />WordPress Core Updates: ' . self::$updates['WordPress'] . '<br />Translation Updates: ' . self::$updates['translations'];
+		// send email about selected updates here by building the email based on the options
+		$watched_updates = 0;
 
-				// wp_mail( get_option( 'admin_email' ), 'Updates for ' . get_option( 'siteurl' ) . ' available', $message );
-			}
+		$message = 'There are updates available for ' . get_option( 'siteurl' ) . ' available.' . "\r\n";
+
+		if ( get_option( 'brothman_option1' ) ) {
+
+			$watched_updates = $watched_updates + self::$updates['plugins'];
+
+			$message = $message . self::$updates['plugins'] . ' plugins.' . "\r\n";
+
+		}
+
+		if ( get_option( 'brothman_option2' ) ) {
+
+			$watched_updates = $watched_updates + self::$updates['themes'];
+
+			$message = $message . self::$updates['themes'] . ' themes.' . "\r\n";
+
+		}
+
+		if ( get_option( 'brothman_option3' ) ) {
+
+			$watched_updates = $watched_updates + self::$updates['WordPress'];
+
+			$message = $message . self::$updates['WordPress'] . ' WordPress Core Updates.' . "\r\n";
+
+		}
+
+		if ( $watched_updates > 0 ) {
+
+			wp_mail( get_option( 'admin_email' ), $watched_updates . 'for ' . get_option( 'siteurl' ) . ' available!', $message);
+
+		}
 
 	}
 
 	/**
-	* Add menu page
+	* Add options page
 	*
 	* @since 1.0.0
 	*/
 	public function add_plugin_page() {
+//1. Add the page to settings
+		add_options_page(
+			'Updates Notifier Settings', // page title
+			'Updates Notifier', // menu title
+			'manage_options', // required capability of user
+			'updates-notifier', // menu slug
+			[ $this, 'create_admin_page' ] // callback function to build and display the page
+		);
 
-		//create new top-level menu
-	add_menu_page('My Cool Plugin Settings', 'Cool Settings', 'administrator', 'my_cool_plugin_settings_page' , [ $this, 'create_admin_page' ] );
+
+
+// 2. Add settings to the page
+// each setting needs register_setting() and add_settings_field() to appear on the correct page and allow changes to be saved
+// each option has a callback() to create the field and a sanitize() to save the input in a clean way
+
+
+		register_setting(
+			'writing',                 // settings page
+			'prevent_email_cron',          // option name
+			[ $this, 'brothman_check_plugins_sanitize' ]  // validation callback
+		);
+
+		register_setting(
+			'writing',                 // settings page
+			'brothman_option1',          // option name
+			[ $this, 'brothman_check_plugins_sanitize' ]  // validation callback
+		);
+
+		add_settings_field(
+			'brothman_check_plugins',      // id
+			'Check Plugin Updates?',              // setting title
+			[ $this, 'brothman_check_plugins_callback' ],    // display callback
+			'writing',                 // settings page
+			'default'                  // settings section
+		);
+
+
+
+		register_setting(
+			'writing',                 // settings page
+			'brothman_option2',          // option name
+			[ $this, 'brothman_check_themes_sanitize' ]  // validation callback
+		);
+
+		add_settings_field(
+			'brothman_check_themes',      // id
+			'Check Theme Updates?',              // setting title
+			[ $this, 'brothman_check_themes_callback' ],    // display callback
+			'writing',                 // settings page
+			'default'                  // settings section
+		);
+
+
+
+		register_setting(
+			'writing',                 // settings page
+			'brothman_option3',          // option name
+			[ $this, 'brothman_check_wordpress_sanitize' ]  // validation callback
+		);
+
+		add_settings_field(
+			'brothman_check_wordpress',      // id
+			'Check WordPress Updates?',              // setting title
+			[ $this, 'brothman_check_wordpress_callback' ],    // display callback
+			'writing',                 // settings page
+			'default'                  // settings section
+		);
 
 	}
 
+	/**
+	* Options page callback
+	*
+	* @since 1.0.0
+	*/
 	public function create_admin_page() {
+
 		?>
-<div class="wrap">
-<h1>Updates Notifier</h1>
 
-<form method="post" action="options.php">
-    <?php settings_fields( 'my-cool-plugin-settings-group' ); ?>
-    <?php do_settings_sections( 'my-cool-plugin-settings-group' ); ?>
-    <table class="form-table">
-        <tr valign="top">
-        <th scope="row">New Option Name</th>
-        <td><input type="text" name="new_option_name" value="<?php echo esc_attr( get_option('new_option_name') ); ?>" /></td>
-        </tr>
+			<div class="wrap">
 
-        <tr valign="top">
-        <th scope="row">Some Other Option</th>
-        <td><input type="text" name="some_other_option" value="<?php echo esc_attr( get_option('some_other_option') ); ?>" /></td>
-        </tr>
+				<h1>Updates Notifier</h1>
 
-        <tr valign="top">
-        <th scope="row">Options, Etc.</th>
-        <td><input type="text" name="option_etc" value="<?php echo esc_attr( get_option('option_etc') ); ?>" /></td>
-        </tr>
-    </table>
+				<form method="post" action="options.php">
 
-    <?php submit_button(); ?>
+					<?php
 
-</form>
-</div>
-<?php }
+						printf(
+							'<div class="notice notice-info updates_notifier">' .
+									'<b>Updates Available:</b>' .
+									'<p>' .
+										'Plugins: ' . self::$updates['plugins'] . '<br />' .
+										'Themes: ' . self::$updates['themes'] . '<br />' .
+										'WordPress: ' . self::$updates['themes'] . '<br />' .
+									'</p>' .
+							'</div>'
+						);
 
+						//settings_fields( 'php_notifier_settings_group' );
 
-	public function alert_type() {
+					//	do_settings_sections( 'php-notifier' );
 
-		// return 'info' or 'error'
-		if (self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['translations'] == 0) {
+						submit_button();
 
-		return 'info';
+					?>
 
-	} else {
+				</form>
 
-		return 'error';
+			</div>
 
-	}
-
-	}
-
-	public function page_init() {
-
-		register_setting( 'my-cool-plugin-settings-group', 'new_option_name' );
-		register_setting( 'my-cool-plugin-settings-group', 'some_other_option' );
-		register_setting( 'my-cool-plugin-settings-group', 'option_etc' );
-
+		<?php
 	}
 
 
-	public function sanitize( $input ) {
 
-		$new_input = array();
+	public function brothman_check_plugins_callback() {
 
-		$new_input['un-check-plugins-id'] = $input['un-check-plugins-id'];
-		self::$options['un-check-plugins-id'] = $input['un-check-plugins-id'];
+		// get option 'brothman_option1' value from the database and put it in the array $options
+		self::$options = get_option( 'brothman_option1' );
 
-		return $new_input;
+		// get the value of the option from the $options array (set to no if empty)
+		$value = (bool) empty( self::$options['brothman_check_plugins'] ) ? false : true;
+
+		// print the HTML to create the field
+		printf(
+				'<input id="brothman_check_plugins" name="brothman_option1[brothman_check_plugins]" type="checkbox" value="1" %s />',
+				checked( 1, $value, false )
+		);
+
+
+	}
+
+	public function brothman_check_plugins_sanitize( $input ) {
+
+		// create an empty 'clean' array
+		$valid = array();
+
+		// add the cleaned value to the clean array
+		$valid['brothman_check_plugins'] = (bool) isset( $input['brothman_check_plugins'] ) ? true : false;
+
+		// return the clean array
+		return $valid;
+
+	}
+
+
+
+	public function brothman_check_themes_callback() {
+
+		self::$options = get_option( 'brothman_option2' );
+
+		$value = (bool) empty( self::$options['brothman_check_themes'] ) ? false : true;
+
+		printf(
+				'<input id="brothman_check_plugins" name="brothman_option2[brothman_check_themes]" type="checkbox" value="1" %s />',
+				checked( 1, $value, false )
+		);
+
+	}
+
+
+	public function brothman_check_themes_sanitize( $input ) {
+
+		$valid = array();
+
+		$valid['brothman_check_themes'] = (bool) isset( $input['brothman_check_themes'] ) ? true : false;
+
+		return $valid;
+
+	}
+
+
+
+	public function brothman_check_wordpress_callback() {
+
+		self::$options = get_option( 'brothman_option3' );
+
+		$value = (bool) empty( self::$options['brothman_check_wordpress'] ) ? false : true;
+
+
+		printf(
+				'<input id="brothman_check_wordpress" name="brothman_option3[brothman_check_wordpress]" type="checkbox" value="1" %s />',
+				checked( 1, $value, false )
+		);
+
+
+	}
+
+
+	public function brothman_check_wordpress_sanitize( $input ) {
+
+		$valid = array();
+
+		$valid['brothman_check_wordpress'] = (bool) isset( $input['brothman_check_wordpress'] ) ? true : false;
+
+		return $valid;
+
+	}
+
+
+	public function brothman_how_often_callback() {
+
+		$options = array(
+			'never'   => 'Never',
+			'daily'   => 'Daily',
+			'weekly'  => 'Weekly',
+			'monthly' => 'Monthly',
+		);
+
+		print( '<select name="brothman_option4[brothman_how_often]">' );
+
+		foreach ( $options as $value => $label ) {
+
+			printf(
+				'<option value="%1$s" %2$s>%3$s</option>',
+				esc_attr( $value ),
+				selected( self::$options['brothman_how_often'], $value ),
+				esc_html( $label )
+			);
+
+		}
+
+		print( '</select>' );
+
+	}
+
+
+	public function brothman_how_often_sanitize( $input ) {
+
+		$valid = array();
+
+		$valid['brothman_how_often'] = (bool) isset( $input['brothman_check_wordpress'] ) ? true : false;
+
+		return $valid;
+
+	}
+
+	public function un_enqueue_admin_styles() {
+
+		wp_register_style( 'un_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
+
+		wp_enqueue_style( 'un_admin_css' );
 
 	}
 
