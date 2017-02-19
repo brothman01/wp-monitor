@@ -22,16 +22,28 @@ class UpdatesNotifier {
 		// add the options page
 		add_action( 'admin_menu', [ $this, 'add_plugin_page' ] );
 
-		// schedule cron task
-		wp_schedule_event(time(), 'daily', 'my-updates-notification');
-
+		// other stuff
 		$this->init();
 
 	}
 
 	public function init() {
 
-		add_action( 'my-updates-notification', [ $this, 'un_send_email' ] );
+		// get the option that is set when the crontask is scheduled
+		$prevent_email_cron = get_option( 'prevent_email_cron' );
+
+		// schedule crontask if it has not already been scheduled
+		if ( $prevent_email_cron == 0 ) {
+
+				wp_schedule_event(time(), 'daily', 'send_my_updates_notification');
+
+				//set the option to say the crontask has already been scheduled
+				update_option( 'prevent_email_cron', 1, true );
+
+	}
+
+		// add action to send email when cron task is triggered
+		add_action( 'send_my_updates_notification', [ $this, 'un_send_email' ] );
 
 	}
 
@@ -43,7 +55,7 @@ class UpdatesNotifier {
 			return;
 
 		}
-
+		// get update data (only after role of user has been checked)
 			$update_data = wp_get_update_data();
 
 			self::$updates = array(
@@ -52,13 +64,12 @@ class UpdatesNotifier {
 				'WordPress'	=>	$update_data['counts']['themes'],
 			);
 
-			print_r( self::$updates); // DEBUG
-
-			}
+	}
 
 
 	public function un_send_email() {
-		// send email about selected updates here
+
+		// send email about selected updates here by building the email based on the options
 		$watched_updates = 0;
 
 		$message = 'There are updates available for ' . get_option( 'siteurl' ) . ' available.' . "\r\n";
@@ -102,6 +113,9 @@ class UpdatesNotifier {
 	*/
 	public function add_plugin_page() {
 
+// each setting needs register_setting() and add_settings_field() to appear on the correct page and allow changes to be saved
+// each option has a callback() to create the field and a sanitize() to save the input in a clean way
+
 		// add_options_page(
 		// 	'Updates Notifier Settings',
 		// 	'Updates Notifier',
@@ -109,6 +123,13 @@ class UpdatesNotifier {
 		// 	'updates-notifier',
 		// 	[ $this, 'create_admin_page' ]
 		// );
+
+
+		register_setting(
+			'writing',                 // settings page
+			'prevent_email_cron',          // option name
+			[ $this, 'brothman_check_plugins_sanitize' ]  // validation callback
+		);
 
 		register_setting(
 			'writing',                 // settings page
@@ -161,12 +182,14 @@ class UpdatesNotifier {
 
 
 	public function brothman_check_plugins_callback() {
-		// get option 'boss_email' value from the database
+
+		// get option 'brothman_option1' value from the database and put it in the array $options
 		self::$options = get_option( 'brothman_option1' );
 
+		// get the value of the option from the $options array (set to no if empty)
 		$value = (bool) empty( self::$options['brothman_check_plugins'] ) ? false : true;
 
-		// print the field !!
+		// print the HTML to create the field
 		printf(
 				'<input id="brothman_check_plugins" name="brothman_option1[brothman_check_plugins]" type="checkbox" value="1" %s />',
 				checked( 1, $value, false )
@@ -177,10 +200,13 @@ class UpdatesNotifier {
 
 	public function brothman_check_plugins_sanitize( $input ) {
 
+		// create an empty 'clean' array
 		$valid = array();
 
+		// add the cleaned value to the clean array
 		$valid['brothman_check_plugins'] = (bool) isset( $input['brothman_check_plugins'] ) ? true : false;
 
+		// return the clean array
 		return $valid;
 
 	}
@@ -188,12 +214,11 @@ class UpdatesNotifier {
 
 
 	public function brothman_check_themes_callback() {
-		// get option 'boss_email' value from the database
+
 		self::$options = get_option( 'brothman_option2' );
 
 		$value = (bool) empty( self::$options['brothman_check_themes'] ) ? false : true;
 
-		// print the field !!
 		printf(
 				'<input id="brothman_check_plugins" name="brothman_option2[brothman_check_themes]" type="checkbox" value="1" %s />',
 				checked( 1, $value, false )
@@ -201,7 +226,7 @@ class UpdatesNotifier {
 
 	}
 
-	// Validate user input
+
 	public function brothman_check_themes_sanitize( $input ) {
 
 		$valid = array();
@@ -215,12 +240,12 @@ class UpdatesNotifier {
 
 
 	public function brothman_check_wordpress_callback() {
-		// get option 'boss_email' value from the database
+
 		self::$options = get_option( 'brothman_option3' );
 
 		$value = (bool) empty( self::$options['brothman_check_wordpress'] ) ? false : true;
 
-		// print the field !!
+
 		printf(
 				'<input id="brothman_check_wordpress" name="brothman_option3[brothman_check_wordpress]" type="checkbox" value="1" %s />',
 				checked( 1, $value, false )
@@ -229,7 +254,7 @@ class UpdatesNotifier {
 
 	}
 
-	// Validate user input
+
 	public function brothman_check_wordpress_sanitize( $input ) {
 
 		$valid = array();
@@ -267,7 +292,7 @@ class UpdatesNotifier {
 
 	}
 
-	// Validate user input
+
 	public function brothman_how_often_sanitize( $input ) {
 
 		$valid = array();
