@@ -116,7 +116,7 @@ class UpdatesNotifier {
 	* @since 1.0.0
 	*/
 	public function add_plugin_page() {
-//1. Add the page to settings
+// 1. Add the page to settings
 		add_options_page(
 			'Updates Notifier Settings', // page title
 			'Updates Notifier', // menu title
@@ -125,11 +125,17 @@ class UpdatesNotifier {
 			[ $this, 'create_admin_page' ] // callback function to build and display the page
 		);
 
+// 2. Add options section
+		add_settings_section(
+			'default_section_id', // id of the section (for use in the id section)
+			'General Settings', // title of the section
+			array( $this, 'print_section_info' ), // callback function that put the reuired info into the section
+			'updates-notifier' // The menu page on which to display the section
+		);
 
-
-// 2. Add settings to the page
-// each setting needs register_setting() and add_settings_field() to appear on the correct page and allow changes to be saved
-// each option has a callback() to create the field and a sanitize() to save the input in a clean way
+// 3. Add settings to the section
+	// - each setting needs register_setting() and add_settings_field() to appear on the correct page and allow changes to be saved
+	// - each option has a callback() to create the field and a sanitize() to save the input in a clean way
 
 
 		register_setting(
@@ -138,8 +144,10 @@ class UpdatesNotifier {
 			[ $this, 'brothman_check_plugins_sanitize' ]  // validation callback
 		);
 
+
+
 		register_setting(
-			'writing',                 // settings page
+			'updates-notifier',                 // settings page
 			'brothman_option1',          // option name
 			[ $this, 'brothman_check_plugins_sanitize' ]  // validation callback
 		);
@@ -148,8 +156,8 @@ class UpdatesNotifier {
 			'brothman_check_plugins',      // id
 			'Check Plugin Updates?',              // setting title
 			[ $this, 'brothman_check_plugins_callback' ],    // display callback
-			'writing',                 // settings page
-			'default'                  // settings section
+			'updates-notifier',                 // settings page
+			'default_section_id'                  // settings section
 		);
 
 
@@ -214,9 +222,11 @@ class UpdatesNotifier {
 							'</div>'
 						);
 
-						//settings_fields( 'php_notifier_settings_group' );
+						// tell the page to use the settings group?
+						settings_fields( 'brothman_option1' );
 
-					//	do_settings_sections( 'php-notifier' );
+						// add the section to the page
+						do_settings_sections( 'updates-notifier' );
 
 						submit_button();
 
@@ -229,6 +239,24 @@ class UpdatesNotifier {
 		<?php
 	}
 
+	public function print_section_info() {
+
+	echo 'Adjust the settings below:';
+
+}
+
+public function brothman_prevent_email_cron_sanitize( $input ) {
+
+	// create an empty 'clean' array
+	$valid = array();
+
+	// add the cleaned value to the clean array
+	$valid['prevent_email_cron'] = (bool) isset( $input['prevent_email_cron'] ) ? true : false;
+
+	// return the clean array
+	return $valid;
+
+}
 
 
 	public function brothman_check_plugins_callback() {
