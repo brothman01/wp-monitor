@@ -16,13 +16,22 @@ class UpdatesNotifier {
 
 	public function __construct() {
 
+		// check for updates
 		add_action( 'admin_bar_menu', [ $this, 'un_check_for_updates' ] );
 
 		// add the options page
 		add_action( 'admin_menu', [ $this, 'add_plugin_page' ] );
 
-		// create and add the fields to the options page
-		//add_action( 'admin_init', [ $this, 'page_init' ] );
+		// schedule cron task
+		wp_schedule_event(time(), 'daily', 'my-updates-notification');
+
+		$this->init();
+
+	}
+
+	public function init() {
+
+		add_action( 'my-updates-notification', [ $this, 'un_send_email' ] );
 
 	}
 
@@ -43,16 +52,47 @@ class UpdatesNotifier {
 				'WordPress'	=>	$update_data['counts']['themes'],
 			);
 
-			print_r( self::$updates);
+			print_r( self::$updates); // DEBUG
 
-			if (self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] != 0) {
-
-				$message =
-					'<b>Available Updates:</b>' .
-					'<p>Plugin Updates: ' . self::$updates['plugins'] . '<br />Theme Updates: ' . self::$updates['themes'] . '<br />WordPress Core Updates: ' . self::$updates['WordPress'];
-
-				wp_mail( get_option( 'admin_email' ), 'Updates for ' . get_option( 'siteurl' ) . ' available', $message );
 			}
+
+	}
+
+	public function un_send_email() {
+		// send email about selected updates here
+		$watched_updates = 0;
+
+		$message = 'There are updates available for ' . get_option( 'siteurl' ) . ' available.' . "\r\n";
+
+		if ( get_option( 'brothman_option1' ) ) {
+
+			$watched_updates = $watched_updates + self::$updates['plugins'];
+
+			$message = $message . self::$updates['plugins'] . ' plugins.' . "\r\n";
+
+		}
+
+		if ( get_option( 'brothman_option2' ) ) {
+
+			$watched_updates = $watched_updates + self::$updates['themes'];
+
+			$message = $message . self::$updates['themes'] . ' themes.' . "\r\n";
+
+		}
+
+		if ( get_option( 'brothman_option3' ) ) {
+
+			$watched_updates = $watched_updates + self::$updates['WordPress'];
+
+			$message = $message . self::$updates['WordPress'] . ' WordPress Core Updates.' . "\r\n";
+
+		}
+
+		if ( $watched_updates > 0 ) {
+
+			wp_mail( get_option( 'admin_email' ), $watched_updates . 'for ' . get_option( 'siteurl' ) . ' available!', $message);
+
+		}
 
 	}
 
