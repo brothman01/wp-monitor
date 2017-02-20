@@ -207,7 +207,7 @@ class UpdatesNotifier {
 
 				<h1>Updates Notifier</h1>
 
-				<form method="post" action="options.php">
+				<form method="post" action="options-general.php?page=updates-notifier">
 
 					<?php
 
@@ -222,7 +222,7 @@ class UpdatesNotifier {
 							'</div>'
 						);
 
-						// tell the page to use the settings group?
+						// tell the page to use the setting?
 						settings_fields( 'brothman_option1' );
 
 						// add the section to the page
