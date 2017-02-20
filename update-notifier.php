@@ -117,40 +117,46 @@ class UpdatesNotifier {
 	*/
 	public function add_plugin_page() {
 // 1. Add the page to settings
-		add_options_page(
-			'Updates Notifier Settings', // page title
-			'Updates Notifier', // menu title
-			'manage_options', // required capability of user
-			'updates-notifier', // menu slug
-			[ $this, 'create_admin_page' ] // callback function to build and display the page
-		);
+		// add_options_page(
+		// 	'Updates Notifier Settings', // page title
+		// 	'Updates Notifier', // menu title
+		// 	'manage_options', // required capability of user
+		// 	'updates-notifier', // menu slug
+		// 	[ $this, 'create_admin_page' ] // callback function to build and display the page
+		// );
 
 // 2. Add options section
-		add_settings_section(
-			'default_section_id', // id of the section (for use in the id section)
-			'General Settings', // title of the section
-			array( $this, 'print_section_info' ), // callback function that put the reuired info into the section
-			'updates-notifier' // The menu page on which to display the section
-		);
+		// add_settings_section(
+		// 	'default_section_id', // id of the section (for use in the id section)
+		// 	'General Settings', // title of the section
+		// 	array( $this, 'print_section_info' ), // callback function that put the reuired info into the section
+		// 	'updates-notifier' // The menu page on which to display the section
+		// );
 
-// 3. Add settings to the section
+// 3. Register one setting and one field per setting and add them to the section
 	// - each setting needs register_setting() and add_settings_field() to appear on the correct page and allow changes to be saved
 	// - each option has a callback() to create the field and a sanitize() to save the input in a clean way
 
 
+	register_setting(
+		'writing',                 // settings page
+		'prevent_email_cron',          // option name
+		[ $this, 'brothman_check_plugin_sanitize' ]  // validation callback
+	);
+
 		register_setting(
 			'writing',                 // settings page
-			'prevent_email_cron',          // option name
-			[ $this, 'brothman_check_plugins_sanitize' ]  // validation callback
+			'un_settings',          // option name
+			[ $this, 'un_sanitize' ]  // validation callback
 		);
 
 
 
-		register_setting(
-			'updates-notifier',                 // settings page
-			'brothman_option1',          // option name
-			[ $this, 'brothman_check_plugins_sanitize' ]  // validation callback
-		);
+		// register_setting(
+		// 	'updates-notifier',                 // settings page
+		// 	'brothman_option1',          // option name
+		// 	[ $this, 'brothman_check_plugins_sanitize' ]  // validation callback
+		// );
 
 		add_settings_field(
 			'brothman_check_plugins',      // id
@@ -162,11 +168,11 @@ class UpdatesNotifier {
 
 
 
-		register_setting(
-			'writing',                 // settings page
-			'brothman_option2',          // option name
-			[ $this, 'brothman_check_themes_sanitize' ]  // validation callback
-		);
+		// register_setting(
+		// 	'writing',                 // settings page
+		// 	'brothman_option2',          // option name
+		// 	[ $this, 'brothman_check_themes_sanitize' ]  // validation callback
+		// );
 
 		add_settings_field(
 			'brothman_check_themes',      // id
@@ -178,11 +184,11 @@ class UpdatesNotifier {
 
 
 
-		register_setting(
-			'writing',                 // settings page
-			'brothman_option3',          // option name
-			[ $this, 'brothman_check_wordpress_sanitize' ]  // validation callback
-		);
+		// register_setting(
+		// 	'writing',                 // settings page
+		// 	'brothman_option3',          // option name
+		// 	[ $this, 'brothman_check_wordpress_sanitize' ]  // validation callback
+		// );
 
 		add_settings_field(
 			'brothman_check_wordpress',      // id
@@ -239,24 +245,39 @@ class UpdatesNotifier {
 		<?php
 	}
 
+	public function un_sanitize( $input ) {
+
+		// create an empty 'clean' array
+		$valid = array();
+
+		// add the cleaned value to the clean array
+		$valid['brothman_check_plugins'] = (bool) isset( $input['brothman_check_plugins'] ) ? true : false;
+		$valid['brothman_check_themes'] = (bool) isset( $input['brothman_check_themes'] ) ? true : false;
+		$valid['brothman_check_WordPress'] = (bool) isset( $input['brothman_check_WordPress'] ) ? true : false;
+
+		// return the clean array
+		return $valid;
+
+	}
+
 	public function print_section_info() {
 
 	echo 'Adjust the settings below:';
 
 }
 
-public function brothman_prevent_email_cron_sanitize( $input ) {
-
-	// create an empty 'clean' array
-	$valid = array();
-
-	// add the cleaned value to the clean array
-	$valid['prevent_email_cron'] = (bool) isset( $input['prevent_email_cron'] ) ? true : false;
-
-	// return the clean array
-	return $valid;
-
-}
+// public function brothman_prevent_email_cron_sanitize( $input ) {
+//
+// 	// create an empty 'clean' array
+// 	$valid = array();
+//
+// 	// add the cleaned value to the clean array
+// 	$valid['prevent_email_cron'] = (bool) isset( $input['prevent_email_cron'] ) ? true : false;
+//
+// 	// return the clean array
+// 	return $valid;
+//
+// }
 
 
 	public function brothman_check_plugins_callback() {
@@ -276,18 +297,18 @@ public function brothman_prevent_email_cron_sanitize( $input ) {
 
 	}
 
-	public function brothman_check_plugins_sanitize( $input ) {
-
-		// create an empty 'clean' array
-		$valid = array();
-
-		// add the cleaned value to the clean array
-		$valid['brothman_check_plugins'] = (bool) isset( $input['brothman_check_plugins'] ) ? true : false;
-
-		// return the clean array
-		return $valid;
-
-	}
+	// public function brothman_check_plugins_sanitize( $input ) {
+	//
+	// 	// create an empty 'clean' array
+	// 	$valid = array();
+	//
+	// 	// add the cleaned value to the clean array
+	// 	$valid['brothman_check_plugins'] = (bool) isset( $input['brothman_check_plugins'] ) ? true : false;
+	//
+	// 	// return the clean array
+	// 	return $valid;
+	//
+	// }
 
 
 
@@ -305,15 +326,15 @@ public function brothman_prevent_email_cron_sanitize( $input ) {
 	}
 
 
-	public function brothman_check_themes_sanitize( $input ) {
-
-		$valid = array();
-
-		$valid['brothman_check_themes'] = (bool) isset( $input['brothman_check_themes'] ) ? true : false;
-
-		return $valid;
-
-	}
+	// public function brothman_check_themes_sanitize( $input ) {
+	//
+	// 	$valid = array();
+	//
+	// 	$valid['brothman_check_themes'] = (bool) isset( $input['brothman_check_themes'] ) ? true : false;
+	//
+	// 	return $valid;
+	//
+	// }
 
 
 
@@ -333,53 +354,18 @@ public function brothman_prevent_email_cron_sanitize( $input ) {
 	}
 
 
-	public function brothman_check_wordpress_sanitize( $input ) {
-
-		$valid = array();
-
-		$valid['brothman_check_wordpress'] = (bool) isset( $input['brothman_check_wordpress'] ) ? true : false;
-
-		return $valid;
-
-	}
-
-
-	public function brothman_how_often_callback() {
-
-		$options = array(
-			'never'   => 'Never',
-			'daily'   => 'Daily',
-			'weekly'  => 'Weekly',
-			'monthly' => 'Monthly',
-		);
-
-		print( '<select name="brothman_option4[brothman_how_often]">' );
-
-		foreach ( $options as $value => $label ) {
-
-			printf(
-				'<option value="%1$s" %2$s>%3$s</option>',
-				esc_attr( $value ),
-				selected( self::$options['brothman_how_often'], $value ),
-				esc_html( $label )
-			);
-
-		}
-
-		print( '</select>' );
-
-	}
+	// public function brothman_check_wordpress_sanitize( $input ) {
+	//
+	// 	$valid = array();
+	//
+	// 	$valid['brothman_check_wordpress'] = (bool) isset( $input['brothman_check_wordpress'] ) ? true : false;
+	//
+	// 	return $valid;
+	//
+	// }
 
 
-	public function brothman_how_often_sanitize( $input ) {
 
-		$valid = array();
-
-		$valid['brothman_how_often'] = (bool) isset( $input['brothman_check_wordpress'] ) ? true : false;
-
-		return $valid;
-
-	}
 
 	public function un_enqueue_admin_styles() {
 
