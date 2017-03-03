@@ -41,9 +41,10 @@ class UpdatesNotifier {
 	public function init() {
 
 		// get the option that is set when the crontask is scheduled
-		$prevent_email_cron = get_option( 'at_prevent_email_cron' );
 
-		 // wp_die( print_r( $prevent_email_cron ) ); // DEBUG
+		$prevent_email_cron = self::$options[ 'at_prevent_email_cron' ];
+
+		  wp_die( $prevent_email_cron ); // DEBUG
 
 		// schedule crontask if it has not already been scheduled
 		if ( $prevent_email_cron == 1 ) {
