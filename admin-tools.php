@@ -8,7 +8,7 @@
  * License:     GPL-2.0+
  */
 
-class UpdatesNotifier {
+class AdminTools {
 
 	public static $updates;
 
@@ -18,12 +18,13 @@ class UpdatesNotifier {
 
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
-			'at_prevent_email_cron' => false,
+			'at_prevent_email_cron' => true,
 			'at_check_plugins' => false,
 			'at_check_themes' => false,
 			'at_check_wordpress' => false,
 			'at_check_php' => false,
 		] );
+
 		// check for updates
 		add_action( 'admin_bar_menu', [ $this, 'at_check_for_updates' ] );
 
@@ -41,18 +42,17 @@ class UpdatesNotifier {
 	public function init() {
 
 		// get the option that is set when the crontask is scheduled
-
-		$prevent_email_cron = self::$options[ 'at_prevent_email_cron' ];
-
-		  wp_die( $prevent_email_cron ); // DEBUG
+		$prevent_email_cron = self::$options['at_prevent_email_cron'];
 
 		// schedule crontask if it has not already been scheduled
-		if ( $prevent_email_cron == 1 ) {
+		if ( 0 == $prevent_email_cron ) {
 
 				wp_schedule_event(time(), 'daily', 'send_my_updates_notification');
 
 				//set the option to say the crontask has already been scheduled
-				update_option( 'prevent_email_cron', 1, true );
+				self::$options['at_prevent_email_cron'] = true;
+
+				update_option( 'at_options', self::$options );
 
 	}
 
@@ -309,4 +309,4 @@ class UpdatesNotifier {
 
 }
 
-$updates_notifier = new UpdatesNotifier();
+$admin_tools = new AdminTools();
