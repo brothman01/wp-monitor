@@ -18,12 +18,14 @@ class UpdatesNotifier {
 
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
-			'at_settings1' => '',
-			'at_settings2' => '',
-			'at_checkbox1' => false,
+			'at_prevent_email_cron' => false,
+			'at_check_plugins' => false,
+			'at_check_themes' => false,
+			'at_check_wordpress' => false,
+			'at_check_php' => false,
 		] );
 		// check for updates
-		add_action( 'admin_bar_menu', [ $this, 'un_check_for_updates' ] );
+		add_action( 'admin_bar_menu', [ $this, 'at_check_for_updates' ] );
 
 		// add the options page
 		add_action( 'admin_menu', [ $this, 'at_add_plugin_page' ] );
@@ -39,10 +41,12 @@ class UpdatesNotifier {
 	public function init() {
 
 		// get the option that is set when the crontask is scheduled
-		$prevent_email_cron = get_option( 'prevent_email_cron' );
+		$prevent_email_cron = get_option( 'at_prevent_email_cron' );
+
+		 // wp_die( print_r( $prevent_email_cron ) ); // DEBUG
 
 		// schedule crontask if it has not already been scheduled
-		if ( $prevent_email_cron == 0 ) {
+		if ( $prevent_email_cron == 1 ) {
 
 				wp_schedule_event(time(), 'daily', 'send_my_updates_notification');
 
@@ -90,28 +94,42 @@ class UpdatesNotifier {
 		);
 
 			// 5. Add each settings field
+			// add_settings_field(
+			// 	'at_settings1',      // id
+			// 	'Text Field',              // setting title
+			// 	[ $this, 'at_text_field_callback' ],    // display callback
+			// 	'options_page',                 // settings page
+			// 	'options_br_id'                  // settings section
+			// );
+
 			add_settings_field(
-				'at_settings1',      // id
-				'Text Field',              // setting title
-				[ $this, 'at_text_field_callback' ],    // display callback
+				'at_check_plugins',      // id
+				'Check Plugins?',              // setting title
+				[ $this, 'at_check_plugins_callback' ],    // display callback
 				'options_page',                 // settings page
 				'options_br_id'                  // settings section
 			);
 
 			add_settings_field(
-				'at_settings2',      // id
-				'Tinkerbell\'s Vagina',              // setting title
-				[ $this, 'at_tinkerbells_vagina_callback' ],    // display callback
+				'at_check_themes',      // id
+				'Check Themes?',              // setting title
+				[ $this, 'at_check_themes_callback' ],    // display callback
 				'options_page',                 // settings page
 				'options_br_id'                  // settings section
 			);
 
-
+			add_settings_field(
+				'at_check_wordpress',      // id
+				'Check WordPress?',              // setting title
+				[ $this, 'at_check_wordpress_callback' ],    // display callback
+				'options_page',                 // settings page
+				'options_br_id'                  // settings section
+			);
 
 			add_settings_field(
-				'at_checkbox1',      // id
-				'Can I see your big penis?',              // setting title
-				[ $this, 'at_checkbox1_callback' ],    // display callback
+				'at_check_php',      // id
+				'Check PHP?',              // setting title
+				[ $this, 'at_check_php_callback' ],    // display callback
 				'options_page',                 // settings page
 				'options_br_id'                  // settings section
 			);
@@ -119,7 +137,7 @@ class UpdatesNotifier {
 		}
 
 
-	public function un_check_for_updates() {
+	public function at_check_for_updates() {
 
 		if ( ! current_user_can( 'install_plugins' ) ) {
 
@@ -133,7 +151,10 @@ class UpdatesNotifier {
 				'plugins'	=>	$update_data['counts']['plugins'],
 				'themes'	=>	$update_data['counts']['themes'],
 				'WordPress'	=>	$update_data['counts']['themes'],
+				'PHP' => phpversion(),
 			);
+
+			print_r( self::$updates );
 
 	}
 
@@ -203,11 +224,15 @@ class UpdatesNotifier {
 				$valid = array();
 
 				// add the cleaned values of each field to the clean array on submit
-				$valid['at_settings1'] = empty( $input['at_settings1'] ) ? '' : sanitize_text_field( $input['at_settings1'] );
+				// $valid['at_settings1'] = empty( $input['at_settings1'] ) ? '' : sanitize_text_field( $input['at_settings1'] );
 
-				$valid['at_settings2'] = empty( $input['at_settings2'] ) ? '' : sanitize_text_field( $input['at_settings2'] );
+				$valid['at_check_plugins']       	= (bool) empty( $input['at_check_plugins'] ) ? false : true;
 
-				$valid['at_checkbox1']       	= (bool) empty( $input['at_checkbox1'] ) ? false : true;
+				$valid['at_check_themes']       	= (bool) empty( $input['at_check_themes'] ) ? false : true;
+
+				$valid['at_check_wordpress']      = (bool) empty( $input['at_check_wordpress'] ) ? false : true;
+
+				$valid['at_check_php']      = (bool) empty( $input['at_check_php'] ) ? false : true;
 
 
 				// return the clean array
@@ -221,32 +246,53 @@ class UpdatesNotifier {
 
 			}
 
-			public function at_text_field_callback() {
+			// public function at_text_field_callback() {
+			//
+			// 	// print the HTML to create the field
+			// 	printf(
+			// 		'<input id="at_settings1" name="at_options[at_settings1]" type="text" value="%1$s" />',
+			// 		self::$options['at_settings1']
+			// 	);
+			//
+			// }
+
+
+			public function at_check_plugins_callback() {
 
 				// print the HTML to create the field
 				printf(
-					'<input id="at_settings1" name="at_options[at_settings1]" type="text" value="%1$s" />',
-					self::$options['at_settings1']
+					'<input id="at_check_plugins" name="at_options[at_check_plugins]" type="checkbox" value="1" %1$s />',
+					checked( true, self::$options['at_check_plugins'], false )
 				);
 
 			}
 
-			public function at_tinkerbells_vagina_callback() {
+			public function at_check_themes_callback() {
 
 				// print the HTML to create the field
 				printf(
-					'<input id="at_settings2" name="at_options[at_settings2]" type="text" value="%1$s" />',
-					self::$options['at_settings2']
+					'<input id="at_check_themes" name="at_options[at_check_themes]" type="checkbox" value="1" %1$s />',
+					checked( true, self::$options['at_check_themes'], false )
 				);
 
 			}
 
-			public function at_checkbox1_callback() {
+			public function at_check_wordpress_callback() {
 
 				// print the HTML to create the field
 				printf(
-					'<input id="at_checkbox1" name="at_options[at_checkbox1]" type="checkbox" value="1" %1$s />',
-					checked( true, self::$options['at_checkbox1'], false )
+					'<input id="at_check_wordpress" name="at_options[at_check_wordpress]" type="checkbox" value="1" %1$s />',
+					checked( true, self::$options['at_check_wordpress'], false )
+				);
+
+			}
+
+			public function at_check_php_callback() {
+
+				// print the HTML to create the field
+				printf(
+					'<input id="at_check_php" name="at_options[at_check_php]" type="checkbox" value="1" %1$s />',
+					checked( true, self::$options['at_check_php'], false )
 				);
 
 			}
