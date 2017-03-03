@@ -1,6 +1,6 @@
 <?php
 /*
- * Plugin Name: Updates Notifier
+ * Plugin Name: Admin Tools
  * Description: Notify user when updates to WordPress are needed.
  * Version:     1.0.0
  * Author:      Ben Rothman
@@ -16,11 +16,20 @@ class UpdatesNotifier {
 
 	public function __construct() {
 
+		// get option 'at_options' value from the database and put it in the array $options
+		self::$options = get_option( 'at_options', [
+			'at_settings1' => '',
+			'at_settings2' => '',
+			'at_checkbox1' => false,
+		] );
 		// check for updates
 		add_action( 'admin_bar_menu', [ $this, 'un_check_for_updates' ] );
 
 		// add the options page
-		add_action( 'admin_menu', [ $this, 'add_plugin_page' ] );
+		add_action( 'admin_menu', [ $this, 'at_add_plugin_page' ] );
+
+		// build options page
+		add_action( 'admin_init', [ $this, 'at_settings_init' ] );
 
 		// other stuff
 		$this->init();
@@ -51,6 +60,64 @@ class UpdatesNotifier {
 
 	}
 
+	public function at_add_plugin_page() {
+
+			 // 1. Add the settings page
+			 add_options_page(
+				'Options Page', // page title
+					'Admin Tools', // menu title
+					'manage_options', // capability required of user
+					'options_page', // menu slug
+					[ $this, 'create_admin_page' ] // callback function
+				);
+
+	}
+
+	public function at_settings_init() {
+
+		register_setting( // (actually a settings group)
+			'at_options_group',                 // group name
+			'at_options',          // option name
+			[ $this, 'at_sanitize' ]  // validation callback
+		);
+
+		// 2. Add the section to the setting page
+		add_settings_section(
+			'options_br_id', // id for use in id attribute
+			'General Settings', // title of the section
+			[ $this, 'at_section_callback' ], // callback function
+			'options_page' // page
+		);
+
+			// 5. Add each settings field
+			add_settings_field(
+				'at_settings1',      // id
+				'Text Field',              // setting title
+				[ $this, 'at_text_field_callback' ],    // display callback
+				'options_page',                 // settings page
+				'options_br_id'                  // settings section
+			);
+
+			add_settings_field(
+				'at_settings2',      // id
+				'Tinkerbell\'s Vagina',              // setting title
+				[ $this, 'at_tinkerbells_vagina_callback' ],    // display callback
+				'options_page',                 // settings page
+				'options_br_id'                  // settings section
+			);
+
+
+
+			add_settings_field(
+				'at_checkbox1',      // id
+				'Can I see your big penis?',              // setting title
+				[ $this, 'at_checkbox1_callback' ],    // display callback
+				'options_page',                 // settings page
+				'options_br_id'                  // settings section
+			);
+
+		}
+
 
 	public function un_check_for_updates() {
 
@@ -78,7 +145,7 @@ class UpdatesNotifier {
 
 		$message = 'There are updates available for ' . get_option( 'siteurl' ) . ' available.' . "\r\n";
 
-		if ( get_option( 'brothman_option1' ) ) {
+		if ( get_option( 'at_option1' ) ) {
 
 			$watched_updates = $watched_updates + self::$updates['plugins'];
 
@@ -86,7 +153,7 @@ class UpdatesNotifier {
 
 		}
 
-		if ( get_option( 'brothman_option2' ) ) {
+		if ( get_option( 'at_option2' ) ) {
 
 			$watched_updates = $watched_updates + self::$updates['themes'];
 
@@ -94,7 +161,7 @@ class UpdatesNotifier {
 
 		}
 
-		if ( get_option( 'brothman_option3' ) ) {
+		if ( get_option( 'at_option3' ) ) {
 
 			$watched_updates = $watched_updates + self::$updates['WordPress'];
 
@@ -110,261 +177,79 @@ class UpdatesNotifier {
 
 	}
 
-	/**
-	* Add options page
-	*
-	* @since 1.0.0
-	*/
-	public function add_plugin_page() {
-// 1. Add the page to settings
-		// add_options_page(
-		// 	'Updates Notifier Settings', // page title
-		// 	'Updates Notifier', // menu title
-		// 	'manage_options', // required capability of user
-		// 	'updates-notifier', // menu slug
-		// 	[ $this, 'create_admin_page' ] // callback function to build and display the page
-		// );
-
-// 2. Add options section
-		// add_settings_section(
-		// 	'default_section_id', // id of the section (for use in the id section)
-		// 	'General Settings', // title of the section
-		// 	array( $this, 'print_section_info' ), // callback function that put the reuired info into the section
-		// 	'updates-notifier' // The menu page on which to display the section
-		// );
-
-// 3. Register one setting and one field per setting and add them to the section
-	// - each setting needs register_setting() and add_settings_field() to appear on the correct page and allow changes to be saved
-	// - each option has a callback() to create the field and a sanitize() to save the input in a clean way
-
-
-	register_setting(
-		'writing',                 // settings page
-		'prevent_email_cron',          // option name
-		[ $this, 'brothman_check_plugin_sanitize' ]  // validation callback
-	);
-
-		register_setting(
-			'writing',                 // settings page
-			'un_settings',          // option name
-			[ $this, 'un_sanitize' ]  // validation callback
-		);
-
+	// 3. Build the setting page with this callback
+			public function create_admin_page() {
+			 				?>
+							<div class="wrap">
+								<h1>Admin Tools</h1>
+								<form method="post" action="options.php"> <!-- the action needs to be 'options.php' -->
+									<?php
+										printf('<div class="notice notice-info is-dismissible"><p>test</p></div>');
 
-
-		// register_setting(
-		// 	'updates-notifier',                 // settings page
-		// 	'brothman_option1',          // option name
-		// 	[ $this, 'brothman_check_plugins_sanitize' ]  // validation callback
-		// );
-
-		add_settings_field(
-			'brothman_check_plugins',      // id
-			'Check Plugin Updates?',              // setting title
-			[ $this, 'brothman_check_plugins_callback' ],    // display callback
-			'updates-notifier',                 // settings page
-			'default_section_id'                  // settings section
-		);
+										settings_fields( 'at_options_group' );
 
+										do_settings_sections( 'options_page' ); // 4. add the page sections to the page (by entering the page name!)
 
+										submit_button( 'Call Davey Crocket A Pussy' );
+										?>
+									</form>
+								</div>
+								<?php
+			}
 
-		// register_setting(
-		// 	'writing',                 // settings page
-		// 	'brothman_option2',          // option name
-		// 	[ $this, 'brothman_check_themes_sanitize' ]  // validation callback
-		// );
+			public function at_sanitize( $input ) {
 
-		add_settings_field(
-			'brothman_check_themes',      // id
-			'Check Theme Updates?',              // setting title
-			[ $this, 'brothman_check_themes_callback' ],    // display callback
-			'writing',                 // settings page
-			'default'                  // settings section
-		);
+				// create an empty 'clean' array
+				$valid = array();
 
+				// add the cleaned values of each field to the clean array on submit
+				$valid['at_settings1'] = empty( $input['at_settings1'] ) ? '' : sanitize_text_field( $input['at_settings1'] );
 
+				$valid['at_settings2'] = empty( $input['at_settings2'] ) ? '' : sanitize_text_field( $input['at_settings2'] );
 
-		// register_setting(
-		// 	'writing',                 // settings page
-		// 	'brothman_option3',          // option name
-		// 	[ $this, 'brothman_check_wordpress_sanitize' ]  // validation callback
-		// );
+				$valid['at_checkbox1']       	= (bool) empty( $input['at_checkbox1'] ) ? false : true;
 
-		add_settings_field(
-			'brothman_check_wordpress',      // id
-			'Check WordPress Updates?',              // setting title
-			[ $this, 'brothman_check_wordpress_callback' ],    // display callback
-			'writing',                 // settings page
-			'default'                  // settings section
-		);
 
-	}
+				// return the clean array
+				return $valid;
 
-	/**
-	* Options page callback
-	*
-	* @since 1.0.0
-	*/
-	public function create_admin_page() {
+			}
 
-		?>
-
-			<div class="wrap">
+			public function at_section_callback() {
 
-				<h1>Updates Notifier</h1>
+				echo 'This is the only section on the page, so wtf?';
 
-				<form method="post" action="options-general.php?page=updates-notifier">
+			}
 
-					<?php
+			public function at_text_field_callback() {
 
-						printf(
-							'<div class="notice notice-info updates_notifier">' .
-									'<b>Updates Available:</b>' .
-									'<p>' .
-										'Plugins: ' . self::$updates['plugins'] . '<br />' .
-										'Themes: ' . self::$updates['themes'] . '<br />' .
-										'WordPress: ' . self::$updates['themes'] . '<br />' .
-									'</p>' .
-							'</div>'
-						);
+				// print the HTML to create the field
+				printf(
+					'<input id="at_settings1" name="at_options[at_settings1]" type="text" value="%1$s" />',
+					self::$options['at_settings1']
+				);
 
-						// tell the page to use the setting?
-						settings_fields( 'brothman_option1' );
+			}
 
-						// add the section to the page
-						do_settings_sections( 'updates-notifier' );
+			public function at_tinkerbells_vagina_callback() {
 
-						submit_button();
+				// print the HTML to create the field
+				printf(
+					'<input id="at_settings2" name="at_options[at_settings2]" type="text" value="%1$s" />',
+					self::$options['at_settings2']
+				);
 
-					?>
+			}
 
-				</form>
+			public function at_checkbox1_callback() {
 
-			</div>
+				// print the HTML to create the field
+				printf(
+					'<input id="at_checkbox1" name="at_options[at_checkbox1]" type="checkbox" value="1" %1$s />',
+					checked( true, self::$options['at_checkbox1'], false )
+				);
 
-		<?php
-	}
-
-	public function un_sanitize( $input ) {
-
-		// create an empty 'clean' array
-		$valid = array();
-
-		// add the cleaned value to the clean array
-		$valid['brothman_check_plugins'] = (bool) isset( $input['brothman_check_plugins'] ) ? true : false;
-		$valid['brothman_check_themes'] = (bool) isset( $input['brothman_check_themes'] ) ? true : false;
-		$valid['brothman_check_WordPress'] = (bool) isset( $input['brothman_check_WordPress'] ) ? true : false;
-
-		// return the clean array
-		return $valid;
-
-	}
-
-	public function print_section_info() {
-
-	echo 'Adjust the settings below:';
-
-}
-
-// public function brothman_prevent_email_cron_sanitize( $input ) {
-//
-// 	// create an empty 'clean' array
-// 	$valid = array();
-//
-// 	// add the cleaned value to the clean array
-// 	$valid['prevent_email_cron'] = (bool) isset( $input['prevent_email_cron'] ) ? true : false;
-//
-// 	// return the clean array
-// 	return $valid;
-//
-// }
-
-
-	public function brothman_check_plugins_callback() {
-
-		// get option 'brothman_option1' value from the database and put it in the array $options
-		self::$options = get_option( 'brothman_option1' );
-
-		// get the value of the option from the $options array (set to no if empty)
-		$value = (bool) empty( self::$options['brothman_check_plugins'] ) ? false : true;
-
-		// print the HTML to create the field
-		printf(
-				'<input id="brothman_check_plugins" name="brothman_option1[brothman_check_plugins]" type="checkbox" value="1" %s />',
-				checked( 1, $value, false )
-		);
-
-
-	}
-
-	// public function brothman_check_plugins_sanitize( $input ) {
-	//
-	// 	// create an empty 'clean' array
-	// 	$valid = array();
-	//
-	// 	// add the cleaned value to the clean array
-	// 	$valid['brothman_check_plugins'] = (bool) isset( $input['brothman_check_plugins'] ) ? true : false;
-	//
-	// 	// return the clean array
-	// 	return $valid;
-	//
-	// }
-
-
-
-	public function brothman_check_themes_callback() {
-
-		self::$options = get_option( 'brothman_option2' );
-
-		$value = (bool) empty( self::$options['brothman_check_themes'] ) ? false : true;
-
-		printf(
-				'<input id="brothman_check_plugins" name="brothman_option2[brothman_check_themes]" type="checkbox" value="1" %s />',
-				checked( 1, $value, false )
-		);
-
-	}
-
-
-	// public function brothman_check_themes_sanitize( $input ) {
-	//
-	// 	$valid = array();
-	//
-	// 	$valid['brothman_check_themes'] = (bool) isset( $input['brothman_check_themes'] ) ? true : false;
-	//
-	// 	return $valid;
-	//
-	// }
-
-
-
-	public function brothman_check_wordpress_callback() {
-
-		self::$options = get_option( 'brothman_option3' );
-
-		$value = (bool) empty( self::$options['brothman_check_wordpress'] ) ? false : true;
-
-
-		printf(
-				'<input id="brothman_check_wordpress" name="brothman_option3[brothman_check_wordpress]" type="checkbox" value="1" %s />',
-				checked( 1, $value, false )
-		);
-
-
-	}
-
-
-	// public function brothman_check_wordpress_sanitize( $input ) {
-	//
-	// 	$valid = array();
-	//
-	// 	$valid['brothman_check_wordpress'] = (bool) isset( $input['brothman_check_wordpress'] ) ? true : false;
-	//
-	// 	return $valid;
-	//
-	// }
-
-
+			}
 
 
 	public function un_enqueue_admin_styles() {
