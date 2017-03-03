@@ -61,7 +61,8 @@ class AdminTools {
 
 
 		// enqueue the admin stylesheet
-		add_action( 'admin_enqueue_scripts', [ $this, 'un_enqueue_admin_styles' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'at_enqueue_admin_styles' ] );
+
 
 	}
 
@@ -69,7 +70,7 @@ class AdminTools {
 
 			 // 1. Add the settings page
 			 add_options_page(
-				'Options Page', // page title
+				 'Options Page', // page title
 					'Admin Tools', // menu title
 					'manage_options', // capability required of user
 					'options_page', // menu slug
@@ -85,6 +86,9 @@ class AdminTools {
 			'at_options',          // option name
 			[ $this, 'at_sanitize' ]  // validation callback
 		);
+
+
+		$this->dashboard_section();
 
 		// 2. Add the section to the setting page
 		add_settings_section(
@@ -137,6 +141,16 @@ class AdminTools {
 
 		}
 
+		public function dashboard_section() {
+
+			add_settings_section(
+				'options_dashboard_id', // id for use in id attribute
+				'Site Status', // title of the section
+				[ $this, 'at_dashboard_callback' ], // callback function
+				'options_page' // page
+			);
+
+		}
 
 	public function at_check_for_updates() {
 
@@ -206,7 +220,7 @@ class AdminTools {
 								<h1>Admin Tools</h1>
 								<form method="post" action="options.php"> <!-- the action needs to be 'options.php' -->
 									<?php
-										printf('<div class="notice notice-info is-dismissible"><p>test</p></div>');
+										//printf('<div class="notice notice-info is-dismissible"><p>test</p></div>');
 
 										settings_fields( 'at_options_group' );
 
@@ -238,6 +252,58 @@ class AdminTools {
 
 				// return the clean array
 				return $valid;
+
+			}
+
+			public function at_dashboard_callback() {
+
+				echo '<div id="dashboard_main">
+
+					<div class="twothirds">
+
+						<div class="onequarter">
+						<h3 style="text-align: center;">Plugins:</h3>
+
+							<div class="guage">
+								<div class="guage-filling">&nbsp;
+								</div>
+							</div>
+						</div>
+
+						<div class="onequarter">
+						<h3 style="text-align: center;">Themes:</h3>
+
+							<div class="guage">
+								<div class="guage-filling">&nbsp;
+								</div>
+							</div>
+						</div>
+
+						<div class="onequarter">
+						<h3 style="text-align: center;">WordPress Core:</h3>
+
+							<div class="guage">
+								<div class="guage-filling">&nbsp;
+								</div>
+							</div>
+						</div>
+
+						<div class="onequarter">
+						<h3 style="text-align: center;">PHP:</h3>
+
+							<div class="guage">
+								<div class="guage-filling">&nbsp;
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="onethird">
+						one third
+					</div>
+
+				</div>';
 
 			}
 
@@ -299,13 +365,14 @@ class AdminTools {
 			}
 
 
-	public function un_enqueue_admin_styles() {
+	public function at_enqueue_admin_styles() {
 
-		wp_register_style( 'un_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
-
-		wp_enqueue_style( 'un_admin_css' );
+		wp_register_style( 'at_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
+		wp_enqueue_style( 'at_admin_css' );
 
 	}
+
+
 
 }
 
