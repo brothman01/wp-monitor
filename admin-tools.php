@@ -19,6 +19,7 @@ class AdminTools {
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
 			'at_prevent_email_cron' => true,
+			'at_send_email' => false,
 			'at_check_plugins' => false,
 			'at_check_themes' => false,
 			'at_check_wordpress' => false,
@@ -33,6 +34,9 @@ class AdminTools {
 
 		// build options page
 		add_action( 'admin_init', [ $this, 'at_settings_init' ] );
+
+		// include other files
+		include_once( plugin_dir_path( __FILE__ ) . 'user-log.php' );
 
 		// other stuff
 		$this->init();
@@ -93,8 +97,8 @@ class AdminTools {
 		// 2. Add the section to the setting page
 		add_settings_section(
 			'options_br_id', // id for use in id attribute
-			'General Settings', // title of the section
-			[ $this, 'at_section_callback' ], // callback function
+			'Email Settings', // title of the section
+			[ $this, 'at_email_section_callback' ], // callback function
 			'options_page' // page
 		);
 
@@ -106,6 +110,14 @@ class AdminTools {
 			// 	'options_page',                 // settings page
 			// 	'options_br_id'                  // settings section
 			// );
+
+			add_settings_field(
+				'at_send_email',      // id
+				'Send Email?',              // setting title
+				[ $this, 'at_send_email_callback' ],    // display callback
+				'options_page',                 // settings page
+				'options_br_id'                  // settings section
+			);
 
 			add_settings_field(
 				'at_check_plugins',      // id
@@ -226,7 +238,7 @@ class AdminTools {
 
 										do_settings_sections( 'options_page' ); // 4. add the page sections to the page (by entering the page name!)
 
-										submit_button( 'Call Davey Crocket A Pussy' );
+										submit_button();
 										?>
 									</form>
 								</div>
@@ -240,6 +252,11 @@ class AdminTools {
 
 				// add the cleaned values of each field to the clean array on submit
 				// $valid['at_settings1'] = empty( $input['at_settings1'] ) ? '' : sanitize_text_field( $input['at_settings1'] );
+
+				$valid['at_prevent_email_cron'] = (bool) empty( $input['at_prevent_email_cron'] ) ? false : true;
+
+
+				$valid['at_send_email']       	= (bool) empty( $input['at_send_email'] ) ? false : true;
 
 				$valid['at_check_plugins']       	= (bool) empty( $input['at_check_plugins'] ) ? false : true;
 
@@ -259,57 +276,111 @@ class AdminTools {
 
 				echo '<div id="dashboard_main">
 
+
 					<div class="twothirds">
 
-						<div class="onequarter">
+						<div class="onequarter cell">
 						<h3 style="text-align: center;">Plugins:</h3>
 
 							<div class="guage">
-								<div class="guage-filling">&nbsp;
-								</div>
+								<div class="guage_filling">&nbsp;' .
+								( sizeof( get_plugins() ) - self::$updates['plugins'] ) . ' / ' . sizeof( get_plugins() ) .
+
+								'</div>
 							</div>
+
 						</div>
 
-						<div class="onequarter">
+						<div class="onequarter cell">
 						<h3 style="text-align: center;">Themes:</h3>
-
 							<div class="guage">
-								<div class="guage-filling">&nbsp;
+								<div class="guage_filling">&nbsp;' .
+								sizeof( wp_get_themes() ) . '
 								</div>
 							</div>
+
 						</div>
 
-						<div class="onequarter">
+						<div class="onequarter cell">
 						<h3 style="text-align: center;">WordPress Core:</h3>
 
 							<div class="guage">
-								<div class="guage-filling">&nbsp;
+								<div class="guage_filling">&nbsp;' .
+								self::$updates['WordPress'] . '
 								</div>
 							</div>
+
 						</div>
 
-						<div class="onequarter">
+						<div class="onequarter cell">
 						<h3 style="text-align: center;">PHP:</h3>
 
 							<div class="guage">
-								<div class="guage-filling">&nbsp;
+								<div class="guage_filling">&nbsp;
 								</div>
 							</div>
+
 						</div>
+
+						<div class="onethird cell">
+						<h3 style="text-align: center;">???:</h3>
+
+							<div class="guage">
+								<div class="guage_filling">&nbsp;
+								</div>
+							</div>
+
+						</div>
+
+						<div class="onethird cell">
+						<h3 style="text-align: center;">???:</h3>
+
+							<div class="guage">
+								<div class="guage_filling">&nbsp;
+								</div>
+							</div>
+
+						</div>
+
+						<div class="onethird cell">
+						<h3 style="text-align: center;">Logged In Users:</h3>
+
+
+						<table class="wp-list-table widefat fixed striped logs">
+							<thead>
+								<tr>
+									<th>Username</th>
+									<th>Date/Time</th>
+									<th>IP Address</th>
+								</tr>
+							</thead>
+
+							<!-- tr and ths for each logged in user that never logged out -->
+
+						</table>
+
+
+
+						</div>
+
 
 					</div>
 
 					<div class="onethird">
-						one third
+						<center>
+						<img src="' . plugin_dir_url( __FILE__ ) . 'library/images/good-icon.png" /> <!-- will be conditional -->
+						<h2>Site is OK.</h2>
+						</center>
 					</div>
 
 				</div>';
 
 			}
 
-			public function at_section_callback() {
 
-				echo 'This is the only section on the page, so wtf?';
+			public function at_email_section_callback() {
+
+				echo 'Select the settings for the email.';
 
 			}
 
@@ -323,6 +394,15 @@ class AdminTools {
 			//
 			// }
 
+			public function at_send_email_callback() {
+
+				// print the HTML to create the field
+				printf(
+					'<input id="at_send_email" name="at_options[at_send_email]" type="checkbox" value="1" %1$s />',
+					checked( true, self::$options['at_send_email'], false )
+				);
+
+			}
 
 			public function at_check_plugins_callback() {
 
