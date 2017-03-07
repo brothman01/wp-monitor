@@ -181,7 +181,7 @@ class AdminTools {
 				'PHP' => phpversion(),
 			);
 
-			print_r( self::$updates );
+			// print_r( self::$updates );
 
 	}
 

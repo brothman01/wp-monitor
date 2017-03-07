@@ -11,24 +11,38 @@ class UserLog extends AdminTools {
 
 			}
 
-			add_action('wp_login', 'user_login');
+			add_action( 'loop_start', [ $this, 'get_user_information' ] );
 
 		}
 
-		public function user_login() {
+		public function get_user_information() {
+	         if ( is_user_logged_in() ) {
+	             $current_user = wp_get_current_user();
 
-			$current_user = wp_get_current_user();
+	            update_option( 'at_users', get_option( 'at_users' ) . ':' . $current_user->user_login . ',' . [ $this, 'get_user_ip' ] );
 
-			$values = 'Username: ' . $current_user->user_login . '<br />';
-	     'User email: ' . $current_user->user_email . '<br />';
-	     'User first name: ' . $current_user->user_firstname . '<br />';
-	     'User last name: ' . $current_user->user_lastname . '<br />';
-	     'User display name: ' . $current_user->display_name . '<br />';
-	     'User ID: ' . $current_user->ID . '<br />';
+	         }
+	 }
 
-			 update_option( 'at_users', $values );
+	 public function get_user_ip() {
 
-		}
+		 if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+
+			 $ip = $_SERVER['HTTP_CLIENT_IP'];
+
+		 } else if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+
+			 $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+
+		 } else {
+
+			 $ip = $_SERVER['REMOTE_ADDR'];
+
+		 }
+
+		 return $ip;
+
+	 }
 
 }
 
