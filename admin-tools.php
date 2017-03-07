@@ -19,6 +19,7 @@ class AdminTools {
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
 			'at_prevent_email_cron' => true,
+			'at_user_timeout' => '',
 			'at_send_email' => false,
 			'at_check_plugins' => false,
 			'at_check_themes' => false,
@@ -91,8 +92,24 @@ class AdminTools {
 			[ $this, 'at_sanitize' ]  // validation callback
 		);
 
-
 		$this->dashboard_section();
+
+
+		add_settings_section(
+			'general_section_id', // id for use in id attribute
+			'General Settings', // title of the section
+			[ $this, 'at_email_section_callback' ], // callback function
+			'options_page' // page
+		);
+
+
+					add_settings_field(
+						'at_user_timeout',      // id
+						'How Long Until A User Is Logged Out For Inactivity?',              // setting title
+						[ $this, 'at_user_timeout_callback' ],    // display callback
+						'options_page',                 // settings page
+						'general_section_id'                  // settings section
+					);
 
 		// 2. Add the section to the setting page
 		add_settings_section(
@@ -102,54 +119,54 @@ class AdminTools {
 			'options_page' // page
 		);
 
-			// 5. Add each settings field
-			// add_settings_field(
-			// 	'at_settings1',      // id
-			// 	'Text Field',              // setting title
-			// 	[ $this, 'at_text_field_callback' ],    // display callback
-			// 	'options_page',                 // settings page
-			// 	'options_br_id'                  // settings section
-			// );
+						// 5. Add each settings field
+						// add_settings_field(
+						// 	'at_settings1',      // id
+						// 	'Text Field',              // setting title
+						// 	[ $this, 'at_text_field_callback' ],    // display callback
+						// 	'options_page',                 // settings page
+						// 	'options_br_id'                  // settings section
+						// );
 
-			add_settings_field(
-				'at_send_email',      // id
-				'Send Email?',              // setting title
-				[ $this, 'at_send_email_callback' ],    // display callback
-				'options_page',                 // settings page
-				'options_br_id'                  // settings section
-			);
+						add_settings_field(
+							'at_send_email',      // id
+							'Send Email?',              // setting title
+							[ $this, 'at_send_email_callback' ],    // display callback
+							'options_page',                 // settings page
+							'options_br_id'                  // settings section
+						);
 
-			add_settings_field(
-				'at_check_plugins',      // id
-				'Check Plugins?',              // setting title
-				[ $this, 'at_check_plugins_callback' ],    // display callback
-				'options_page',                 // settings page
-				'options_br_id'                  // settings section
-			);
+						add_settings_field(
+							'at_check_plugins',      // id
+							'Check Plugins?',              // setting title
+							[ $this, 'at_check_plugins_callback' ],    // display callback
+							'options_page',                 // settings page
+							'options_br_id'                  // settings section
+						);
 
-			add_settings_field(
-				'at_check_themes',      // id
-				'Check Themes?',              // setting title
-				[ $this, 'at_check_themes_callback' ],    // display callback
-				'options_page',                 // settings page
-				'options_br_id'                  // settings section
-			);
+						add_settings_field(
+							'at_check_themes',      // id
+							'Check Themes?',              // setting title
+							[ $this, 'at_check_themes_callback' ],    // display callback
+							'options_page',                 // settings page
+							'options_br_id'                  // settings section
+						);
 
-			add_settings_field(
-				'at_check_wordpress',      // id
-				'Check WordPress?',              // setting title
-				[ $this, 'at_check_wordpress_callback' ],    // display callback
-				'options_page',                 // settings page
-				'options_br_id'                  // settings section
-			);
+						add_settings_field(
+							'at_check_wordpress',      // id
+							'Check WordPress?',              // setting title
+							[ $this, 'at_check_wordpress_callback' ],    // display callback
+							'options_page',                 // settings page
+							'options_br_id'                  // settings section
+						);
 
-			add_settings_field(
-				'at_check_php',      // id
-				'Check PHP?',              // setting title
-				[ $this, 'at_check_php_callback' ],    // display callback
-				'options_page',                 // settings page
-				'options_br_id'                  // settings section
-			);
+						add_settings_field(
+							'at_check_php',      // id
+							'Check PHP?',              // setting title
+							[ $this, 'at_check_php_callback' ],    // display callback
+							'options_page',                 // settings page
+							'options_br_id'                  // settings section
+						);
 
 		}
 
@@ -255,6 +272,7 @@ class AdminTools {
 
 				$valid['at_prevent_email_cron'] = (bool) empty( $input['at_prevent_email_cron'] ) ? false : true;
 
+				$valid['at_user_timeout']       	=  isset( $input['at_user_timeout'] ) ? $input['at_user_timeout'] : '0.05.00';
 
 				$valid['at_send_email']       	= (bool) empty( $input['at_send_email'] ) ? false : true;
 
@@ -353,11 +371,21 @@ class AdminTools {
 									<th>Date/Time</th>
 									<th>IP Address</th>
 								</tr>
-							</thead>
+							</thead>';
 
-							<!-- tr and ths for each logged in user that never logged out -->
+							 $at_users = get_option( 'at_users' );
 
-						</table>
+							 $at_users_entries = preg_split( '/[\s:]+/', $at_users );
+
+							 foreach ( $at_users_entries as &$user) {
+
+								 $user_data = preg_split ("/[\s,]+/", $user); ;
+
+								 echo '<tr>' . '<th>' . $user_data[0] . '</th>' . '<th>' . $user_data[1] . '</th>' . '<th>' . $user_data[2] . '</th> . </tr>';
+
+							 }
+
+						echo '</table>
 
 
 
@@ -384,15 +412,15 @@ class AdminTools {
 
 			}
 
-			// public function at_text_field_callback() {
-			//
-			// 	// print the HTML to create the field
-			// 	printf(
-			// 		'<input id="at_settings1" name="at_options[at_settings1]" type="text" value="%1$s" />',
-			// 		self::$options['at_settings1']
-			// 	);
-			//
-			// }
+			public function at_user_timeout_callback() {
+
+				// print the HTML to create the field
+				printf(
+					'<input id="at_user_timeout" name="at_options[at_user_timeout]" type="text" value="%1$s" /> %2$s',
+					self::$options['at_user_timeout'], 'minutes'
+				);
+
+			}
 
 			public function at_send_email_callback() {
 

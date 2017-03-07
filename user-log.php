@@ -19,7 +19,11 @@ class UserLog extends AdminTools {
 	         if ( is_user_logged_in() ) {
 	             $current_user = wp_get_current_user();
 
-	            update_option( 'at_users', get_option( 'at_users' ) . ':' . $current_user->user_login . ',' . [ $this, 'get_user_ip' ] );
+							 $timestamp = date('Y-m-d');
+
+							 $at_users_update = get_option( 'at_users' ) . ':' . $current_user->user_login . ',' . $timestamp . ',' . $this->get_user_ip();
+
+	            update_option( 'at_users', $at_users_update );
 
 	         }
 	 }
