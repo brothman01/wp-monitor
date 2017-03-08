@@ -318,71 +318,68 @@ class AdminTools {
 
 			public function at_dashboard_callback() {
 
-				echo '<div id="dashboard_main">';
+					echo '<div id="dashboard_main">
 
-				echo '<h1 style="text-align: center;">Site Status:</h1>';
+					<h1 style="text-align: center;">Site Status:</h1>
 
-					echo '<div class="twothirds">';
 
-						echo '<div class="onequarter cell">
+
+					<div class="twothirds">
+
+						<div class="onequarter cell">
 						<h3 style="text-align: center;">Plugins:</h3>
 
 							<div class="guage">
-								<div class="guage_filling">&nbsp;' .
-								( sizeof( get_plugins() ) - self::$updates['plugins'] ) . ' / ' . sizeof( get_plugins() ) .
+								<div class="guage_filling">&nbsp;' . ( sizeof( get_plugins() ) - self::$updates['plugins'] ) . ' / ' . sizeof( get_plugins() ) .
 
 								'</div>
 							</div>
 
-						</div>';
+						</div>
 
-						echo '<div class="onequarter cell">
+						<div class="onequarter cell">
 						<h3 style="text-align: center;">Themes:</h3>
 
 							<div class="guage">
-								<div class="guage_filling">&nbsp;' .
-								sizeof( wp_get_themes() ) . '
-								</div>
+								<div class="guage_filling">&nbsp;' . sizeof( wp_get_themes() ) .
+								'</div>
 							</div>
 
-						</div>';
+						</div>
 
-						echo '<div class="onequarter cell">
+						<div class="onequarter cell">
 						<h3 style="text-align: center;">WordPress Core:</h3>
 
 							<div class="guage">
-								<div class="guage_filling">&nbsp;' .
-								self::$updates['WordPress'] . '
+								<div class="guage_filling">&nbsp;' . self::$updates['WordPress'] . '
 								</div>
 							</div>
 
-						</div>';
+						</div>
 
-						echo '<div class="onequarter cell">
+						<div class="onequarter cell">
 						<h3 style="text-align: center;">PHP:</h3>
 
 							<div class="guage">
-								<div class="guage_filling">&nbsp;' .
-								self::$updates['PHP'] .
+								<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
 								'</div>
 							</div>
 
-						</div>';
+						</div>
 
 
 
-						echo '<div class="onethird cell">
+						<div class="onethird cell">
 						<h3 style="text-align: center;">SSL:</h3>
 
 							<div class="guage">
-								<div class="guage_filling">&nbsp;' .
-								$this->sslCheck() .
+								<div class="guage_filling">&nbsp;' . $this->sslCheck() .
 								'</div>
 							</div>
 
-						</div>';
+						</div>
 
-						echo '<div class="onethird cell">
+						<div class="onethird cell">
 						<h3 style="text-align: center;">???:</h3>
 
 							<div class="guage">
@@ -390,25 +387,25 @@ class AdminTools {
 								</div>
 							</div>
 
-						</div>';
+						</div>
 
-						echo '<div class="onethird cell">
-						<h3 style="text-align: center;">Logged In Users:</h3>';
+						<div class="onethird cell">
+						<h3 style="text-align: center;">???:</h3>
+						test
+						</div>
+
+						</div>
 
 
 
 
 
+						<div class="onethird" style="border: solid green 1px;">
 
-						echo '</div>';
+						<div class="half">
 
-						echo '</div>';
+								<table class="wp-list-table widefat fixed striped">
 
-						echo '<div class="onethird">';
-
-						echo '<div class="half">
-
-								<table class="wp-list-table widefat fixed striped logs">
 							<thead>
 								<tr>
 									<th>Username</th>
@@ -429,7 +426,7 @@ class AdminTools {
 
 								 if ( $display_counter < 12 ) {
 
-								 	echo '<tr>' .
+									echo '<tr>' .
 									'<th>' . '<a href="' . get_edit_user_link( $user_data[1] ) . '">' . $user_data[0] . '</a>' . '</th>' .
 									'<th>' . $user_data[2] . '</th>' .
 									'<th>' . $user_data[3] . '</th>' .
@@ -446,20 +443,20 @@ class AdminTools {
 							 }
 
 						echo '</table>
-						</div>';
 
-						echo '<div class="half">test text sheebarl</div>';
+						</div>
 
-						// '<img id="status_icon" src="' . plugin_dir_url( __FILE__ ) . 'library/images/good-icon.png" /> <!-- will be conditional -->
-										//<h2>Site is OK.</h2>';
+						<div class="half" style="background: black;">
 
+						test text sheebarl
 
-						echo '</div>';
-
-					echo '</div>';
+						</div>
 
 
-				echo '</div>';
+
+						</div>
+
+					</div>';
 
 			}
 
