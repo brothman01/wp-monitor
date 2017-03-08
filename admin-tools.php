@@ -402,7 +402,66 @@ class AdminTools {
 
 						<div class="onethird" style="border: solid green 1px;">
 
+
 						<div class="half">
+						<h3 style="text-align: center;">Variables</h3>
+
+						<table class="wp-list-table widefat fixed striped">
+
+					<thead>
+						<tr>
+							<th>Variable</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+
+						<tr>
+						<th>WP Version</th>
+						<th>' . get_bloginfo('version') .'</th>
+						</tr>
+
+						<tr>
+						<th>Name</th>
+						<th>' . get_bloginfo('name') .'</th>
+						</tr>
+
+						<tr>
+						<th>URL</th>
+						<th>' . get_bloginfo('url') .'</th>
+						</tr>
+
+						<tr>
+						<th>Charset</th>
+						<th>' . get_bloginfo('charset') .'</th>
+						</tr>
+
+						<tr>
+						<th>Admin Email</th>
+						<th>' . get_bloginfo('admin_email') .'</th>
+						</tr>
+
+						<tr>
+						<th>Language</th>
+						<th>' . get_bloginfo('language') .'</th>
+						</tr>
+
+						<tr>
+						<th>Stylesheet Directory</th>
+						<th>' . get_bloginfo('stylesheet_directory') .'</th>
+						</tr>
+
+						<tr>
+						<th>Atom URL</th>
+						<th>' . get_bloginfo('atom_url') .'</th>
+						</tr>
+
+
+						</table>
+
+						</div>
+
+						<div class="half">
+						<h3 style="text-align: center;">Logged-in Users:</h3>
 
 								<table class="wp-list-table widefat fixed striped">
 
@@ -445,13 +504,6 @@ class AdminTools {
 						echo '</table>
 
 						</div>
-
-						<div class="half" style="background: black;">
-
-						test text sheebarl
-
-						</div>
-
 
 
 						</div>
