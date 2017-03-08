@@ -16,16 +16,19 @@ class UserLog extends AdminTools {
 		}
 
 		public function get_user_information() {
-	         if ( is_user_logged_in() ) {
-	             $current_user = wp_get_current_user();
+
+			if ( is_user_logged_in() ) {
+
+						 $current_user = wp_get_current_user();
 
 							 $timestamp = date('Y-m-d');
 
-							 $at_users_update = get_option( 'at_users' ) . ':' . $current_user->user_login . ',' . $timestamp . ',' . $this->get_user_ip();
+							 $at_users_update = get_option( 'at_users' ) . ':' . $current_user->user_login . ',' . $current_user->ID . ',' . $timestamp . ',' . $this->get_user_ip();
 
-	            update_option( 'at_users', $at_users_update );
+							 update_option( 'at_users', $at_users_update );
 
-	         }
+		}
+
 	 }
 
 	 public function get_user_ip() {

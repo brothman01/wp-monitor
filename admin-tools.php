@@ -68,8 +68,34 @@ class AdminTools {
 		// enqueue the admin stylesheet
 		add_action( 'admin_enqueue_scripts', [ $this, 'at_enqueue_admin_styles' ] );
 
+		// dashboard widget
+		add_action( 'admin_footer', [ $this, 'at_custom_dashboard_widget' ] );
+
 
 	}
+
+	function at_custom_dashboard_widget() {
+	// Bail if not viewing the main dashboard page
+	if ( get_current_screen()->base !== 'dashboard' ) {
+		return;
+	}
+	?>
+
+	<div id="custom-id" class="welcome-panel" style="display: none;">
+
+		<?php $this->at_dashboard_callback(); ?>
+
+	</div>
+
+	<script>
+		jQuery(document).ready(function($) {
+
+			$('#welcome-panel').after($('#custom-id').show());
+
+		});
+	</script>
+
+<?php }
 
 	public function at_add_plugin_page() {
 
@@ -98,7 +124,7 @@ class AdminTools {
 		add_settings_section(
 			'general_section_id', // id for use in id attribute
 			'General Settings', // title of the section
-			[ $this, 'at_email_section_callback' ], // callback function
+			[ $this, 'at_general_section_callback' ], // callback function
 			'options_page' // page
 		);
 
@@ -292,12 +318,13 @@ class AdminTools {
 
 			public function at_dashboard_callback() {
 
-				echo '<div id="dashboard_main">
+				echo '<div id="dashboard_main">';
 
+				echo '<h1 style="text-align: center;">Site Status:</h1>';
 
-					<div class="twothirds">
+					echo '<div class="twothirds">';
 
-						<div class="onequarter cell">
+						echo '<div class="onequarter cell">
 						<h3 style="text-align: center;">Plugins:</h3>
 
 							<div class="guage">
@@ -307,19 +334,20 @@ class AdminTools {
 								'</div>
 							</div>
 
-						</div>
+						</div>';
 
-						<div class="onequarter cell">
+						echo '<div class="onequarter cell">
 						<h3 style="text-align: center;">Themes:</h3>
+
 							<div class="guage">
 								<div class="guage_filling">&nbsp;' .
 								sizeof( wp_get_themes() ) . '
 								</div>
 							</div>
 
-						</div>
+						</div>';
 
-						<div class="onequarter cell">
+						echo '<div class="onequarter cell">
 						<h3 style="text-align: center;">WordPress Core:</h3>
 
 							<div class="guage">
@@ -328,19 +356,33 @@ class AdminTools {
 								</div>
 							</div>
 
-						</div>
+						</div>';
 
-						<div class="onequarter cell">
+						echo '<div class="onequarter cell">
 						<h3 style="text-align: center;">PHP:</h3>
 
 							<div class="guage">
-								<div class="guage_filling">&nbsp;
-								</div>
+								<div class="guage_filling">&nbsp;' .
+								self::$updates['PHP'] .
+								'</div>
 							</div>
 
-						</div>
+						</div>';
 
-						<div class="onethird cell">
+
+
+						echo '<div class="onethird cell">
+						<h3 style="text-align: center;">SSL:</h3>
+
+							<div class="guage">
+								<div class="guage_filling">&nbsp;' .
+								$this->sslCheck() .
+								'</div>
+							</div>
+
+						</div>';
+
+						echo '<div class="onethird cell">
 						<h3 style="text-align: center;">???:</h3>
 
 							<div class="guage">
@@ -348,23 +390,25 @@ class AdminTools {
 								</div>
 							</div>
 
-						</div>
+						</div>';
 
-						<div class="onethird cell">
-						<h3 style="text-align: center;">???:</h3>
-
-							<div class="guage">
-								<div class="guage_filling">&nbsp;
-								</div>
-							</div>
-
-						</div>
-
-						<div class="onethird cell">
-						<h3 style="text-align: center;">Logged In Users:</h3>
+						echo '<div class="onethird cell">
+						<h3 style="text-align: center;">Logged In Users:</h3>';
 
 
-						<table class="wp-list-table widefat fixed striped logs">
+
+
+
+
+						echo '</div>';
+
+						echo '</div>';
+
+						echo '<div class="onethird">';
+
+						echo '<div class="half">
+
+								<table class="wp-list-table widefat fixed striped logs">
 							<thead>
 								<tr>
 									<th>Username</th>
@@ -377,38 +421,71 @@ class AdminTools {
 
 							 $at_users_entries = preg_split( '/[\s:]+/', $at_users );
 
+							 $display_counter = 0;
+
 							 foreach ( $at_users_entries as &$user) {
 
 								 $user_data = preg_split ("/[\s,]+/", $user); ;
 
-								 echo '<tr>' . '<th>' . $user_data[0] . '</th>' . '<th>' . $user_data[1] . '</th>' . '<th>' . $user_data[2] . '</th> . </tr>';
+								 if ( $display_counter < 12 ) {
+
+								 	echo '<tr>' .
+									'<th>' . '<a href="' . get_edit_user_link( $user_data[1] ) . '">' . $user_data[0] . '</a>' . '</th>' .
+									'<th>' . $user_data[2] . '</th>' .
+									'<th>' . $user_data[3] . '</th>' .
+									'</tr>';
+
+									$display_counter++;
+
+								} else {
+
+									return;
+
+								}
 
 							 }
 
 						echo '</table>
+						</div>';
+
+						echo '<div class="half">test text sheebarl</div>';
+
+						// '<img id="status_icon" src="' . plugin_dir_url( __FILE__ ) . 'library/images/good-icon.png" /> <!-- will be conditional -->
+										//<h2>Site is OK.</h2>';
 
 
+						echo '</div>';
 
-						</div>
+					echo '</div>';
 
 
-					</div>
-
-					<div class="onethird">
-						<center>
-						<img src="' . plugin_dir_url( __FILE__ ) . 'library/images/good-icon.png" /> <!-- will be conditional -->
-						<h2>Site is OK.</h2>
-						</center>
-					</div>
-
-				</div>';
+				echo '</div>';
 
 			}
 
+			public function sslCheck() {
+
+				if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on') {
+
+    			return 'SSL Not Installed';
+
+				} else {
+
+					return 'SSL Installed';
+
+				}
+
+			}
+
+			public function at_general_section_callback() {
+
+				echo 'Edit the settings for the plugin here.';
+
+			}
 
 			public function at_email_section_callback() {
 
-				echo 'Select the settings for the email.';
+				echo 'Edit the settings for the email here.';
 
 			}
 
