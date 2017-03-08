@@ -24,7 +24,7 @@
 .twothirds {
 	float: left;
 	width: 65%;
-	border: solid blue 1px;
+
 }
 
 .guage {
@@ -37,7 +37,7 @@
 
 .cell {
 	margin-bottom: 4%;
-	border: solid red 1px;
+
 }
 
 .guage_filling {

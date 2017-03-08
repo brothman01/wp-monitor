@@ -391,7 +391,12 @@ class AdminTools {
 
 						<div class="onethird cell">
 						<h3 style="text-align: center;">???:</h3>
-						test
+
+							<div class="guage">
+								<div class="guage_filling">&nbsp;
+								</div>
+							</div>
+
 						</div>
 
 						</div>
