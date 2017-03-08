@@ -405,7 +405,7 @@ class AdminTools {
 
 
 
-						<div class="onethird" style="border: solid green 1px;">
+						<div class="onethird" >
 
 
 						<div class="half">
