@@ -1,13 +1,6 @@
-.justgage_container {
-		width: 450px;
-		margin: 0 auto;
-		text-align: center;
-		background: green;
-}
-
-.gauge {
-		width: 450px;
-		height: 450px;
+#gauge {
+		width: 300px!important;
+		height: 300px!important;
 }
 
 a:link.button,

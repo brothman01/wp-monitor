@@ -223,7 +223,7 @@ class AdminTools {
 				'WordPress'	=>	$update_data['counts']['themes'],
 				'PHP' => phpversion(),
 			);
-
+			// http://php.net/supported-versions.php
 			// print_r( self::$updates );
 
 	}
@@ -345,47 +345,77 @@ class AdminTools {
 					<div class="twothirds">
 
 						<div class="onequarter cell">
-						<h3 style="text-align: center;">Plugins:</h3>' .
 
-							// '<div class="guage">
-							// 	<div class="guage_filling">&nbsp;' . ( sizeof( get_plugins() ) - self::$updates['plugins'] ) . ' / ' . sizeof( get_plugins() ) .
-							//
-							// 	'</div>
-							// </div>
-
-										'<div id="g1" class="gauge"></div>
-											<script>
-											var g1;
-									document.addEventListener("DOMContentLoaded", function(event) {
-										var g1 = new JustGage(
+							<div id="g1" class="gauge"></div>
+								<script>
+									var g1;
+									document.addEventListener( "DOMContentLoaded", function( event ) {
+										var g1 = new JustGage( {
 											id: "g1",
-											value: 67,
+											value: ' . ( sizeof( get_plugins() ) - self::$updates['plugins'] ) . ',
 											min: 0,
-											max: 100,
-											title: "Visitors"
-										);
-											</script>
+											max: ' . sizeof( get_plugins() ) . ',
+											title: "Plugins"
+											} );
+									} );
+								</script>
+
+						</div>
+
+						<div class="onequarter cell">
+
+						<div id="g2" class="gauge"></div>
+							<script>
+								var g2;
+								document.addEventListener( "DOMContentLoaded", function( event ) {
+									var g2 = new JustGage( {
+										id: "g2",
+										value: ' . ( sizeof( wp_get_themes() ) - self::$updates['themes'] ) . ',
+										min: 0,
+										max: ' . sizeof( wp_get_themes() ) . ',
+										title: "Themes"
+										} );
+								} );
+							</script>
 
 
 						</div>
 
 						<div class="onequarter cell">
-						<h3 style="text-align: center;">Themes:</h3>
+						<h3 style="text-align: center; color: #999999;">WordPress Core</h3>
 
-							<div class="guage">
-								<div class="guage_filling">&nbsp;' . sizeof( wp_get_themes() ) .
-								'</div>
-							</div>
+							<div class="gauge indicator">
 
-						</div>
+									<div class="indicator_light" id="wordpress_red_light">&nbsp;</div>
 
-						<div class="onequarter cell">
-						<h3 style="text-align: center;">WordPress Core:</h3>
+									<div class="indicator_light">&nbsp;</div>
 
-							<div class="guage">
-								<div class="guage_filling">&nbsp;' . self::$updates['WordPress'] . '
-								</div>
-							</div>
+									<div class="indicator_light" id="wordpress_green_light">&nbsp;</div>
+
+								<script>
+
+									document.addEventListener( "DOMContentLoaded", function( event ) {
+
+										var wordpress_green_light = document.getElementById("wordpress_green_light");
+
+										var wordpress_red_light = document.getElementById("wordpress_red_light");
+
+										if (' . self::$updates['WordPress'] .' == 0) {
+
+											wordpress_green_light.style.background = "#01FC27";
+
+										} else {
+
+											wordpress_red_light.style.background = "red";
+
+										}
+
+									} );
+								</script>' .
+
+
+
+							'</div>
 
 						</div>
 
@@ -399,6 +429,8 @@ class AdminTools {
 
 						</div>
 
+
+						<div id="second_gauge_row" style="width: 100%; float: left;">
 
 
 						<div class="onethird cell">
@@ -431,6 +463,16 @@ class AdminTools {
 
 						</div>
 
+
+
+
+
+						</div>
+
+
+
+
+
 						</div>
 
 
@@ -440,7 +482,7 @@ class AdminTools {
 						<div class="onethird" >
 
 
-						<div class="half">
+						<div class="half left_half">
 						<h3 style="text-align: center;">Variables</h3>
 
 						<table class="wp-list-table widefat fixed striped at_table">
@@ -620,8 +662,6 @@ class AdminTools {
 		wp_register_script( 'at_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
 		wp_enqueue_script( 'at_justgage' );
 
-		wp_register_script( 'at_gage_init',  plugin_dir_url( __FILE__ ) . '/library/js/gage-init.js' );
-		wp_enqueue_script( 'at_gage_init' );
 
 	}
 

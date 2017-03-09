@@ -21,6 +21,10 @@
 	width: 49%;
 }
 
+.left_half {
+		margin-right: 10px;
+}
+
 .twothirds {
 	float: left;
 	width: 65%;
@@ -45,12 +49,26 @@
 	padding: 5px 5px;
 	width: 40%;
 	border-radius: 0%;
-
 }
 
 .at_table {
 	display: block;
-	height: 220px;
+	height: 280px;
 	overflow-y: scroll;
-	margin-right: 14px !important;
+}
+
+.indicator {
+	width: 50%;
+	margin-top: 15%;
+	margin: 0px auto;
+	padding: 10px 10px;
+}
+
+.indicator_light {
+	width: 35px;
+	height: 35px;
+	float: left;
+	background: #EDEBEB;
+	border-radius: 100%;
+	margin-right: 5%;
 }
