@@ -14,6 +14,8 @@ class AdminTools {
 
 	public static $options;
 
+	public static $grades;
+
 	public function __construct() {
 
 		// get option 'at_options' value from the database and put it in the array $options
@@ -382,7 +384,7 @@ class AdminTools {
 						</div>
 
 						<div class="onequarter cell">
-						<h3 style="text-align: center; color: #999999;">WordPress Core</h3>
+						<h3>WordPress Core</h3>
 
 							<div class="gauge indicator">
 
@@ -420,7 +422,7 @@ class AdminTools {
 						</div>
 
 						<div class="onequarter cell">
-						<h3 style="text-align: center;">PHP:</h3>
+						<h3>PHP:</h3>
 
 							<div class="guage">
 								<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
@@ -429,12 +431,10 @@ class AdminTools {
 
 						</div>
 
-
 						<div id="second_gauge_row" style="width: 100%; float: left;">
 
-
 						<div class="onethird cell">
-						<h3 style="text-align: center;">SSL:</h3>
+						<h3>SSL:</h3>
 
 							<div class="guage">
 								<div class="guage_filling">&nbsp;' . $this->ssl_check() .
@@ -444,22 +444,69 @@ class AdminTools {
 						</div>
 
 						<div class="onethird cell">
-						<h3 style="text-align: center;">???:</h3>
+						<h3>SSL:</h3>
 
 							<div class="guage">
-								<div class="guage_filling">&nbsp;
+								<div class="guage_filling">&nbsp;' . $this->ssl_check() .
+								'</div>
+							</div>
+
+						</div>
+
+						<div class="onethird cell">
+						<h3>SSL:</h3>
+
+							<div class="guage">
+								<div class="guage_filling">&nbsp;' . $this->ssl_check() .
+								'</div>
+							</div>
+
+						</div>
+
+						</div>
+
+						<div id="third_gauge_row" style="width: 100%; float: left;">
+
+
+						<div class="onethird cell">
+						<h3>SSL:</h3>
+
+							<div class="guage">
+								<div class="guage_filling">&nbsp;' . $this->ssl_check() .
+								'</div>
+							</div>
+
+						</div>
+
+						<div class="onethird cell">
+						<h3>???:</h3>
+
+							<div class="guage">
+								<div class="guage_filling">&nbsp;' . ini_get("SMTP") . '
 								</div>
 							</div>
 
 						</div>
 
 						<div class="onethird cell">
-						<h3 style="text-align: center;">???:</h3>
+						<h3>Overall Grade</h3>
 
-							<div class="guage">
-								<div class="guage_filling">&nbsp;
-								</div>
+						<div class="gauge overall">
+
+							A+
+
 							</div>
+
+
+							<script>
+
+								document.addEventListener( "DOMContentLoaded", function( event ) {
+
+									//var wordpress_green_light = document.getElementById("wordpress_green_light");
+
+
+								} );
+							</script>
 
 						</div>
 
@@ -500,6 +547,11 @@ class AdminTools {
 						</tr>
 
 						<tr>
+						<th>PHP Version</th>
+						<th>' . phpversion() .'</th>
+						</tr>
+
+						<tr>
 						<th>Name</th>
 						<th>' . get_bloginfo('name') .'</th>
 						</tr>
@@ -533,6 +585,18 @@ class AdminTools {
 						<th>Atom URL</th>
 						<th>' . get_bloginfo('atom_url') .'</th>
 						</tr>
+
+						<tr>
+						<th>SMTP</th>
+						<th>' . ini_get("SMTP") .'</th>
+						</tr>
+
+						<tr>
+						<th>Memory Limit</th>
+						<th>' . ini_get("memory_limit") .'</th>
+						</tr>
+
+
 
 
 						</table>

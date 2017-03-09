@@ -41,8 +41,13 @@
 
 .cell {
 	margin-bottom: 4%;
-
 }
+
+	.cell h3 {
+		text-align: center;
+		color: #999999;
+		margin-bottom: 5%;
+	}
 
 .guage_filling {
 	background: red;
@@ -53,7 +58,7 @@
 
 .at_table {
 	display: block;
-	height: 280px;
+	height: 500px;
 	overflow-y: scroll;
 }
 
@@ -64,11 +69,16 @@
 	padding: 10px 10px;
 }
 
-.indicator_light {
-	width: 35px;
-	height: 35px;
-	float: left;
-	background: #EDEBEB;
-	border-radius: 100%;
-	margin-right: 5%;
+		.indicator_light {
+			width: 35px;
+			height: 35px;
+			float: left;
+			background: #EDEBEB;
+			border-radius: 100%;
+			margin-right: 5%;
+		}
+
+.overall {
+	font-size: 48px;
+	text-align: center;
 }
