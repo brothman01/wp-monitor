@@ -4,34 +4,27 @@ class UserLog extends AdminTools {
 
 		public function __construct() {
 
+			add_action('loop_start', [ $this, 'store_last_login' ], 10, 2);
 
-			if ( null == ( get_option( 'at_users' ) ) ) {
-
-				add_option( 'at_users', '' );
-
-			}
-
-			add_action( 'loop_start', [ $this, 'get_user_information' ] );
+			//add_action('wp_logout', [ $this, 'at_user_logged_out' ] );
 
 		}
 
-		public function get_user_information() {
+		public function store_last_login( $current_user ) {
 
-			if ( is_user_logged_in() ) {
+				$current_user = get_currentuserinfo();
 
-						 $current_user = wp_get_current_user();
+ 				$user = $current_user->user_login;
 
-							 $timestamp = date('Y-m-d');
+		    update_user_meta($current_user->ID, 'last_login_timestamp', current_time('mysql', 1));
 
-							 $at_users_update = get_option( 'at_users' ) . ':' . $current_user->user_login . ',' . $current_user->ID . ',' . $timestamp . ',' . $this->get_user_ip();
-
-							 update_option( 'at_users', $at_users_update );
+				update_user_meta($current_user->ID, 'last_ip', $this->at_get_user_ip() );
 
 		}
 
-	 }
 
-	 public function get_user_ip() {
+
+	 public function at_get_user_ip() {
 
 		 if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 

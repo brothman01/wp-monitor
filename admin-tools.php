@@ -316,6 +316,24 @@ class AdminTools {
 
 			}
 
+			function list_online_users() {
+
+				$all_users = get_users( 'blog_id=1' );
+
+				foreach ($all_users as $user) {
+
+						echo '<tr>' .
+						'<th>' . $user->user_login . '</th>' .
+						'<th>' . get_user_meta(  $user->ID, 'last_login_timestamp', true ) . '</th>' .
+
+						'<th>' . get_user_meta(  $user->ID, 'last_ip', true ) . '</th>' .
+
+						'</tr>';
+
+				}
+
+		}
+
 			public function at_dashboard_callback() {
 
 					echo '<div id="dashboard_main">
@@ -327,13 +345,18 @@ class AdminTools {
 					<div class="twothirds">
 
 						<div class="onequarter cell">
-						<h3 style="text-align: center;">Plugins:</h3>
+						<h3 style="text-align: center;">Plugins:</h3>' .
 
-							<div class="guage">
-								<div class="guage_filling">&nbsp;' . ( sizeof( get_plugins() ) - self::$updates['plugins'] ) . ' / ' . sizeof( get_plugins() ) .
+							// '<div class="guage">
+							// 	<div class="guage_filling">&nbsp;' . ( sizeof( get_plugins() ) - self::$updates['plugins'] ) . ' / ' . sizeof( get_plugins() ) .
+							//
+							// 	'</div>
+							// </div>
 
-								'</div>
-							</div>
+										'<div class="container">
+				        			<div id="g1" class="gauge"></div>
+				    				</div>
+
 
 						</div>
 
@@ -373,7 +396,7 @@ class AdminTools {
 						<h3 style="text-align: center;">SSL:</h3>
 
 							<div class="guage">
-								<div class="guage_filling">&nbsp;' . $this->sslCheck() .
+								<div class="guage_filling">&nbsp;' . $this->ssl_check() .
 								'</div>
 							</div>
 
@@ -411,7 +434,7 @@ class AdminTools {
 						<div class="half">
 						<h3 style="text-align: center;">Variables</h3>
 
-						<table class="wp-list-table widefat fixed striped">
+						<table class="wp-list-table widefat fixed striped at_table">
 
 					<thead>
 						<tr>
@@ -466,45 +489,22 @@ class AdminTools {
 						</div>
 
 						<div class="half">
-						<h3 style="text-align: center;">Logged-in Users:</h3>
+						<h3 style="text-align: center;">User Logins:</h3>
 
-								<table class="wp-list-table widefat fixed striped">
+								<table class="wp-list-table widefat fixed striped at_table">
 
-							<thead>
-								<tr>
-									<th>Username</th>
-									<th>Date/Time</th>
-									<th>IP Address</th>
-								</tr>
-							</thead>';
+									<thead>
+										<tr>
+											<th>Username</th>
+											<th>Date/Time</th>
+											<th>Last IP Used</th>
+										</tr>
+									</thead>';
 
-							 $at_users = get_option( 'at_users' );
 
-							 $at_users_entries = preg_split( '/[\s:]+/', $at_users );
 
-							 $display_counter = 0;
+							 $this->list_online_users();
 
-							 foreach ( $at_users_entries as &$user) {
-
-								 $user_data = preg_split ("/[\s,]+/", $user); ;
-
-								 if ( $display_counter < 12 ) {
-
-									echo '<tr>' .
-									'<th>' . '<a href="' . get_edit_user_link( $user_data[1] ) . '">' . $user_data[0] . '</a>' . '</th>' .
-									'<th>' . $user_data[2] . '</th>' .
-									'<th>' . $user_data[3] . '</th>' .
-									'</tr>';
-
-									$display_counter++;
-
-								} else {
-
-									return;
-
-								}
-
-							 }
 
 						echo '</table>
 
@@ -517,17 +517,9 @@ class AdminTools {
 
 			}
 
-			public function sslCheck() {
+			public function ssl_check() {
 
-				if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on') {
-
-    			return 'SSL Not Installed';
-
-				} else {
-
-					return 'SSL Installed';
-
-				}
+    		return is_ssl() ? 'SSL Installed' : 'SSL Not Installed';
 
 			}
 
@@ -608,6 +600,19 @@ class AdminTools {
 
 		wp_register_style( 'at_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
 		wp_enqueue_style( 'at_admin_css' );
+
+		/* Gauges */
+		wp_register_style( 'at_justgage_css',  plugin_dir_url( __FILE__ ) . '/library/css/justgage.css', false, '1.0.0' );
+		wp_enqueue_style( 'at_justgage_css' );
+
+		wp_register_script( 'at_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js' );
+		wp_enqueue_script( 'at_raphael' );
+
+		wp_register_script( 'at_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
+		wp_enqueue_script( 'at_justgage' );
+
+		wp_register_script( 'at_gage_init',  plugin_dir_url( __FILE__ ) . '/library/js/gage-init.js' );
+		wp_enqueue_script( 'at_gage_init' );
 
 	}
 

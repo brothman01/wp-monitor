@@ -48,7 +48,9 @@
 
 }
 
-table {
-   overflow-y: scroll;
-   max-height: 120px;
+.at_table {
+	display: block;
+	height: 220px;
+	overflow-y: scroll;
+	margin-right: 14px !important;
 }
