@@ -353,9 +353,18 @@ class AdminTools {
 							// 	'</div>
 							// </div>
 
-										'<div class="container">
-				        			<div id="g1" class="gauge"></div>
-				    				</div>
+										'<div id="g1" class="gauge"></div>
+											<script>
+											var g1;
+									document.addEventListener("DOMContentLoaded", function(event) {
+										var g1 = new JustGage(
+											id: "g1",
+											value: 67,
+											min: 0,
+											max: 100,
+											title: "Visitors"
+										);
+											</script>
 
 
 						</div>

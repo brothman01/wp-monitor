@@ -1,7 +1,8 @@
-.container {
+.justgage_container {
 		width: 450px;
 		margin: 0 auto;
 		text-align: center;
+		background: green;
 }
 
 .gauge {
