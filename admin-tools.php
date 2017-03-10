@@ -200,12 +200,12 @@ class AdminTools {
 
 		public function dashboard_section() {
 
-			add_settings_section(
-				'options_dashboard_id', // id for use in id attribute
-				'Site Status', // title of the section
-				[ $this, 'at_dashboard_callback' ], // callback function
-				'options_page' // page
-			);
+			// add_settings_section(
+			// 	'options_dashboard_id', // id for use in id attribute
+			// 	'Site Status', // title of the section
+			// 	[ $this, 'at_dashboard_callback' ], // callback function
+			// 	'options_page' // page
+			// );
 
 		}
 
@@ -220,10 +220,15 @@ class AdminTools {
 			$update_data = wp_get_update_data();
 
 			self::$updates = array(
+
 				'plugins'	=>	$update_data['counts']['plugins'],
+
 				'themes'	=>	$update_data['counts']['themes'],
+
 				'WordPress'	=>	$update_data['counts']['themes'],
+
 				'PHP' => phpversion(),
+
 			);
 			// http://php.net/supported-versions.php
 			// print_r( self::$updates );
@@ -340,133 +345,151 @@ class AdminTools {
 
 					echo '<div id="dashboard_main">
 
-					<h1 style="text-align: center;">Site Status:</h1>
-
-
 
 					<div class="twothirds">
 
-						<div class="onequarter cell">
+						<h1 style="text-align: center; background: #F9F9F9;">Site Status:</h1>
 
-							<div id="g1" class="gauge"></div>
-								<script>
-									var g1;
-									document.addEventListener( "DOMContentLoaded", function( event ) {
-										var g1 = new JustGage( {
-											id: "g1",
-											value: ' . ( sizeof( get_plugins() ) - self::$updates['plugins'] ) . ',
-											min: 0,
-											max: ' . sizeof( get_plugins() ) . ',
-											title: "Plugins"
+						<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">
+							<h3>Updates</h3>
+
+								<div class="onequarter cell">
+
+									<div id="g1" class="gauge"></div>
+										<script>
+											var g1;
+											document.addEventListener( "DOMContentLoaded", function( event ) {
+												var g1 = new JustGage( {
+													id: "g1",
+													value: ' . ( sizeof( get_plugins() ) - self::$updates['plugins'] ) . ',
+													min: 0,
+													max: ' . sizeof( get_plugins() ) . ',
+													title: "Plugins"
+													} );
 											} );
-									} );
-								</script>
+										</script>
 
-						</div>
+								</div>
 
-						<div class="onequarter cell">
+								<div class="onequarter cell">
 
-						<div id="g2" class="gauge"></div>
-							<script>
-								var g2;
-								document.addEventListener( "DOMContentLoaded", function( event ) {
-									var g2 = new JustGage( {
-										id: "g2",
-										value: ' . ( sizeof( wp_get_themes() ) - self::$updates['themes'] ) . ',
-										min: 0,
-										max: ' . sizeof( wp_get_themes() ) . ',
-										title: "Themes"
+								<div id="g2" class="gauge"></div>
+									<script>
+										var g2;
+										document.addEventListener( "DOMContentLoaded", function( event ) {
+											var g2 = new JustGage( {
+												id: "g2",
+												value: ' . ( sizeof( wp_get_themes() ) - self::$updates['themes'] ) . ',
+												min: 0,
+												max: ' . sizeof( wp_get_themes() ) . ',
+												title: "Themes"
+												} );
 										} );
-								} );
-							</script>
+									</script>
 
+
+								</div>
+
+								<div class="onequarter cell">
+								<h3>WordPress Core</h3>
+
+									<div class="gauge indicator">
+
+										<div class="inner_indicator">
+
+											<div class="indicator_light" id="wordpress_red_light">&nbsp;</div>
+
+											<div class="indicator_light" id="wordpress_green_light">&nbsp;</div>
+
+											</div>
+
+												</div>
+
+										<script>
+
+											document.addEventListener( "DOMContentLoaded", function( event ) {
+
+												var wordpress_green_light = document.getElementById("wordpress_green_light");
+
+												var wordpress_red_light = document.getElementById("wordpress_red_light");
+
+												if (' . self::$updates['WordPress'] .' == 0) {
+
+													wordpress_green_light.style.background = "#01FC27";
+
+												} else {
+
+													wordpress_red_light.style.background = "red";
+
+												}
+
+											} );
+										</script>
+
+
+
+								</div>
+
+								<div class="onequarter cell">
+								<h3>PHP:</h3>
+
+									<div class="guage">
+										<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
+										'</div>
+									</div>
+
+							</div>
 
 						</div>
 
-						<div class="onequarter cell">
-						<h3>WordPress Core</h3>
-
-							<div class="gauge indicator">
-
-									<div class="indicator_light" id="wordpress_red_light">&nbsp;</div>
-
-									<div class="indicator_light">&nbsp;</div>
-
-									<div class="indicator_light" id="wordpress_green_light">&nbsp;</div>
-
-								<script>
-
-									document.addEventListener( "DOMContentLoaded", function( event ) {
-
-										var wordpress_green_light = document.getElementById("wordpress_green_light");
-
-										var wordpress_red_light = document.getElementById("wordpress_red_light");
-
-										if (' . self::$updates['WordPress'] .' == 0) {
-
-											wordpress_green_light.style.background = "#01FC27";
-
-										} else {
-
-											wordpress_red_light.style.background = "red";
-
-										}
-
-									} );
-								</script>' .
-
-
-
-							'</div>
-
-						</div>
+						<div id="second_gauge_row" style="width: 100%; float: left; background: #F9F9F9;">
+						<h3>Usage</h3>
 
 						<div class="onequarter cell">
-						<h3>PHP:</h3>
+						<h3>Visitor Count</h3>
 
 							<div class="guage">
 								<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
 								'</div>
 							</div>
 
-						</div>
+					</div>
 
-						<div id="second_gauge_row" style="width: 100%; float: left;">
-
-						<div class="onethird cell">
-						<h3>SSL:</h3>
+						<div class="onequarter cell">
+						<h3>Devices</h3>
 
 							<div class="guage">
-								<div class="guage_filling">&nbsp;' . $this->ssl_check() .
+								<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
 								'</div>
 							</div>
 
+					</div>
+
+					<div class="onequarter cell">
+					<h3>Browsers</h3>
+
+						<div class="guage">
+							<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
+							'</div>
 						</div>
 
-						<div class="onethird cell">
-						<h3>SSL:</h3>
+				</div>
 
-							<div class="guage">
-								<div class="guage_filling">&nbsp;' . $this->ssl_check() .
-								'</div>
-							</div>
+				<div class="onequarter cell">
+				<h3>Operating Systems</h3>
 
-						</div>
+					<div class="guage">
+						<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
+						'</div>
+					</div>
 
-						<div class="onethird cell">
-						<h3>SSL:</h3>
+			</div>
 
-							<div class="guage">
-								<div class="guage_filling">&nbsp;' . $this->ssl_check() .
-								'</div>
-							</div>
-
-						</div>
 
 						</div>
 
 						<div id="third_gauge_row" style="width: 100%; float: left;">
-
+						<h3>Summary</h3>
 
 						<div class="onethird cell">
 						<h3>SSL:</h3>
@@ -479,11 +502,10 @@ class AdminTools {
 						</div>
 
 						<div class="onethird cell">
-						<h3>???:</h3>
+						<h3>Total Updates</h3>
 
-							<div class="guage">
-								<div class="guage_filling">&nbsp;' . ini_get("SMTP") . '
-								</div>
+							<div class="gauge overall">
+								8
 							</div>
 
 						</div>
@@ -596,7 +618,10 @@ class AdminTools {
 						<th>' . ini_get("memory_limit") .'</th>
 						</tr>
 
-
+						<tr>
+						<th>Subscriptions</th>
+						<th>' . '???' .'</th>
+						</tr>
 
 
 						</table>
@@ -606,7 +631,27 @@ class AdminTools {
 						<div class="half">
 						<h3 style="text-align: center;">User Logins:</h3>
 
-								<table class="wp-list-table widefat fixed striped at_table">
+								<table class="wp-list-table widefat fixed striped at_half_table">
+
+									<thead>
+										<tr>
+											<th>Username</th>
+											<th>Date/Time</th>
+											<th>Last IP Used</th>
+										</tr>
+									</thead>';
+
+
+
+							 $this->list_online_users();
+
+
+						echo '</table>
+
+
+						<h3 style="text-align: center;">Referrals:</h3>
+
+								<table class="wp-list-table widefat fixed striped at_half_table">
 
 									<thead>
 										<tr>

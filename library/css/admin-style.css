@@ -58,7 +58,13 @@
 
 .at_table {
 	display: block;
-	height: 500px;
+	height: 700px;
+	overflow-y: scroll;
+}
+
+.at_half_table {
+	display: block;
+	height: 325px;
 	overflow-y: scroll;
 }
 
@@ -69,14 +75,20 @@
 	padding: 10px 10px;
 }
 
-		.indicator_light {
-			width: 35px;
-			height: 35px;
-			float: left;
-			background: #EDEBEB;
-			border-radius: 100%;
-			margin-right: 5%;
+		.inner_indicator {
+			width: 50%;
+			margin: 0px auto;
+			background: red;
 		}
+
+				.indicator_light {
+					width: 35px;
+					height: 35px;
+					float: left;
+					background: #EDEBEB;
+					border-radius: 100%;
+					margin-right: 5%;
+				}
 
 .overall {
 	font-size: 48px;
