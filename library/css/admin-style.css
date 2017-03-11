@@ -76,9 +76,9 @@
 }
 
 		.inner_indicator {
-			width: 50%;
+			text-align: center;
+			width: 70%;
 			margin: 0px auto;
-			background: red;
 		}
 
 				.indicator_light {
@@ -90,7 +90,16 @@
 					margin-right: 5%;
 				}
 
+	.timeline_canvas {
+		border: solid black 1px;
+		width: 100%;
+	}
+
 .overall {
-	font-size: 48px;
+	font-size: 58px;
 	text-align: center;
 }
+
+	#ssl_note {
+		font-size: 12px;
+	}

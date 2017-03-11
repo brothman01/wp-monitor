@@ -12,7 +12,7 @@ class UserLog extends AdminTools {
 
 		public function store_last_login( $current_user ) {
 
-				$current_user = get_currentuserinfo();
+				$current_user = wp_get_current_user();
 
  				$user = $current_user->user_login;
 

@@ -41,6 +41,10 @@ class AdminTools {
 		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'user-log.php' );
 
+		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
+
+		include_once( plugin_dir_path( __FILE__ ) . 'visitors.php' );
+
 		// other stuff
 		$this->init();
 
@@ -72,6 +76,8 @@ class AdminTools {
 
 		// dashboard widget
 		add_action( 'admin_footer', [ $this, 'at_custom_dashboard_widget' ] );
+
+		//print_r( PHPVersioner::$info );
 
 
 	}
@@ -219,6 +225,33 @@ class AdminTools {
 		// get update data (only after role of user has been checked)
 			$update_data = wp_get_update_data();
 
+			$php_info = PHPVersioner::$info;
+
+			$current_php_version = substr(phpversion(), 0, -2);
+
+			$user_version_info = $php_info[ $current_php_version ];
+
+			$user_version_supported_until = $user_version_info[ 'supported_until' ];
+
+			$current_date = date_create();
+
+			$PHP_action = ($user_version_supported_until < date_timestamp_get($current_date) ) ? 'Upgrade Now' : 'Up To Date';
+
+			//print_r( $user_version_supported_until . ' vs ' . date_timestamp_get($current_date) );
+
+			if ( $PHP_action == "Upgrade Now" ) {
+
+				$php_update = 1;
+
+			} else {
+
+				$php_update = 0;
+
+			}
+
+			$user_version_supported_until = gmdate("m-d-Y", $user_version_supported_until);
+
+
 			self::$updates = array(
 
 				'plugins'	=>	$update_data['counts']['plugins'],
@@ -227,7 +260,11 @@ class AdminTools {
 
 				'WordPress'	=>	$update_data['counts']['themes'],
 
-				'PHP' => phpversion(),
+				'PHP' => $user_version_supported_until,
+
+				'PHP_action'	=>	$PHP_action,
+
+				'PHP_update'	=>	$php_update,
 
 			);
 			// http://php.net/supported-versions.php
@@ -413,15 +450,19 @@ class AdminTools {
 
 												var wordpress_red_light = document.getElementById("wordpress_red_light");
 
-												if (' . self::$updates['WordPress'] .' == 0) {
+												setTimeout(function(){
 
-													wordpress_green_light.style.background = "#01FC27";
+													if (' . self::$updates['WordPress'] .' == 0) {
 
-												} else {
+														wordpress_green_light.style.background = "#01FC27";
 
-													wordpress_red_light.style.background = "red";
+													} else {
 
-												}
+														wordpress_red_light.style.background = "red";
+
+													}
+
+												}, 2000);
 
 											} );
 										</script>
@@ -433,9 +474,39 @@ class AdminTools {
 								<div class="onequarter cell">
 								<h3>PHP:</h3>
 
-									<div class="guage">
-										<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
-										'</div>
+								<div class="inner_indicator">
+
+									<p>Current Version: <input type="text" maxlength="4" size="4" value="' . phpversion() . '" readonly /> </p>
+
+									<p>Supported Until: <input type="text" maxlength="10" size="10" value="' . self::$updates['PHP'] . '" readonly /></p>
+
+									<p>Action: <input type="text" maxlength="14" size="14" value="' . self::$updates['PHP_action'] . '" readonly /></p>
+
+									<script>
+
+										document.addEventListener( "DOMContentLoaded", function( event ) {
+
+											var wordpress_green_light = document.getElementById("wordpress_green_light");
+
+											var wordpress_red_light = document.getElementById("wordpress_red_light");
+
+											setTimeout(function(){
+
+													if (' . self::$updates['WordPress'] .' == 0) {
+
+														wordpress_green_light.style.background = "#01FC27";
+
+													} else {
+
+														wordpress_red_light.style.background = "red";
+
+													}
+
+											}, 2000);
+
+										} );
+									</script>
+
 									</div>
 
 							</div>
@@ -492,30 +563,79 @@ class AdminTools {
 						<h3>Summary</h3>
 
 						<div class="onethird cell">
-						<h3>SSL:</h3>
+						<h3>SSL</h3>
 
-							<div class="guage">
-								<div class="guage_filling">&nbsp;' . $this->ssl_check() .
-								'</div>
-							</div>
+						<div class="gauge indicator">
+
+							<div class="inner_indicator">
+
+								<div class="indicator_light" id="ssl_red_light">&nbsp;</div>
+
+								<div class="indicator_light" id="ssl_green_light">&nbsp;</div>
+
+								</div>
+
+									</div>
+
+							<script>
+
+								document.addEventListener( "DOMContentLoaded", function( event ) {
+
+									var ssl = "' . $this->ssl_check() . '";' . '
+
+									var ssl_green_light = document.getElementById("ssl_green_light");
+
+									var ssl_red_light = document.getElementById("ssl_red_light");
+
+
+									setTimeout(function(){
+
+										if (  ssl == "SSL Installed" ) {
+
+											ssl_green_light.style.background = "#01FC27";
+
+										} else {
+
+											ssl_red_light.style.background = "red";
+
+										}
+
+									}, 2000);
+
+
+								} );
+							</script>
 
 						</div>
+
 
 						<div class="onethird cell">
 						<h3>Total Updates</h3>
 
-							<div class="gauge overall">
-								8
-							</div>
+							<div class="gauge overall">' .
+
+								( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] ) .
+
+							'</div>
 
 						</div>
 
 						<div class="onethird cell">
 						<h3>Overall Grade</h3>
 
-						<div class="gauge overall">
+						<div class="gauge overall">';
 
-							A+
+						if ( $this->ssl_check() == 'SSL Installed' ) {
+
+							$short_ssl = 'SSL';
+
+						} else {
+
+							$short_ssl = 'No SSL';
+
+						}
+
+							echo 'A+<br /> <span id="ssl_note">(' . $short_ssl . ')</span>
 
 							</div>
 
@@ -655,9 +775,8 @@ class AdminTools {
 
 									<thead>
 										<tr>
-											<th>Username</th>
-											<th>Date/Time</th>
-											<th>Last IP Used</th>
+											<th>URL</th>
+											<th>Count</th>
 										</tr>
 									</thead>';
 
