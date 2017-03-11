@@ -40,13 +40,16 @@
 }
 
 .cell {
-	margin-bottom: 4%;
+	margin-bottom: 1%;
 }
 
 	.cell h3 {
 		text-align: center;
+		font-family: sans-serif;
+		font-size: 15px;
 		color: #999999;
 		margin-bottom: 5%;
+		margin-top: 10px;
 	}
 
 .guage_filling {
@@ -58,13 +61,13 @@
 
 .at_table {
 	display: block;
-	height: 700px;
+	height: 500px;
 	overflow-y: scroll;
 }
 
 .at_half_table {
 	display: block;
-	height: 325px;
+	height: 225px;
 	overflow-y: scroll;
 }
 
@@ -77,8 +80,17 @@
 
 		.inner_indicator {
 			text-align: center;
-			width: 70%;
+			width: 50%;
 			margin: 0px auto;
+			font-size: 12px;
+		}
+
+		.cell p {
+			text-align: center;
+			width: 100%;
+			margin: 0px auto;
+			font-size: 14px;
+			margin: 1% 0px;
 		}
 
 				.indicator_light {

@@ -43,7 +43,6 @@ class AdminTools {
 
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
 
-		include_once( plugin_dir_path( __FILE__ ) . 'visitors.php' );
 
 		// other stuff
 		$this->init();
@@ -126,7 +125,6 @@ class AdminTools {
 			[ $this, 'at_sanitize' ]  // validation callback
 		);
 
-		$this->dashboard_section();
 
 
 		add_settings_section(
@@ -204,16 +202,6 @@ class AdminTools {
 
 		}
 
-		public function dashboard_section() {
-
-			// add_settings_section(
-			// 	'options_dashboard_id', // id for use in id attribute
-			// 	'Site Status', // title of the section
-			// 	[ $this, 'at_dashboard_callback' ], // callback function
-			// 	'options_page' // page
-			// );
-
-		}
 
 	public function at_check_for_updates() {
 
@@ -260,7 +248,7 @@ class AdminTools {
 
 				'WordPress'	=>	$update_data['counts']['themes'],
 
-				'PHP' => $user_version_supported_until,
+				'PHP_supported_until' => $user_version_supported_until,
 
 				'PHP_action'	=>	$PHP_action,
 
@@ -360,14 +348,16 @@ class AdminTools {
 
 			}
 
-			function list_online_users() {
+			function list_last_logins() {
 
 				$all_users = get_users( 'blog_id=1' );
 
 				foreach ($all_users as $user) {
 
 						echo '<tr>' .
+
 						'<th>' . $user->user_login . '</th>' .
+
 						'<th>' . get_user_meta(  $user->ID, 'last_login_timestamp', true ) . '</th>' .
 
 						'<th>' . get_user_meta(  $user->ID, 'last_ip', true ) . '</th>' .
@@ -380,375 +370,67 @@ class AdminTools {
 
 			public function at_dashboard_callback() {
 
-					echo '<div id="dashboard_main">
+					echo '<div id="dashboard_main">';
 
+						echo '<div class="twothirds">
 
-					<div class="twothirds">
+						<h1 style="text-align: center; background: #F9F9F9;">Site Status:</h1>';
 
-						<h1 style="text-align: center; background: #F9F9F9;">Site Status:</h1>
+							echo '<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">';
 
-						<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">
-							<h3>Updates</h3>
+								echo '<h3>Updates</h3>';
 
-								<div class="onequarter cell">
+										echo $this->gauge_cell( 'Plugins', 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
 
-									<div id="g1" class="gauge"></div>
-										<script>
-											var g1;
-											document.addEventListener( "DOMContentLoaded", function( event ) {
-												var g1 = new JustGage( {
-													id: "g1",
-													value: ' . ( sizeof( get_plugins() ) - self::$updates['plugins'] ) . ',
-													min: 0,
-													max: ' . sizeof( get_plugins() ) . ',
-													title: "Plugins"
-													} );
-											} );
-										</script>
+										echo $this->gauge_cell( 'Themes', 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
-								</div>
+										echo $this->indicator_cell( 'WordPress Core', 'wordpress', self::$updates['WordPress'] );
 
-								<div class="onequarter cell">
+										echo $this->php_cell( 'PHP' );
 
-								<div id="g2" class="gauge"></div>
-									<script>
-										var g2;
-										document.addEventListener( "DOMContentLoaded", function( event ) {
-											var g2 = new JustGage( {
-												id: "g2",
-												value: ' . ( sizeof( wp_get_themes() ) - self::$updates['themes'] ) . ',
-												min: 0,
-												max: ' . sizeof( wp_get_themes() ) . ',
-												title: "Themes"
-												} );
-										} );
-									</script>
+							echo '</div>';
 
 
-								</div>
+							echo '<div id="second_gauge_row" style="width: 100%; background: #F9F9F9; float: left;">';
 
-								<div class="onequarter cell">
-								<h3>WordPress Core</h3>
+								echo '<h3>Summary</h3>';
 
-									<div class="gauge indicator">
+										echo $this->ssl_cell( 'SSL', 'onethird' );
 
-										<div class="inner_indicator">
+										echo $this->counter_cell( 'Total Updates', ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] ) );
 
-											<div class="indicator_light" id="wordpress_red_light">&nbsp;</div>
+										echo $this->counter_cell( 'Overall Grade', $this->calculate_grade() . '<br />' . '<span id="ssl_note">(' . $this->ssl_check( true ) . ')</span>');
 
-											<div class="indicator_light" id="wordpress_green_light">&nbsp;</div>
+							echo '</div>';
 
-											</div>
+						echo '</div>';
 
-												</div>
 
-										<script>
+						echo '<div class="onethird" >';
 
-											document.addEventListener( "DOMContentLoaded", function( event ) {
 
-												var wordpress_green_light = document.getElementById("wordpress_green_light");
+							echo '<div class="half left_half">';
 
-												var wordpress_red_light = document.getElementById("wordpress_red_light");
+							echo '<h3 style="text-align: center;">Variables</h3>';
 
-												setTimeout(function(){
+								echo '<table class="wp-list-table widefat fixed striped at_table">';
 
-													if (' . self::$updates['WordPress'] .' == 0) {
+									echo '<thead>';
 
-														wordpress_green_light.style.background = "#01FC27";
+										echo '<tr>
+											<th>Variable</th>
+											<th>Value</th>
+										</tr>';
 
-													} else {
+										echo '</thead>';
 
-														wordpress_red_light.style.background = "red";
+									echo $this->variable_table();
 
-													}
+						echo '</table>';
 
-												}, 2000);
+						echo '</div>';
 
-											} );
-										</script>
-
-
-
-								</div>
-
-								<div class="onequarter cell">
-								<h3>PHP:</h3>
-
-								<div class="inner_indicator">
-
-									<p>Current Version: <input type="text" maxlength="4" size="4" value="' . phpversion() . '" readonly /> </p>
-
-									<p>Supported Until: <input type="text" maxlength="10" size="10" value="' . self::$updates['PHP'] . '" readonly /></p>
-
-									<p>Action: <input type="text" maxlength="14" size="14" value="' . self::$updates['PHP_action'] . '" readonly /></p>
-
-									<script>
-
-										document.addEventListener( "DOMContentLoaded", function( event ) {
-
-											var wordpress_green_light = document.getElementById("wordpress_green_light");
-
-											var wordpress_red_light = document.getElementById("wordpress_red_light");
-
-											setTimeout(function(){
-
-													if (' . self::$updates['WordPress'] .' == 0) {
-
-														wordpress_green_light.style.background = "#01FC27";
-
-													} else {
-
-														wordpress_red_light.style.background = "red";
-
-													}
-
-											}, 2000);
-
-										} );
-									</script>
-
-									</div>
-
-							</div>
-
-						</div>
-
-						<div id="second_gauge_row" style="width: 100%; float: left; background: #F9F9F9;">
-						<h3>Usage</h3>
-
-						<div class="onequarter cell">
-						<h3>Visitor Count</h3>
-
-							<div class="guage">
-								<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
-								'</div>
-							</div>
-
-					</div>
-
-						<div class="onequarter cell">
-						<h3>Devices</h3>
-
-							<div class="guage">
-								<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
-								'</div>
-							</div>
-
-					</div>
-
-					<div class="onequarter cell">
-					<h3>Browsers</h3>
-
-						<div class="guage">
-							<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
-							'</div>
-						</div>
-
-				</div>
-
-				<div class="onequarter cell">
-				<h3>Operating Systems</h3>
-
-					<div class="guage">
-						<div class="guage_filling">&nbsp;' . self::$updates['PHP'] .
-						'</div>
-					</div>
-
-			</div>
-
-
-						</div>
-
-						<div id="third_gauge_row" style="width: 100%; float: left;">
-						<h3>Summary</h3>
-
-						<div class="onethird cell">
-						<h3>SSL</h3>
-
-						<div class="gauge indicator">
-
-							<div class="inner_indicator">
-
-								<div class="indicator_light" id="ssl_red_light">&nbsp;</div>
-
-								<div class="indicator_light" id="ssl_green_light">&nbsp;</div>
-
-								</div>
-
-									</div>
-
-							<script>
-
-								document.addEventListener( "DOMContentLoaded", function( event ) {
-
-									var ssl = "' . $this->ssl_check() . '";' . '
-
-									var ssl_green_light = document.getElementById("ssl_green_light");
-
-									var ssl_red_light = document.getElementById("ssl_red_light");
-
-
-									setTimeout(function(){
-
-										if (  ssl == "SSL Installed" ) {
-
-											ssl_green_light.style.background = "#01FC27";
-
-										} else {
-
-											ssl_red_light.style.background = "red";
-
-										}
-
-									}, 2000);
-
-
-								} );
-							</script>
-
-						</div>
-
-
-						<div class="onethird cell">
-						<h3>Total Updates</h3>
-
-							<div class="gauge overall">' .
-
-								( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] ) .
-
-							'</div>
-
-						</div>
-
-						<div class="onethird cell">
-						<h3>Overall Grade</h3>
-
-						<div class="gauge overall">';
-
-						if ( $this->ssl_check() == 'SSL Installed' ) {
-
-							$short_ssl = 'SSL';
-
-						} else {
-
-							$short_ssl = 'No SSL';
-
-						}
-
-							echo 'A+<br /> <span id="ssl_note">(' . $short_ssl . ')</span>
-
-							</div>
-
-
-							<script>
-
-								document.addEventListener( "DOMContentLoaded", function( event ) {
-
-									//var wordpress_green_light = document.getElementById("wordpress_green_light");
-
-
-								} );
-							</script>
-
-						</div>
-
-
-
-
-
-						</div>
-
-
-
-
-
-						</div>
-
-
-
-
-
-						<div class="onethird" >
-
-
-						<div class="half left_half">
-						<h3 style="text-align: center;">Variables</h3>
-
-						<table class="wp-list-table widefat fixed striped at_table">
-
-					<thead>
-						<tr>
-							<th>Variable</th>
-							<th>Value</th>
-						</tr>
-					</thead>
-
-						<tr>
-						<th>WP Version</th>
-						<th>' . get_bloginfo('version') .'</th>
-						</tr>
-
-						<tr>
-						<th>PHP Version</th>
-						<th>' . phpversion() .'</th>
-						</tr>
-
-						<tr>
-						<th>Name</th>
-						<th>' . get_bloginfo('name') .'</th>
-						</tr>
-
-						<tr>
-						<th>URL</th>
-						<th>' . get_bloginfo('url') .'</th>
-						</tr>
-
-						<tr>
-						<th>Charset</th>
-						<th>' . get_bloginfo('charset') .'</th>
-						</tr>
-
-						<tr>
-						<th>Admin Email</th>
-						<th>' . get_bloginfo('admin_email') .'</th>
-						</tr>
-
-						<tr>
-						<th>Language</th>
-						<th>' . get_bloginfo('language') .'</th>
-						</tr>
-
-						<tr>
-						<th>Stylesheet Directory</th>
-						<th>' . get_bloginfo('stylesheet_directory') .'</th>
-						</tr>
-
-						<tr>
-						<th>Atom URL</th>
-						<th>' . get_bloginfo('atom_url') .'</th>
-						</tr>
-
-						<tr>
-						<th>SMTP</th>
-						<th>' . ini_get("SMTP") .'</th>
-						</tr>
-
-						<tr>
-						<th>Memory Limit</th>
-						<th>' . ini_get("memory_limit") .'</th>
-						</tr>
-
-						<tr>
-						<th>Subscriptions</th>
-						<th>' . '???' .'</th>
-						</tr>
-
-
-						</table>
-
-						</div>
-
-						<div class="half">
+						echo '<div class="half">
 						<h3 style="text-align: center;">User Logins:</h3>
 
 								<table class="wp-list-table widefat fixed striped at_half_table">
@@ -756,14 +438,14 @@ class AdminTools {
 									<thead>
 										<tr>
 											<th>Username</th>
-											<th>Date/Time</th>
+											<th>Last Login Date/Time</th>
 											<th>Last IP Used</th>
 										</tr>
 									</thead>';
 
 
 
-							 $this->list_online_users();
+							 $this->list_last_logins();
 
 
 						echo '</table>
@@ -782,7 +464,7 @@ class AdminTools {
 
 
 
-							 $this->list_online_users();
+							 $this->list_last_logins();
 
 
 						echo '</table>
@@ -796,9 +478,319 @@ class AdminTools {
 
 			}
 
-			public function ssl_check() {
+			public function gauge_cell( $title, $gauge_class, $value, $max ) {
 
-    		return is_ssl() ? 'SSL Installed' : 'SSL Not Installed';
+				return '<div class="onequarter cell">
+
+					<div id="' . $gauge_class . '" class="gauge"></div>
+						<script>
+							var g1;
+							document.addEventListener( "DOMContentLoaded", function( event ) {
+								var g1 = new JustGage( {
+									id: "' . $gauge_class . '",
+									value: ' . $value . ',
+									min: 0,
+									max: ' . $max . ',
+									title: "' . $title . '",
+									} );
+							} );
+						</script>
+
+				</div>';
+
+			}
+
+			public function indicator_cell( $title, $class_prefix, $setting ) {
+
+				return '<div class="onequarter cell">
+				<h3>' . $title . '</h3>
+
+					<div class="gauge indicator">
+
+						<div class="inner_indicator">
+
+							<div class="indicator_light" id="' . $class_prefix . '_red_light">&nbsp;</div>
+
+							<div class="indicator_light" id="' . $class_prefix . '_green_light">&nbsp;</div>
+
+						</div>
+
+					</div>
+
+								<script>
+
+									document.addEventListener( "DOMContentLoaded", function( event ) {
+
+										var green_light = document.getElementById("' . $class_prefix . '_green_light");
+
+										var red_light = document.getElementById("' . $class_prefix . '_red_light");
+
+										setTimeout(function(){
+
+											if (' . $setting .' == 0) {
+
+												green_light.style.background = "#01FC27";
+
+											} else {
+
+												red_light.style.background = "#FF0000";
+
+											}
+
+										}, 1500);
+
+									} );
+								</script>
+
+								</div>';
+
+			}
+
+			public function php_cell( $title ) {
+
+						return '<div class="onequarter cell" style="text-align: center;">
+						<h3 style="margin-bottom: 5px;">' . $title . '</h3>
+
+							<p>Running Version: ' . phpversion() . '</p>
+
+							<p>Support Until: ' . self::$updates['PHP_supported_until'] . '</p>
+
+							<input id="php_action_field" type="text" maxlength="14" size="14" style="text-align: center; font-size: 18px; font-style: bold;" readonly />
+
+							<script>
+
+								document.addEventListener( "DOMContentLoaded", function( event ) {
+
+									var php_action_field = document.getElementById("php_action_field");
+
+
+									setTimeout(function(){
+
+											if ("' . self::$updates['PHP_action'] .'" == "Up To Date") {
+
+												php_action_field.style.background = "#01FC27";
+
+												php_action_field.value = "' . self::$updates['PHP_action'] .'";
+
+											} else {
+
+												php_action_field.style.background = "red";
+
+												php_action_field.style.color = "white";
+
+											}
+
+									}, 1000);
+
+								} );
+							</script>
+
+					</div>';
+
+			}
+
+			public function ssl_cell( $title, $class) {
+
+					return '<div class="' . $class . ' cell">
+
+					<h3>' . $title . '</h3>
+
+					<div class="gauge indicator">
+
+						<div class="inner_indicator">
+
+							<div class="indicator_light" id="ssl_red_light">&nbsp;</div>
+
+							<div class="indicator_light" id="ssl_green_light">&nbsp;</div>
+
+						</div>
+
+					</div>
+
+					<script>
+
+						document.addEventListener( "DOMContentLoaded", function( event ) {
+
+							var ssl = ' . $this->ssl_check( false ) . ';' . '
+
+							var ssl_green_light = document.getElementById("ssl_green_light");
+
+							var ssl_red_light = document.getElementById("ssl_red_light");
+
+
+							setTimeout(function(){
+
+								if (  ssl == 1 ) {
+
+									ssl_green_light.style.background = "#01FC27";
+
+								} else {
+
+									ssl_red_light.style.background = "red";
+
+								}
+
+							}, 2000);
+
+
+						} );
+					</script>
+
+				</div>';
+
+			}
+
+			public function counter_cell( $title, $value ) {
+
+				return '<div class="onethird cell">
+				<h3>' . $title . '</h3>
+
+					<div class="gauge overall">' .
+
+						$value .
+
+					'</div>
+
+				</div>';
+
+			}
+
+			public function calculate_grade() {
+
+				$grades = array(
+
+						'Plugins' => ( ( sizeof( get_plugins() ) - self::$updates['plugins'] ) / sizeof( get_plugins() ) * 100),
+
+						'Themes' => ( ( sizeof( wp_get_themes() ) - self::$updates['themes'] ) / sizeof( wp_get_themes() ) * 100),
+
+						'WordPress' =>	( self::$updates['WordPress'] == 0 ) ? 100 : 0,
+
+						'PHP' =>	( self::$updates['PHP_update'] == 0 ) ? 100 : 25,
+
+				);
+
+					$subtotal = $grades['Plugins'] + $grades['Themes'] + $grades['WordPress'] + $grades['PHP'];
+
+
+				$subtotal = $subtotal / 4;
+
+
+				return round( $subtotal, 0 );
+			}
+
+			public function variable_table() {
+
+
+				if ( ( get_option('users_can_register') == 0 ) || empty( get_option('users_can_register') ) ) {
+
+					$anyone_can_register = 'false';
+
+				} else {
+
+					$anyone_can_register = 'true';
+
+				}
+
+				if ( ( get_option('blog_public') == 0 ) || empty( get_option('blog_public') ) ) {
+
+					$blog_public = 'true';
+
+				} else {
+
+					$blog_public = 'false';
+
+				}
+
+				return '
+				<tr>
+				<th>WP Version</th>
+				<th>' . get_bloginfo('version') .'</th>
+				</tr>
+
+				<tr>
+				<th>PHP Version</th>
+				<th>' . phpversion() .'</th>
+				</tr>
+
+				<tr>
+				<th>Name</th>
+				<th>' . get_bloginfo('name') .'</th>
+				</tr>
+
+				<tr>
+				<th>URL</th>
+				<th>' . get_bloginfo('url') .'</th>
+				</tr>
+
+				<tr>
+				<th>Charset</th>
+				<th>' . get_bloginfo('charset') .'</th>
+				</tr>
+
+				<tr>
+				<th>Admin Email</th>
+				<th>' . get_bloginfo('admin_email') .'</th>
+				</tr>
+
+				<tr>
+				<th>Language</th>
+				<th>' . get_bloginfo('language') .'</th>
+				</tr>
+
+				<tr>
+				<th>Stylesheet Directory</th>
+				<th>' . get_bloginfo('stylesheet_directory') .'</th>
+				</tr>
+
+				<tr>
+				<th>Anyone Can Register</th>
+				<th>' . $anyone_can_register .'</th>
+				</tr>
+
+				<tr>
+				<th>Front Page Displays</th>
+				<th>' . get_option( 'show_on_front' ) .'</th>
+				</tr>
+
+				<tr>
+				<th>Posts Per Page</th>
+				<th>' . get_option( 'posts_per_page' ) .'</th>
+				</tr>
+
+				<tr>
+				<th>Atom URL</th>
+				<th>' . get_bloginfo('atom_url') .'</th>
+				</tr>
+
+				<tr>
+				<th>SMTP</th>
+				<th>' . ini_get("SMTP") .'</th>
+				</tr>
+
+				<tr>
+				<th>Discourage Search Engines</th>
+				<th>' . $blog_public .'</th>
+				</tr>
+
+				<tr>
+				<th>PHP Memory Limit</th>
+				<th>' . ini_get("memory_limit") .'</th>
+				</tr>';
+
+
+			}
+
+			public function ssl_check( $print ) {
+
+				if ( $print ) {
+
+				return is_ssl() ? 'SSL' : 'No SSL';
+
+			} else {
+
+				return is_ssl() ? 1 : 0;
+
+			}
 
 			}
 
