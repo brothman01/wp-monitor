@@ -1,7 +1,6 @@
 /* Settings Page Dashboard */
 #dashboard_main {
 	width: 100%;
-
 	clear: both;
 	overflow-y: hidden;
 }
@@ -21,6 +20,10 @@
 	width: 49%;
 }
 
+	.half h3 {
+		margin-top: 0px;
+	}
+
 .left_half {
 		margin-right: 10px;
 }
@@ -31,13 +34,6 @@
 
 }
 
-.guage {
-	border: solid black 2px;
-	width: 80%;
-	border-radius: 0%;
-	padding: 2px 2px;
-	margin: 0px auto;
-}
 
 .cell {
 	margin-bottom: 1%;
@@ -89,7 +85,8 @@
 			text-align: center;
 			width: 100%;
 			margin: 0px auto;
-			font-size: 14px;
+			color: black;
+			font-size: 12px;
 			margin: 1% 0px;
 		}
 

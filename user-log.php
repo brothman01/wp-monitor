@@ -50,38 +50,36 @@ class UserLog extends AdminTools {
 
 			$ip_address = $this->at_get_user_ip();
 
-			$browser = $_SERVER['HTTP_USER_AGENT'];
+			$referrer = $_SERVER['HTTP_REFERER'];
 
-			$device = $_SERVER['HTTP_USER_AGENT'];
+			$the_query = new WP_Query( ['post_title'	=>	$ip_address, 'post_type'	=>	'visitor'] );
 
-			$os = php_uname();
+					if ( empty( $the_array ) ) {
+						// wtf??
+						$args = array(
+			        'post_author' => 1,
+			        'post_content' => '',
+			        'post_content_filtered' => '',
+			        'post_title' => $ip_address,
+			        'post_excerpt' => '',
+			        'post_status' => 'draft',
+			        'post_type' => 'visitor',
+			        'comment_status' => '',
+			        'ping_status' => '',
+			        'post_password' => '',
+			        'to_ping' =>  '',
+			        'pinged' => '',
+			        'post_parent' => 0,
+			        'menu_order' => 0,
+			        'guid' => '',
+			        'import_id' => 0,
+			        'context' => '',
+			    	);
 
-		// 	$query = new WPQuery( array( 'title' => current_time('mysql', 1) . "-" . $ip_address ) );
-		//
-		// 	if( null == get_post_by_title( current_time('mysql', 1) . '-' . $ip_address ) ) {
-		//   // Set the page ID so that we know the page was created successfully
-		//   $post_id = wp_insert_post(
-		//     array(
-		//       'comment_status'  => 'closed',
-		//       'ping_status'   => 'closed',
-		//       'post_author'   => 1,
-		//       'post_name'   => 'test',
-		//       'post_title'    => current_time('mysql', 1) . '-' . $ip_address,
-		//       'post_status'   => 'publish',
-		//       'post_type'   => 'visitor'
-		//     )
-		//   );
-		//
-		// 	update_user_meta($browser, 'browser', current_time('mysql', 1));
-		//
-		// 	update_user_meta($device, 'device', current_time('mysql', 1));
-		//
-		// 	update_user_meta($os, 'OS', current_time('mysql', 1));
-		// }
+						wp_insert_post( $args );
 
+				}
 
-
-			echo '<span style="color: red;">the ip address of the visitor is ' . $ip_address . ' on ' . $device . '</span>';
 
 		}
 

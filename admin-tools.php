@@ -39,8 +39,8 @@ class AdminTools {
 		add_action( 'admin_init', [ $this, 'at_settings_init' ] );
 
 		// include other files
+		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
 		include_once( plugin_dir_path( __FILE__ ) . 'user-log.php' );
-
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
 
 
@@ -74,14 +74,14 @@ class AdminTools {
 		add_action( 'admin_enqueue_scripts', [ $this, 'at_enqueue_admin_styles' ] );
 
 		// dashboard widget
-		add_action( 'admin_footer', [ $this, 'at_custom_dashboard_widget' ] );
+		add_action( 'admin_footer', [ $this, 'at_dashboard_widget' ] );
 
 		//print_r( PHPVersioner::$info );
 
 
 	}
 
-	function at_custom_dashboard_widget() {
+	function at_dashboard_widget() {
 	// Bail if not viewing the main dashboard page
 	if ( get_current_screen()->base !== 'dashboard' ) {
 		return;
@@ -215,7 +215,7 @@ class AdminTools {
 
 			$php_info = PHPVersioner::$info;
 
-			$current_php_version = substr(phpversion(), 0, -2);
+			$current_php_version = ( 2 == substr_count( phpversion(), '.' ) ) ? substr(phpversion(), 0, -2) : phpversion();
 
 			$user_version_info = $php_info[ $current_php_version ];
 
@@ -553,7 +553,7 @@ class AdminTools {
 
 							<p>Running Version: ' . phpversion() . '</p>
 
-							<p>Support Until: ' . self::$updates['PHP_supported_until'] . '</p>
+							<p>Supported Until: ' . self::$updates['PHP_supported_until'] . '</p>
 
 							<input id="php_action_field" type="text" maxlength="14" size="14" style="text-align: center; font-size: 18px; font-style: bold;" readonly />
 
@@ -674,12 +674,18 @@ class AdminTools {
 
 				$subtotal = $subtotal / 4;
 
+				$subtotal = round( $subtotal, 0 );
 
-				return round( $subtotal, 0 );
+
+
+				return $subtotal;
 			}
+
+
 
 			public function variable_table() {
 
+				$all_vars = '';
 
 				if ( ( get_option('users_can_register') == 0 ) || empty( get_option('users_can_register') ) ) {
 
@@ -691,6 +697,7 @@ class AdminTools {
 
 				}
 
+
 				if ( ( get_option('blog_public') == 0 ) || empty( get_option('blog_public') ) ) {
 
 					$blog_public = 'true';
@@ -701,81 +708,54 @@ class AdminTools {
 
 				}
 
-				return '
-				<tr>
-				<th>WP Version</th>
-				<th>' . get_bloginfo('version') .'</th>
-				</tr>
 
-				<tr>
-				<th>PHP Version</th>
-				<th>' . phpversion() .'</th>
-				</tr>
+				$variables = array(
 
-				<tr>
-				<th>Name</th>
-				<th>' . get_bloginfo('name') .'</th>
-				</tr>
+					'WP Version'	=> get_bloginfo('version'),
 
-				<tr>
-				<th>URL</th>
-				<th>' . get_bloginfo('url') .'</th>
-				</tr>
+					'PHP Version'	=> phpversion(),
 
-				<tr>
-				<th>Charset</th>
-				<th>' . get_bloginfo('charset') .'</th>
-				</tr>
+					'Name'				=> get_bloginfo('name'),
 
-				<tr>
-				<th>Admin Email</th>
-				<th>' . get_bloginfo('admin_email') .'</th>
-				</tr>
+					'URL'					=>	get_bloginfo('url'),
 
-				<tr>
-				<th>Language</th>
-				<th>' . get_bloginfo('language') .'</th>
-				</tr>
+					'Charset'			=>	get_bloginfo('charset'),
 
-				<tr>
-				<th>Stylesheet Directory</th>
-				<th>' . get_bloginfo('stylesheet_directory') .'</th>
-				</tr>
+					'Admin Email'	=>	get_bloginfo('admin_email'),
 
-				<tr>
-				<th>Anyone Can Register</th>
-				<th>' . $anyone_can_register .'</th>
-				</tr>
+					'Language'		=>	get_bloginfo('language'),
 
-				<tr>
-				<th>Front Page Displays</th>
-				<th>' . get_option( 'show_on_front' ) .'</th>
-				</tr>
+					'Stylesheet Directory'	=>	get_bloginfo('stylesheet_directory'),
 
-				<tr>
-				<th>Posts Per Page</th>
-				<th>' . get_option( 'posts_per_page' ) .'</th>
-				</tr>
+					'Anyone Can Register'			=>	$anyone_can_register,
 
-				<tr>
-				<th>Atom URL</th>
-				<th>' . get_bloginfo('atom_url') .'</th>
-				</tr>
+					'Front Page Displays'			=> get_option( 'show_on_front' ),
 
-				<tr>
-				<th>SMTP</th>
-				<th>' . ini_get("SMTP") .'</th>
-				</tr>
+					'Posts Per Page'					=>	get_option( 'posts_per_page' ),
 
-				<tr>
-				<th>Discourage Search Engines</th>
-				<th>' . $blog_public .'</th>
-				</tr>
+					'Atom URL'								=>	get_bloginfo('atom_url'),
 
-				<tr>
-				<th>PHP Memory Limit</th>
-				<th>' . ini_get("memory_limit") .'</th>
-				</tr>';
+					'SMTP'										=>	ini_get("SMTP"),
+
+					'Discourage Search Engines'=>	$blog_public,
+
+					'PHP Memory Limit'				=>	ini_get("memory_limit"),
+
+				);
+
+				foreach($variables as $key => $value) {
+
+					$all_vars = $all_vars .
+					'<tr>
+						<th>' . $key . '</th>
+						<th>' . $value .'</th>
+					</tr>';
+
+				}
+
+				return $all_vars;
+
+
 
 
 			}
