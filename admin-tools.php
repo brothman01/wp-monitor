@@ -213,7 +213,7 @@ class AdminTools {
 		// get update data (only after role of user has been checked)
 			$update_data = wp_get_update_data();
 
-			$php_info = PHPVersioner::$info;
+			$php_info = PHPVersioner::$info; 
 
 			$current_php_version = ( 2 == substr_count( phpversion(), '.' ) ) ? substr(phpversion(), 0, -2) : phpversion();
 
