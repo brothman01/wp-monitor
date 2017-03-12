@@ -30,26 +30,30 @@ class AdminTools {
 
 
 		// other stuff
-		$this->init();
+		add_action( 'plugins_loaded', [ $this, 'init' ] );
 
 	}
 
 	public function init() {
 
 		// get the option that is set when the crontask is scheduled
-		$prevent_email_cron = Settings::$options['at_prevent_email_cron'];
+		// $prevent_email_cron = Settings::$options['at_prevent_email_cron'];
+		//
+		// print_r( $prevent_email_cron );
+
+		wp_mail( 'emailto', 'foobar', 'message', array(), array() );
 
 		// schedule crontask if it has not already been scheduled
-		if ( 0 == $prevent_email_cron ) {
-
-				wp_schedule_event(time(), 'daily', 'send_my_updates_notification');
-
-				//set the option to say the crontask has already been scheduled
-				Settings::$options['at_prevent_email_cron'] = true;
-
-				update_option( 'at_options', Settings::$options );
-
-	}
+	// 	if ( 0 == $prevent_email_cron ) {
+	//
+	// 			wp_schedule_event(time(), 'daily', 'send_my_updates_notification');
+	//
+	// 			//set the option to say the crontask has already been scheduled
+	// 			Settings::$options['at_prevent_email_cron'] = true;
+	//
+	// 			update_option( 'at_options', Settings::$options );
+	//
+	// }
 
 		// add action to send email when cron task is triggered
 		add_action( 'send_my_updates_notification', [ $this, 'un_send_email' ] );
