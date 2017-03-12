@@ -21,7 +21,7 @@ class AdminTools {
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
 			'at_prevent_email_cron' => true,
-			'at_user_timeout' => '',
+			'at_user_timeout' => 5,
 			'at_send_email' => false,
 			'at_check_plugins' => false,
 			'at_check_themes' => false,
@@ -213,7 +213,7 @@ class AdminTools {
 		// get update data (only after role of user has been checked)
 			$update_data = wp_get_update_data();
 
-			$php_info = PHPVersioner::$info; 
+			$php_info = PHPVersioner::$info;
 
 			$current_php_version = ( 2 == substr_count( phpversion(), '.' ) ) ? substr(phpversion(), 0, -2) : phpversion();
 

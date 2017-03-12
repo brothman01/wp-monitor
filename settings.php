@@ -2,9 +2,13 @@
 
 class Settings extends AdminTools {
 
+	public static $options;
+
 	public function __construct() {
 
-		// wp_die( print_r( self::$options ) );
+		self::$options = AdminTools::$options;
+
+		 wp_die( print_r( self::$options ) );
 
 	}
 
