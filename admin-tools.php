@@ -18,19 +18,28 @@ class AdminTools {
 
 	public function __construct() {
 
+		// get option 'at_options' value from the database and put it in the array $options
+		self::$options = get_option( 'at_options', [
+			'at_prevent_email_cron' => true,
+			'at_user_timeout' => 5,
+			'at_send_email' => false,
+			'at_check_plugins' => false,
+			'at_check_themes' => false,
+			'at_check_wordpress' => false,
+			'at_check_php' => false,
+		] );
 
 		// check for updates
 		add_action( 'admin_bar_menu', [ $this, 'at_check_for_updates' ] );
 
+		add_action( 'plugins_loaded', [ $this, 'init' ] );
 
 		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
 		include_once( plugin_dir_path( __FILE__ ) . 'user-log.php' );
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
+		include_once( plugin_dir_path( __FILE__ ) . 'send-email.php' );
 
-
-		// other stuff
-		add_action( 'plugins_loaded', [ $this, 'init' ] );
 
 	}
 
@@ -41,7 +50,7 @@ class AdminTools {
 		//
 		// print_r( $prevent_email_cron );
 
-		wp_mail( 'emailto', 'foobar', 'message', array(), array() );
+		//wp_mail( "strawberry@test.org", 'subject', 'frogger');
 
 		// schedule crontask if it has not already been scheduled
 	// 	if ( 0 == $prevent_email_cron ) {
@@ -56,7 +65,7 @@ class AdminTools {
 	// }
 
 		// add action to send email when cron task is triggered
-		add_action( 'send_my_updates_notification', [ $this, 'un_send_email' ] );
+		//add_action( 'send_my_updates_notification', [ $this, 'un_send_email' ] );
 
 		// enqueue the admin stylesheet
 		add_action( 'admin_enqueue_scripts', [ $this, 'at_enqueue_admin_styles' ] );
@@ -101,6 +110,7 @@ class AdminTools {
 			return;
 
 		}
+
 		// get update data (only after role of user has been checked)
 			$update_data = wp_get_update_data();
 
@@ -690,7 +700,13 @@ class AdminTools {
 			}
 
 
-	public function at_enqueue_admin_styles() {
+	public function at_enqueue_admin_styles( $hook ) {
+
+		// wp_die( $hook );
+
+		if ( 'index.php' !== $hook ) {
+			return;
+		}
 
 		wp_register_style( 'at_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
 		wp_enqueue_style( 'at_admin_css' );

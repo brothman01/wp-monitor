@@ -8,17 +8,6 @@ class Settings extends AdminTools {
 
 		self::$options = AdminTools::$options;
 
-		// get option 'at_options' value from the database and put it in the array $options
-		self::$options = get_option( 'at_options', [
-			'at_prevent_email_cron' => true,
-			'at_user_timeout' => 5,
-			'at_send_email' => false,
-			'at_check_plugins' => false,
-			'at_check_themes' => false,
-			'at_check_wordpress' => false,
-			'at_check_php' => false,
-		] );
-
 		// add the options page
 		add_action( 'admin_menu', [ $this, 'at_add_plugin_page' ] );
 
