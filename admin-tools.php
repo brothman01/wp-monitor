@@ -4,6 +4,7 @@
  * Description: Notify user when updates to WordPress are needed.
  * Version:     1.0.0
  * Author:      Ben Rothman
+ * Slug:				???
  * Author URI:  http://www.BenRothman.org
  * License:     GPL-2.0+
  */
@@ -138,6 +139,8 @@ class AdminTools {
 
 			}
 
+
+
 			$user_version_supported_until = gmdate("m-d-Y", $user_version_supported_until);
 
 
@@ -154,6 +157,8 @@ class AdminTools {
 				'PHP_action'	=>	$PHP_action,
 
 				'PHP_update'	=>	$php_update,
+
+				'PHP_warning' => $user_version_info[ 'supported_until' ],
 
 			);
 			// http://php.net/supported-versions.php
@@ -720,7 +725,6 @@ class AdminTools {
 
 		wp_register_script( 'at_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
 		wp_enqueue_script( 'at_justgage' );
-
 
 	}
 
