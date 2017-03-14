@@ -115,6 +115,8 @@ class AdminTools {
 		// get update data (only after role of user has been checked)
 			$update_data = wp_get_update_data();
 
+			print_r( $update_data['counts']['wordpress'] );
+
 			$php_info = PHPVersioner::$info;
 
 			$current_php_version = ( 2 == substr_count( phpversion(), '.' ) ) ? substr(phpversion(), 0, -2) : phpversion();
@@ -139,8 +141,6 @@ class AdminTools {
 
 			}
 
-
-
 			$user_version_supported_until = gmdate("m-d-Y", $user_version_supported_until);
 
 
@@ -150,7 +150,7 @@ class AdminTools {
 
 				'themes'	=>	$update_data['counts']['themes'],
 
-				'WordPress'	=>	$update_data['counts']['themes'],
+				'WordPress'	=>	$update_data['counts']['wordpress'],
 
 				'PHP_supported_until' => $user_version_supported_until,
 
@@ -161,8 +161,8 @@ class AdminTools {
 				'PHP_warning' => $user_version_info[ 'supported_until' ],
 
 			);
-			// http://php.net/supported-versions.php
-			// print_r( self::$updates );
+
+			 //print_r( self::$updates );
 
 	}
 
@@ -385,7 +385,7 @@ class AdminTools {
 
 										setTimeout(function(){
 
-											if (' . $setting .' == 0) {
+											if (' . $setting .' == 1) {
 
 												green_light.style.background = "#01FC27";
 

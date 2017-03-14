@@ -13,7 +13,7 @@ public static $info;
 	}
 
 	public function at_version_info() {
-		
+
 			$contents = wp_remote_get( 'http://php.net/supported-versions.php' );
 
 			$body = str_replace( '<link rel="shortcut icon" href="http://php.net/favicon.ico">', '', wp_remote_retrieve_body( $contents ) );

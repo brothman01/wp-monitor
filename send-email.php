@@ -39,6 +39,10 @@ class EmailManager extends AdminTools {
 						}
 
 
+					} else {
+
+						$message = $message . "\n\n";
+
 					}
 
 				$message = $message .
@@ -46,21 +50,30 @@ class EmailManager extends AdminTools {
 
 				if ( AdminTools::$updates['themes'] >= 1 ) {
 
-				$message = $message . '';
+					foreach( $themes_that_need_updates as $theme) {
+
+						$message = $message . '	- ' . $theme . "\n\n";
+
+					}
+
+			} else {
+
+				$message = $message . "\n\n";
 
 			}
 
 
 				$message = $message .
 				'	<li>WordPress Updates: ' . $updates['WordPress'] . '</li>' . "\r\n" .
+				'	- ' . $this->wp_update_message( $updates['WordPress'] ) . "\r\n\r\n";
 
+				$message = $message .
 				'	<li>PHP Updates: ' . $updates['PHP_update'] . '</li>' . "\r\n" .
 
-				'	' . '- PHP ' . phpversion() . ' supported until ' . AdminTools::$updates['PHP_warning'] . '.' . "\r\n" .
+				'	' . '- PHP ' . phpversion() . ' supported until ' . date("m-d-Y", AdminTools::$updates['PHP_warning']) . '.' . "\r\n" .
 
 			'</ol>';
 
-		//	wp_die();
 			wp_mail( $admin_email, $subject, $message );
 
 		}
@@ -113,13 +126,27 @@ class EmailManager extends AdminTools {
 			],
 		] );
 
+		$wow = maybe_unserialize( wp_remote_retrieve_body( $response ) );
+
 		//print_r( $response );
-		return $response;
+		return $wow;
 
 		}
 
 
+		public function wp_update_message( $updates ) {
 
+			if ( $updates == 0 ) {
+
+				return 'WordPress core is up to date.';
+
+			} else {
+
+				return 'Update WordPress immediately.';
+
+			}
+
+		}
 
 
 
@@ -148,11 +175,17 @@ class EmailManager extends AdminTools {
 
 						$repo_plugin = $this->get_plugin_info( 'https://api.wordpress.org/plugins/info/1.0/' . $slug );
 
-						 print_r( $repo_plugin[ 'name' ] . $repo_plugin[ 'version' ] . '<br />');
+						if ( empty( $repo_plugin ) ) {
+
+							continue;
+
+						}
+
+						// print_r( $repo_plugin[ 'name' ] . $repo_plugin[ 'version' ] . '<br />');
 
 
 
-						if ( $plugin_version < $repo_plugin[ 'version' ] ) {
+						if ( version_compare($plugin_version, $repo_plugin[ 'version' ], '<') ) {
 
 							array_push( $plugins_that_need_updates, $plugin_name );
 
@@ -170,30 +203,36 @@ class EmailManager extends AdminTools {
 
 					$a_theme = array_slice( $installed_themes, 0, 1 );
 
-					print_r( array_slice( $a_theme, 0, 1 ) );
+					// print_r( array_slice( $a_theme, 0, 1 ) );
 
 					$themes_that_need_updates = array();
 
 					foreach( $installed_themes as $theme ) {
 
-						$theme_name = $theme['Name'];
+						$theme_name = $theme->get( 'Name' );
 
 						// print_r( $plugin_name . '<br />' );
 
-						$theme_version = $theme['Version'];
+						$theme_version = $theme->get( 'Version' );
 
-						$slug = sanitize_title( $theme['Name'] );
+						$slug = $theme->get( 'TextDomain' );
 
 						$repo_theme = $this->get_theme_info( $slug );
 
-						 //print_r( $repo_theme[ 'name' ] . $repo_theme[ 'version' ] . '<br />');
+						if ( empty( $repo_theme ) ) {
+
+							continue;
+
+						}
 
 
 
-						if ( $theme_version < $repo_theme[ 'version' ] ) {
-
+						if ( version_compare( $theme_version, $repo_theme->version, '<' ) ) {
+						//
 							array_push( $themes_that_need_updates, $theme_name );
 
+							//print_r( $theme_name . ': ' . $repo_theme->version . '<br />');
+						//
 						}
 
 
