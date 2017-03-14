@@ -49,12 +49,10 @@ class AdminTools {
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
 		include_once( plugin_dir_path( __FILE__ ) . 'send-email.php' );
 
-		add_action( 'at_send_email', [ 'EmailManager', 'at_send_email' ] );
-
 	}
 
 	public function init() {
-		
+
 		// enqueue the admin stylesheet
 		add_action( 'admin_enqueue_scripts', [ $this, 'at_enqueue_admin_styles' ] );
 
@@ -148,6 +146,8 @@ class AdminTools {
 				'SSL'					=>	$this->ssl_check( false ),
 
 			);
+
+			update_option( 'at_update_info', self::$updates );
 
 			 //print_r( self::$updates );
 

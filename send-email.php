@@ -2,16 +2,21 @@
 
 class EmailManager extends AdminTools {
 
+	public $at_updates;
+
 		public function __construct() {
 
+				$this->at_updates = get_option( 'at_update_info', false );
+
 			// actions
-			add_action( 'at_send_email', $this->at_send_email(), 2, 2 );
+			add_action( 'at_send_email', [ $this, 'at_send_email' ] );
 
 			$this->init();
 
 		}
 
 		public function init() {
+
 
 			$prevent_email_cron = get_option( 'at_prevent_email_cron' );
 
@@ -28,127 +33,128 @@ class EmailManager extends AdminTools {
 
 		public function at_send_email() {
 
-			wp_die( 'at_send_email()' );
+			$admin_email = get_bloginfo('admin_email');
 
-			AdminTools::at_check_for_updates();
+			$subject = 'Updates Available for ' . get_bloginfo( 'url' );
 
-			// $updates = AdminTools::$updates;
-			//
-			// $admin_email = get_bloginfo('admin_email');
-			//
-			// $subject = 'Updates Available for ' . get_bloginfo( 'url' );
-			//
-			// $plugins_that_need_updates = $this->get_plugins_that_need_updates( get_plugins() );
-			//
-			// $themes_that_need_updates = $this->get_themes_that_need_updates( wp_get_themes() );
-			//
-			//
-			// $message =
-			// '<html>
-			// 	<head>
-			// 	<style>
-			// 			table {
-			// 				font-family: arial, sans-serif;
-			// 				border-collapse: collapse;
-			// 			}
-			//
-			// 			td, th {
-			// 				border: 1px solid #dddddd;
-			// 				text-align: left;
-			// 				padding: 8px;
-			// 			}
-			//
-			// 			tr:nth-child(even) {
-			// 				background-color: #dddddd;
-			// 			}
-			// 	</style>
-			// 	</head>
-			//
-			// 	<body>
-			//
-			// <center>
-			// <h1>' . 'Updates for ' . get_bloginfo( 'url' ) . '</h1>
-			// <table style="width: 700px;">' .
-			//
-			// 	'	<thead>
-			// 		<tr>
-			// 			<th>Update</th>
-			// 			<th>Details</th>
-			// 		</tr>
-			// 		</thead>
-			//
-			//
-			// 		<tr>
-			// 			<td>' . AdminTools::$updates['plugins'] . ' Plugin Update(s)</td>
-			// 			<td>';
-			//
-			// 		if ( AdminTools::$updates['plugins'] >= 1 ) {
-			//
-			//
-			// 			foreach( $plugins_that_need_updates as $plugin) {
-			//
-			// 				$message .= $plugin . ', ';
-			//
-			// 			}
-			//
-			//
-			// 		}
-			//
-			// 		$message .=
-			// 			'</td>
-			// 		</tr>';
-			//
-			// 		$message .=
-			// 	'	<tr>
-			// 			<td>' . AdminTools::$updates['themes'] . ' Theme Update(s)</td>
-			// 			<td>';
-			//
-			// 	if ( AdminTools::$updates['themes'] >= 1 ) {
-			//
-			// 		foreach( $themes_that_need_updates as $theme) {
-			//
-			// 			$message .= $theme . ', ';
-			//
-			// 		}
-			//
-			// }
-			//
-			// $message .=
-			// 	'</td>
-			// </tr>';
-			//
-			//
-			// 	$message .=
-			// 		'<tr>
-			// 			<td>' . $updates['WordPress'] . ' WordPress Update(s)'  . '</td>
-			// 	 		<td>' . $this->wp_update_message( $updates['WordPress'] ) . '</td>
-			// 		</tr>';
-			//
-			// 	$message .=
-			// 	'<tr>
-			// 		<td>'. $updates['PHP_update'] . ' PHP Update(s)' . '</td>
-			// 		<td>' . 'PHP ' . phpversion() . ' supported until ' . date("m-d-Y", AdminTools::$updates['PHP_warning']) . '.' . '</td>
-			// 	</tr>';
-			//
-			// 	$message .=
-			// 	'<tr>
-			// 		<td>' . 'SSL' . '</td>
-			// 		<td>' . $this->ssl_status(AdminTools::$updates['SSL'] ) . '</td>
-			// 	</tr>';
-			//
-			// $message .=
-			// '</table>
-			// </center>
-			//
-			// </body>
-			// </html>';
-			//
-			// $headers = "MIME-Version: 1.0\r\n";
-			//
-			// $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-			//
-			//
-			// wp_mail( $admin_email, $subject, $message, $headers);
+			if ( ! function_exists( 'get_plugins' ) ) {
+
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+			}
+
+			$plugins_that_need_updates = $this->get_plugins_that_need_updates( get_plugins() );
+
+			update_option( 'at-testing', $plugins_that_need_updates );
+
+			$themes_that_need_updates = $this->get_themes_that_need_updates( wp_get_themes() );
+
+
+			$message =
+			'<html>
+				<head>
+				<style>
+						table {
+							font-family: arial, sans-serif;
+							border-collapse: collapse;
+						}
+
+						td, th {
+							border: 1px solid #dddddd;
+							text-align: left;
+							padding: 8px;
+						}
+
+						tr:nth-child(even) {
+							background-color: #dddddd;
+						}
+				</style>
+				</head>
+
+				<body>
+
+			<center>
+			<h1>' . 'Updates for ' . get_bloginfo( 'url' ) . '</h1>
+			<table style="width: 700px;">' .
+
+				'	<thead>
+					<tr>
+						<th>Update</th>
+						<th>Details</th>
+					</tr>
+					</thead>
+
+					<tr>
+						<td>' . $this->at_updates['plugins'] . ' Plugin Update(s)</td>
+						<td>';
+
+					if ( $this->at_updates['plugins'] >= 1 ) {
+
+
+						foreach( $plugins_that_need_updates as $plugin) {
+
+							$message .= $plugin . ', ';
+
+						}
+
+
+					}
+
+					$message .=
+						'</td>
+					</tr>';
+
+					$message .=
+				'	<tr>
+						<td>' . $this->at_updates['themes'] . ' Theme Update(s)</td>
+						<td>';
+
+				if ( $this->at_updates['themes'] >= 1 ) {
+
+					foreach( $themes_that_need_updates as $theme) {
+
+						$message .= $theme . ', ';
+
+					}
+
+			}
+
+			$message .=
+				'</td>
+			</tr>';
+
+
+				$message .=
+					'<tr>
+						<td>' . $updates['WordPress'] . ' WordPress Update(s)'  . '</td>
+				 		<td>' . $this->wp_update_message( $updates['WordPress'] ) . '</td>
+					</tr>';
+
+				$message .=
+				'<tr>
+					<td>'. $updates['PHP_update'] . ' PHP Update(s)' . '</td>
+					<td>' . 'PHP ' . phpversion() . ' supported until ' . date("m-d-Y", $this->at_updates['PHP_warning']) . '.' . '</td>
+				</tr>';
+
+				$message .=
+				'<tr>
+					<td>' . 'SSL' . '</td>
+					<td>' . $this->ssl_status($this->at_updates['SSL'] ) . '</td>
+				</tr>';
+
+			$message .=
+			'</table>
+			</center>
+
+			</body>
+			</html>';
+
+			$headers = "MIME-Version: 1.0\r\n";
+
+			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+
+			wp_mail( $admin_email, $subject, $message, $headers);
 
 		}
 
@@ -241,7 +247,7 @@ class EmailManager extends AdminTools {
 
 				public function get_plugins_that_need_updates( $installed_plugins ) {
 
-					$skip_plugins = array( 'BR Options Page', 'Home Slider', 'Invalid Login Redirect', 'PHP Notifier' );
+					update_option( 'yhrstgf', $installed_plugins );
 
 					$plugins_that_need_updates = array();
 
@@ -249,20 +255,9 @@ class EmailManager extends AdminTools {
 
 						$plugin_name = $plugin['Name'];
 
-						// print_r( $plugin_name . '<br />' );
-
-						if ( in_array( $plugin_name, $skip_plugins, true ) ) {
-
-							continue;
-
-						}
-
-
 						$plugin_version = $plugin['Version'];
 
-						$slug = sanitize_title( $plugin['Name'] );
-
-						$repo_plugin = $this->get_plugin_info( 'https://api.wordpress.org/plugins/info/1.0/' . $slug );
+						$repo_plugin = $this->get_plugin_info( 'https://api.wordpress.org/plugins/info/1.0/' . $plugin['TextDomain'] );
 
 						if ( empty( $repo_plugin ) ) {
 
@@ -270,11 +265,7 @@ class EmailManager extends AdminTools {
 
 						}
 
-						// print_r( $repo_plugin[ 'name' ] . $repo_plugin[ 'version' ] . '<br />');
-
-
-
-						if ( version_compare($plugin_version, $repo_plugin[ 'version' ], '<') ) {
+						if ( version_compare( $plugin_version, $repo_plugin[ 'version' ], '<' ) ) {
 
 							array_push( $plugins_that_need_updates, $plugin_name );
 
