@@ -59,6 +59,12 @@ class Settings extends AdminTools {
 					[ $this, 'at_sanitize' ]  // validation callback
 				);
 
+				register_setting( // (actually a settings group)
+					'at_prevent_email_cron',                 // group name
+					'at_prevent_email_cron',          // option name
+					[ $this, 'at_sanitize' ]  // validation callback
+				);
+
 
 
 				add_settings_section(

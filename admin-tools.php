@@ -17,11 +17,13 @@ class AdminTools {
 
 	public static $grades;
 
-	public function __construct() {
+
+	public function __construct( ) {
+
+
 
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
-			'at_prevent_email_cron' => true,
 			'at_user_timeout' => 5,
 			'at_send_email' => false,
 			'at_check_plugins' => false,
@@ -29,6 +31,12 @@ class AdminTools {
 			'at_check_wordpress' => false,
 			'at_check_php' => false,
 		] );
+
+		if ( empty( get_option( 'at_prevent_email_cron' ) ) ) {
+
+			update_option( 'at_prevent_email_cron', 0, 1 );
+
+		}
 
 		// check for updates
 		add_action( 'admin_bar_menu', [ $this, 'at_check_for_updates' ] );
@@ -41,33 +49,12 @@ class AdminTools {
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
 		include_once( plugin_dir_path( __FILE__ ) . 'send-email.php' );
 
+		add_action( 'at_send_email', [ 'EmailManager', 'at_send_email' ] );
 
 	}
 
 	public function init() {
-
-		// get the option that is set when the crontask is scheduled
-		// $prevent_email_cron = Settings::$options['at_prevent_email_cron'];
-		//
-		// print_r( $prevent_email_cron );
-
-		//wp_mail( "strawberry@test.org", 'subject', 'frogger');
-
-		// schedule crontask if it has not already been scheduled
-	// 	if ( 0 == $prevent_email_cron ) {
-	//
-	// 			wp_schedule_event(time(), 'daily', 'send_my_updates_notification');
-	//
-	// 			//set the option to say the crontask has already been scheduled
-	// 			Settings::$options['at_prevent_email_cron'] = true;
-	//
-	// 			update_option( 'at_options', Settings::$options );
-	//
-	// }
-
-		// add action to send email when cron task is triggered
-		//add_action( 'send_my_updates_notification', [ $this, 'un_send_email' ] );
-
+		
 		// enqueue the admin stylesheet
 		add_action( 'admin_enqueue_scripts', [ $this, 'at_enqueue_admin_styles' ] );
 
@@ -115,8 +102,6 @@ class AdminTools {
 		// get update data (only after role of user has been checked)
 			$update_data = wp_get_update_data();
 
-			print_r( $update_data['counts']['wordpress'] );
-
 			$php_info = PHPVersioner::$info;
 
 			$current_php_version = ( 2 == substr_count( phpversion(), '.' ) ) ? substr(phpversion(), 0, -2) : phpversion();
@@ -160,6 +145,8 @@ class AdminTools {
 
 				'PHP_warning' => $user_version_info[ 'supported_until' ],
 
+				'SSL'					=>	$this->ssl_check( false ),
+
 			);
 
 			 //print_r( self::$updates );
@@ -167,44 +154,7 @@ class AdminTools {
 	}
 
 
-	public function un_send_email() {
 
-		// send email about selected updates here by building the email based on the options
-		$watched_updates = 0;
-
-		$message = 'There are updates available for ' . get_option( 'siteurl' ) . ' available.' . "\r\n";
-
-		if ( get_option( 'at_option1' ) ) {
-
-			$watched_updates = $watched_updates + self::$updates['plugins'];
-
-			$message = $message . self::$updates['plugins'] . ' plugins.' . "\r\n";
-
-		}
-
-		if ( get_option( 'at_option2' ) ) {
-
-			$watched_updates = $watched_updates + self::$updates['themes'];
-
-			$message = $message . self::$updates['themes'] . ' themes.' . "\r\n";
-
-		}
-
-		if ( get_option( 'at_option3' ) ) {
-
-			$watched_updates = $watched_updates + self::$updates['WordPress'];
-
-			$message = $message . self::$updates['WordPress'] . ' WordPress Core Updates.' . "\r\n";
-
-		}
-
-		if ( $watched_updates > 0 ) {
-
-			wp_mail( get_option( 'admin_email' ), $watched_updates . 'for ' . get_option( 'siteurl' ) . ' available!', $message);
-
-		}
-
-	}
 
 			function list_last_logins() {
 
@@ -710,7 +660,9 @@ class AdminTools {
 		// wp_die( $hook );
 
 		if ( 'index.php' !== $hook ) {
+
 			return;
+
 		}
 
 		wp_register_style( 'at_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );

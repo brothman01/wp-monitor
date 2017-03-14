@@ -4,8 +4,25 @@ class EmailManager extends AdminTools {
 
 		public function __construct() {
 
-			// other stuff
-			add_action( 'activity_box_end', [ $this, 'at_send_email' ] );
+			// actions
+			add_action( 'at_send_email', [ $this, 'at_send_email' ] );
+
+			$this->init();
+
+		}
+
+		public function init() {
+
+			$prevent_email_cron = get_option( 'at_prevent_email_cron' );
+
+		 // schedule crontask if it has not already been scheduled
+		 if ( 0 == $prevent_email_cron ) {
+
+				 wp_schedule_event( time(), 'daily', 'at_send_email' );
+
+				 update_option( 'at_prevent_email_cron', 1 );
+
+	 }
 
 		}
 
@@ -25,59 +42,127 @@ class EmailManager extends AdminTools {
 
 
 			$message =
-			'<h1>Updates:</h1> ' . "\r\n\r\n" .
-			'<ol>' . "\r\n" .
-				'	<li>Plugin Updates: ' . $updates['plugins'] . '</li>' . "\r\n";
+			'<html>
+				<head>
+				<style>
+						table {
+							font-family: arial, sans-serif;
+							border-collapse: collapse;
+						}
+
+						td, th {
+							border: 1px solid #dddddd;
+							text-align: left;
+							padding: 8px;
+						}
+
+						tr:nth-child(even) {
+							background-color: #dddddd;
+						}
+				</style>
+				</head>
+
+				<body>
+
+			<center>
+			<h1>' . 'Updates for ' . get_bloginfo( 'url' ) . '</h1>
+			<table style="width: 700px;">' .
+
+				'	<thead>
+					<tr>
+						<th>Update</th>
+						<th>Details</th>
+					</tr>
+					</thead>
+
+
+					<tr>
+						<td>' . AdminTools::$updates['plugins'] . ' Plugin Update(s)</td>
+						<td>';
 
 					if ( AdminTools::$updates['plugins'] >= 1 ) {
 
 
 						foreach( $plugins_that_need_updates as $plugin) {
 
-							$message = $message . '	- ' . $plugin . "\n\n";
+							$message .= $plugin . ', ';
 
 						}
 
 
-					} else {
-
-						$message = $message . "\n\n";
-
 					}
 
-				$message = $message .
-				'	<li>Theme Updates: ' . $updates['themes'] . '</li>' . "\r\n";
+					$message .=
+						'</td>
+					</tr>';
+
+					$message .=
+				'	<tr>
+						<td>' . AdminTools::$updates['themes'] . ' Theme Update(s)</td>
+						<td>';
 
 				if ( AdminTools::$updates['themes'] >= 1 ) {
 
 					foreach( $themes_that_need_updates as $theme) {
 
-						$message = $message . '	- ' . $theme . "\n\n";
+						$message .= $theme . ', ';
 
 					}
 
-			} else {
-
-				$message = $message . "\n\n";
-
 			}
 
+			$message .=
+				'</td>
+			</tr>';
 
-				$message = $message .
-				'	<li>WordPress Updates: ' . $updates['WordPress'] . '</li>' . "\r\n" .
-				'	- ' . $this->wp_update_message( $updates['WordPress'] ) . "\r\n\r\n";
 
-				$message = $message .
-				'	<li>PHP Updates: ' . $updates['PHP_update'] . '</li>' . "\r\n" .
+				$message .=
+					'<tr>
+						<td>' . $updates['WordPress'] . ' WordPress Update(s)'  . '</td>
+				 		<td>' . $this->wp_update_message( $updates['WordPress'] ) . '</td>
+					</tr>';
 
-				'	' . '- PHP ' . phpversion() . ' supported until ' . date("m-d-Y", AdminTools::$updates['PHP_warning']) . '.' . "\r\n" .
+				$message .=
+				'<tr>
+					<td>'. $updates['PHP_update'] . ' PHP Update(s)' . '</td>
+					<td>' . 'PHP ' . phpversion() . ' supported until ' . date("m-d-Y", AdminTools::$updates['PHP_warning']) . '.' . '</td>
+				</tr>';
 
-			'</ol>';
+				$message .=
+				'<tr>
+					<td>' . 'SSL' . '</td>
+					<td>' . $this->ssl_status(AdminTools::$updates['SSL'] ) . '</td>
+				</tr>';
 
-			wp_mail( $admin_email, $subject, $message );
+			$message .=
+			'</table>
+			</center>
+
+			</body>
+			</html>';
+
+			$headers = "MIME-Version: 1.0\r\n";
+			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+			wp_mail( $admin_email, $subject, $message, $headers);
 
 		}
 
+		public function ssl_status( $on ) {
+
+			if ( $on ) {
+
+				return 'On';
+
+			} else {
+
+				return 'Off';
+
+			}
+
+			return;
+
+		}
 
 
 		public function get_plugin_info( $slug ) {
