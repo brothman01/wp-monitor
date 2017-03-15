@@ -19,9 +19,41 @@ class UserLog extends AdminTools {
 
  				$user = $current_user->user_login;
 
-		    update_user_meta($current_user->ID, 'last_login_timestamp', current_time('mysql', 1));
+				$args = array(
+				'post_type' => 'visitor',
+				'title' => $this->at_get_user_ip() . '',
+				);
 
-				update_user_meta($current_user->ID, 'last_ip', $this->at_get_user_ip() );
+				$the_query = new WP_Query( $args );
+
+				if ( $the_query->have_posts() ) {
+
+					print_r( 'this visitor has already come to the site.' );
+
+					/* Restore original Post Data */
+					wp_reset_postdata();
+
+			} else {
+
+				print_r ('Welcome new visitor');
+				
+				$ip = $this->at_get_user_ip();
+		// Create post object
+				$my_post = array(
+				  'post_title'    => $ip . '',
+				  'post_content'  => '',
+				  'post_status'   => 'publish',
+					'post_type' => 'visitor',
+					);
+
+				// Insert the post into the database
+				wp_insert_post( $my_post );
+
+		}
+
+		    //update_user_meta($current_user->ID, 'last_login_timestamp', current_time('mysql', 1));
+
+				//update_user_meta($current_user->ID, 'last_ip', $this->at_get_user_ip() );
 
 		}
 

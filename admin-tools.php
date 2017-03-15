@@ -2,7 +2,7 @@
 /*
  * Plugin Name: Admin Tools
  * Description: Notify user when updates to WordPress are needed.
- * Version:     1.0.0
+ * Version:     0.0.1
  * Author:      Ben Rothman
  * Slug:				???
  * Author URI:  http://www.BenRothman.org
@@ -24,12 +24,21 @@ class AdminTools {
 
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
+
 			'at_user_timeout' => 5,
+
+			'at_how_often'	=>	'Daily',
+
 			'at_send_email' => false,
+
 			'at_check_plugins' => false,
+
 			'at_check_themes' => false,
+
 			'at_check_wordpress' => false,
+
 			'at_check_php' => false,
+
 		] );
 
 		if ( empty( get_option( 'at_prevent_email_cron' ) ) ) {
@@ -45,9 +54,16 @@ class AdminTools {
 
 		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
+
 		include_once( plugin_dir_path( __FILE__ ) . 'user-log.php' );
+
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
+
 		include_once( plugin_dir_path( __FILE__ ) . 'send-email.php' );
+
+		//add cron times
+		add_filter( 'cron_schedules',          array( $this, 'custom_cron_schedules' ) );
+
 
 	}
 
@@ -59,15 +75,38 @@ class AdminTools {
 		// dashboard widget
 		add_action( 'admin_footer', [ $this, 'at_dashboard_widget' ] );
 
-		//print_r( PHPVersioner::$info );
+	}
 
+	public function custom_cron_schedules( $schedules ) {
+
+		if ( ! isset( $schedules['weekly'] ) ) {
+
+			$schedules['weekly'] = array(
+				'interval' => 604800,
+				'display'  => __( 'Once Per Week' ),
+			);
+
+		}
+
+		if ( ! isset( $schedules['monthly'] ) ) {
+
+			$schedules['monthly'] = array(
+				'interval' => 2628000,
+				'display'  => __( 'Once Per Month' ),
+			);
+
+		}
+
+		return $schedules;
 
 	}
 
 	function at_dashboard_widget() {
 	// Bail if not viewing the main dashboard page
 	if ( get_current_screen()->base !== 'dashboard' ) {
+
 		return;
+
 	}
 	?>
 

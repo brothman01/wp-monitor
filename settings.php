@@ -109,6 +109,14 @@ class Settings extends AdminTools {
 								);
 
 								add_settings_field(
+									'at_how_often',      // id
+									'Email Frequency',              // setting title
+									[ $this, 'at_how_often_callback' ],    // display callback
+									'options_page',                 // settings page
+									'options_br_id'                  // settings section
+								);
+
+								add_settings_field(
 									'at_check_plugins',      // id
 									'Check Plugins?',              // setting title
 									[ $this, 'at_check_plugins_callback' ],    // display callback
@@ -156,6 +164,8 @@ class Settings extends AdminTools {
 
 					$valid['at_send_email']       	= (bool) empty( $input['at_send_email'] ) ? false : true;
 
+					$valid['at_how_often']       	= isset( $input['at_how_often'] ) ? $input['at_how_often'] : 'Daily';
+
 					$valid['at_check_plugins']       	= (bool) empty( $input['at_check_plugins'] ) ? false : true;
 
 					$valid['at_check_themes']       	= (bool) empty( $input['at_check_themes'] ) ? false : true;
@@ -167,6 +177,32 @@ class Settings extends AdminTools {
 
 					// return the clean array
 					return $valid;
+
+				}
+
+				public function at_how_often_callback() {
+
+					$options = array(
+						'never'   => 'never',
+						'daily'   => 'daily',
+						'weekly'  => 'weekly',
+						'monthly' => 'monthly',
+					);
+
+					print( '<select name="at_options[at_how_often]">' );
+
+					foreach ( $options as $value => $label ) {
+
+						printf(
+							'<option value="%1$s" %2$s>%3$s</option>',
+							esc_attr( $value ),
+							selected( self::$options['at_how_often'], $value ),
+							esc_html( $label )
+						);
+
+					}
+
+					print( '</select>' );
 
 				}
 
