@@ -93,12 +93,12 @@ class EmailManager extends AdminTools {
 
 						foreach( $plugins_that_need_updates as $plugin) {
 
-							$message .= $plugin . ', ';
+							$message .= $plugin . "\r\n";
 
 						}
 
-
 					}
+
 
 					$message .=
 						'</td>
@@ -113,7 +113,7 @@ class EmailManager extends AdminTools {
 
 					foreach( $themes_that_need_updates as $theme) {
 
-						$message .= $theme . ', ';
+						$message .= $theme . "\r\n";
 
 					}
 

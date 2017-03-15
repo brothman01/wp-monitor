@@ -39,7 +39,7 @@ class AdminTools {
 		}
 
 		// check for updates
-		add_action( 'admin_bar_menu', [ $this, 'at_check_for_updates' ] );
+		add_action( 'init', [ $this, 'at_check_for_updates' ] );
 
 		add_action( 'plugins_loaded', [ $this, 'init' ] );
 
@@ -149,7 +149,6 @@ class AdminTools {
 
 			update_option( 'at_update_info', self::$updates );
 
-			 //print_r( self::$updates );
 
 	}
 
