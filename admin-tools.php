@@ -659,6 +659,39 @@ class AdminTools {
 
 			}
 
+			public function at_how_often_callback() {
+
+				$options = array(
+					'never'   => 'never',
+
+					'hourly'	=>	'hourly',
+
+					'daily'   => 'daily',
+
+					'weekly'  => 'weekly',
+
+					'monthly' => 'monthly',
+
+				);
+
+				print( '<select name="at_options[at_how_often]">' );
+
+				foreach ( $options as $value => $label ) {
+
+					printf(
+						'<option value="%1$s" %2$s>%3$s</option>',
+						esc_attr( $value ),
+						selected( self::$options['at_how_often'], $value ),
+						esc_html( $label )
+					);
+
+				}
+
+				print( '</select>' );
+
+			}
+
+
 			public function at_check_plugins_callback() {
 
 				// print the HTML to create the field

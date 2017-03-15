@@ -164,7 +164,7 @@ class Settings extends AdminTools {
 
 					$valid['at_send_email']       	= (bool) empty( $input['at_send_email'] ) ? false : true;
 
-					$valid['at_how_often']       	= isset( $input['at_how_often'] ) ? $input['at_how_often'] : 'Daily';
+					$valid['at_how_often']       	= isset( $input['at_how_often'] ) ? $input['at_how_often'] : 'daily';
 
 					$valid['at_check_plugins']       	= (bool) empty( $input['at_check_plugins'] ) ? false : true;
 

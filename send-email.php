@@ -23,26 +23,34 @@ class EmailManager extends AdminTools {
 
 			$prevent_email_cron = get_option( 'at_prevent_email_cron' );
 
-		// schedule crontask if it has not already been scheduled
+			// schedule crontask if it has not already been scheduled
 		if ( 0 == $prevent_email_cron ) {
 
-		wp_schedule_event( time(), $at_how_often, 'at_send_email' );
+			wp_schedule_event( time(), $at_how_often, 'at_send_email' );
 
-		update_option( 'at_prevent_email_cron', 1 );
+			update_option( 'at_prevent_email_cron', 1 );
 
-	 }
+		}
 
-	 if ( wp_get_schedule( 'at_send_email' ) <> $at_how_often ) {
+		$current_frequency = wp_get_schedule( 'at_send_email' );
 
-		 update_option('testing', wp_get_schedule( 'at_send_email' ) <> $at_how_often );
+		if ( $current_frequency == 'never') {
 
-		 wp_clear_scheduled_hook( 'at_send_email' );
+			wp_clear_scheduled_hook( 'at_send_email' );
 
-		 wp_schedule_event( time(), $at_how_often, 'at_send_email' );
+		}
 
-		 update_option( 'at_prevent_email_cron', 1 );
+		update_option( 'testing', $current_frequency . ' = ' . $at_how_often );
 
-	 }
+		if ( $current_frequency <> $at_how_often ) {
+
+			 wp_clear_scheduled_hook( 'at_send_email' );
+
+			 wp_schedule_event( time(), $at_how_often, 'at_send_email' );
+
+			 update_option( 'at_prevent_email_cron', 1 );
+
+		 }
 
 		}
 
