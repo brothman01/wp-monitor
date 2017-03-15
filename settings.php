@@ -184,9 +184,15 @@ class Settings extends AdminTools {
 
 					$options = array(
 						'never'   => 'never',
+
+						'hourly'	=>	'hourly',
+
 						'daily'   => 'daily',
+
 						'weekly'  => 'weekly',
+
 						'monthly' => 'monthly',
+
 					);
 
 					print( '<select name="at_options[at_how_often]">' );

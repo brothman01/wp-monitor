@@ -19,18 +19,28 @@ class EmailManager extends AdminTools {
 
 		public function init() {
 
-			$at_how_often = self::$options['$at_how_often'];
-
-			//print_r( $at_how_often );
+			$at_how_often = parent::$options['at_how_often'];
 
 			$prevent_email_cron = get_option( 'at_prevent_email_cron' );
 
-		 // schedule crontask if it has not already been scheduled
-		 if ( 0 == $prevent_email_cron ) {
+		// schedule crontask if it has not already been scheduled
+		if ( 0 == $prevent_email_cron ) {
 
-				 wp_schedule_event( time(), $at_how_often, 'at_send_email' );
+		wp_schedule_event( time(), $at_how_often, 'at_send_email' );
 
-				 update_option( 'at_prevent_email_cron', 1 );
+		update_option( 'at_prevent_email_cron', 1 );
+
+	 }
+
+	 if ( wp_get_schedule( 'at_send_email' ) <> $at_how_often ) {
+
+		 update_option('testing', wp_get_schedule( 'at_send_email' ) <> $at_how_often );
+
+		 wp_clear_scheduled_hook( 'at_send_email' );
+
+		 wp_schedule_event( time(), $at_how_often, 'at_send_email' );
+
+		 update_option( 'at_prevent_email_cron', 1 );
 
 	 }
 

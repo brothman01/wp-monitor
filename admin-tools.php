@@ -20,14 +20,12 @@ class AdminTools {
 
 	public function __construct( ) {
 
-
-
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
 
 			'at_user_timeout' => 5,
 
-			'at_how_often'	=>	'Daily',
+			'at_how_often'	=>	'daily',
 
 			'at_send_email' => false,
 
@@ -78,6 +76,15 @@ class AdminTools {
 	}
 
 	public function custom_cron_schedules( $schedules ) {
+
+		if ( ! isset( $schedules['hourly'] ) ) {
+
+			$schedules['hourly'] = array(
+				'interval' => 3600,
+				'display'  => __( 'Once Per Hour' ),
+			);
+
+		}
 
 		if ( ! isset( $schedules['weekly'] ) ) {
 
