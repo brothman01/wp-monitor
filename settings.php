@@ -148,6 +148,14 @@ class Settings extends AdminTools {
 									'options_br_id'                  // settings section
 								);
 
+								add_settings_field(
+									'at_check_ssl',      // id
+									'Check SSL?',              // setting title
+									[ $this, 'at_check_ssl_callback' ],    // display callback
+									'options_page',                 // settings page
+									'options_br_id'                  // settings section
+								);
+
 				}
 
 				public function at_sanitize( $input ) {
@@ -173,6 +181,8 @@ class Settings extends AdminTools {
 					$valid['at_check_wordpress']      = (bool) empty( $input['at_check_wordpress'] ) ? false : true;
 
 					$valid['at_check_php']     			  = (bool) empty( $input['at_check_php'] ) ? false : true;
+
+					$valid['at_check_ssl']     			  = (bool) empty( $input['at_check_ssl'] ) ? false : true;
 
 
 					// return the clean array
@@ -281,6 +291,16 @@ class Settings extends AdminTools {
 					printf(
 						'<input id="at_check_php" name="at_options[at_check_php]" type="checkbox" value="1" %1$s />',
 						checked( true, Settings::$options['at_check_php'], false )
+					);
+
+				}
+
+				public function at_check_ssl_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_check_ssl" name="at_options[at_check_ssl]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_check_ssl'], false )
 					);
 
 				}

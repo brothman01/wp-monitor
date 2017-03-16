@@ -59,6 +59,8 @@ class EmailManager extends AdminTools {
 
 		public function at_send_email() {
 
+			$options = get_option( 'at_options' );
+
 			$admin_email = get_bloginfo('admin_email');
 
 			$subject = 'Updates Available for ' . get_bloginfo( 'url' );
@@ -108,9 +110,11 @@ class EmailManager extends AdminTools {
 						<th>Update</th>
 						<th>Details</th>
 					</tr>
-					</thead>
+					</thead>';
 
-					<tr>
+					if ( $options['at_check_plugins'] == true ) {
+
+					$message .= '<tr>
 						<td>' . $this->at_updates['plugins'] . ' Plugin Update(s)</td>
 						<td>';
 
@@ -125,10 +129,15 @@ class EmailManager extends AdminTools {
 
 					}
 
-
 					$message .=
 						'</td>
 					</tr>';
+
+				}
+
+
+
+					if ( $options['at_check_themes'] == true ) {
 
 					$message .=
 				'	<tr>
@@ -137,18 +146,21 @@ class EmailManager extends AdminTools {
 
 				if ( $this->at_updates['themes'] >= 1 ) {
 
-					foreach( $themes_that_need_updates as $theme) {
+						foreach( $themes_that_need_updates as $theme) {
 
-						$message .= $theme . "\r\n";
+							$message .= $theme . "\r\n";
+
+						}
+
+				}
+
+					$message .=
+						'</td>
+					</tr>';
 
 					}
 
-			}
-
-			$message .=
-				'</td>
-			</tr>';
-
+					if ( $options['at_check_wordpress'] == true ) {
 
 				$message .=
 					'<tr>
@@ -156,11 +168,19 @@ class EmailManager extends AdminTools {
 				 		<td>' . $this->wp_update_message( $updates['WordPress'] ) . '</td>
 					</tr>';
 
+				}
+
+				if ( $options['at_check_php'] == true ) {
+
 				$message .=
 				'<tr>
 					<td>'. $updates['PHP_update'] . ' PHP Update(s)' . '</td>
 					<td>' . 'PHP ' . phpversion() . ' supported until ' . date("m-d-Y", $this->at_updates['PHP_warning']) . '.' . '</td>
 				</tr>';
+
+			}
+
+			if ( $options['at_check_ssl'] == true ) {
 
 				$message .=
 				'<tr>
@@ -170,9 +190,12 @@ class EmailManager extends AdminTools {
 
 			$message .=
 			'</table>
-			</center>
+			</center>';
 
-			</body>
+		}
+
+			$message .=
+			'</body>
 			</html>';
 
 			$headers = "MIME-Version: 1.0\r\n";

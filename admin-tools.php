@@ -37,6 +37,8 @@ class AdminTools {
 
 			'at_check_php' => false,
 
+			'at_check_ssl' => false,
+
 		] );
 
 		if ( empty( get_option( 'at_prevent_email_cron' ) ) ) {
