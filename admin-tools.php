@@ -472,9 +472,9 @@ class AdminTools {
 				return '<div class="onethird cell">
 				<h3>' . $title . '</h3>
 
-					<div class="gauge overall">' .
+					<div class="gauge overall">
 
-						$value .
+						<div class="counter">' . $value . '</div>' . 
 
 					'</div>
 
