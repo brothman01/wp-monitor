@@ -382,7 +382,7 @@ class AdminTools {
 
 							<p>Supported Until: ' . self::$updates['PHP_supported_until'] . '</p>
 
-							<input id="php_action_field" type="text" maxlength="14" size="14" style="text-align: center; font-size: 18px; font-style: bold;" readonly />
+							<input id="php_action_field" type="text" maxlength="14" size="14" style="text-align: center; font-style: bold;" readonly />
 
 							<script>
 
