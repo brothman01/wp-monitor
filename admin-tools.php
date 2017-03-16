@@ -50,6 +50,9 @@ class AdminTools {
 
 		add_action( 'plugins_loaded', [ $this, 'init' ] );
 
+		//add cron times
+		add_filter( 'cron_schedules', [ $this, 'custom_cron_schedules' ] );
+
 		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
 
@@ -59,8 +62,6 @@ class AdminTools {
 
 		include_once( plugin_dir_path( __FILE__ ) . 'send-email.php' );
 
-		//add cron times
-		add_filter( 'cron_schedules',          array( $this, 'custom_cron_schedules' ) );
 
 
 	}
@@ -77,14 +78,6 @@ class AdminTools {
 
 	public function custom_cron_schedules( $schedules ) {
 
-		if ( ! isset( $schedules['hourly'] ) ) {
-
-			$schedules['hourly'] = array(
-				'interval' => 3600,
-				'display'  => __( 'Once Per Hour' ),
-			);
-
-		}
 
 		if ( ! isset( $schedules['weekly'] ) ) {
 

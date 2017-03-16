@@ -21,7 +21,7 @@ class Settings extends AdminTools {
 	public function at_add_plugin_page() {
 
 			 // 1. Add the settings page
-			 add_options_page(
+			 add_management_page(
 				 'Options Page', // page title
 					'Admin Tools', // menu title
 					'manage_options', // capability required of user

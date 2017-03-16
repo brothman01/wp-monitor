@@ -21,10 +21,12 @@ class EmailManager extends AdminTools {
 
 			$at_how_often = parent::$options['at_how_often'];
 
+			//wp_die( $at_how_often );
+
 			$prevent_email_cron = get_option( 'at_prevent_email_cron' );
 
 			// schedule crontask if it has not already been scheduled
-		if ( 0 == $prevent_email_cron ) {
+		if ( 0 == $prevent_email_cron ||  ( 0 == $prevent_email_cron & $at_how_often != get_option( parent::$options['at_how_often'] ) ) ) {
 
 			wp_schedule_event( time(), $at_how_often, 'at_send_email' );
 
