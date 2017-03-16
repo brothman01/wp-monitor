@@ -34,21 +34,22 @@ class EmailManager extends AdminTools {
 
 		$current_frequency = wp_get_schedule( 'at_send_email' );
 
-		if ( $current_frequency == 'never') {
+		if ( $current_frequency == 'never' ) {
 
 			wp_clear_scheduled_hook( 'at_send_email' );
 
 		}
 
-		update_option( 'testing', $current_frequency . ' = ' . $at_how_often );
 
 		if ( $current_frequency <> $at_how_often ) {
 
-			 wp_clear_scheduled_hook( 'at_send_email' );
+			wp_clear_scheduled_hook( 'at_send_email' );
 
-			 wp_schedule_event( time(), $at_how_often, 'at_send_email' );
+			wp_schedule_event( time(), $at_how_often, 'at_send_email' );
 
-			 update_option( 'at_prevent_email_cron', 1 );
+			update_option( 'testing', 'wp_schedule_event( time()' . ', \'' . $at_how_often . '\', ' . '\'at_send_email\'' .  ' );' );
+
+			update_option( 'at_prevent_email_cron', 1 );
 
 		 }
 

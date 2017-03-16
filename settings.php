@@ -158,13 +158,13 @@ class Settings extends AdminTools {
 					// add the cleaned values of each field to the clean array on submit
 					// $valid['at_settings1'] = empty( $input['at_settings1'] ) ? '' : sanitize_text_field( $input['at_settings1'] );
 
-					$valid['at_prevent_email_cron'] = (bool) empty( $input['at_prevent_email_cron'] ) ? false : true;
+					$valid['at_prevent_email_cron'] 	= (bool) empty( $input['at_prevent_email_cron'] ) ? false : true;
 
 					$valid['at_user_timeout']       	=  isset( $input['at_user_timeout'] ) ? $input['at_user_timeout'] : '0.05.00';
 
-					$valid['at_send_email']       	= (bool) empty( $input['at_send_email'] ) ? false : true;
+					$valid['at_send_email']       		= (bool) empty( $input['at_send_email'] ) ? false : true;
 
-					$valid['at_how_often']       	= isset( $input['at_how_often'] ) ? $input['at_how_often'] : 'daily';
+					$valid['at_how_often']  					= isset( $input['at_how_often'] ) ? sanitize_text_field( $input['at_how_often'] ) : 'Never';
 
 					$valid['at_check_plugins']       	= (bool) empty( $input['at_check_plugins'] ) ? false : true;
 
@@ -172,7 +172,7 @@ class Settings extends AdminTools {
 
 					$valid['at_check_wordpress']      = (bool) empty( $input['at_check_wordpress'] ) ? false : true;
 
-					$valid['at_check_php']      = (bool) empty( $input['at_check_php'] ) ? false : true;
+					$valid['at_check_php']     			  = (bool) empty( $input['at_check_php'] ) ? false : true;
 
 
 					// return the clean array
