@@ -180,6 +180,38 @@ class Settings extends AdminTools {
 
 				}
 
+				public function at_general_section_callback() {
+
+					echo 'Edit the settings for the plugin here.';
+
+				}
+
+				public function at_email_section_callback() {
+
+					echo 'Edit the settings for the email here.';
+
+				}
+
+				public function at_user_timeout_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_user_timeout" name="at_options[at_user_timeout]" type="text" value="%1$s" /> %2$s',
+						Settings::$options['at_user_timeout'], 'minutes'
+					);
+
+				}
+
+				public function at_send_email_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_send_email" name="at_options[at_send_email]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_send_email'], false )
+					);
+
+				}
+
 				public function at_how_often_callback() {
 
 					$options = array(
@@ -211,6 +243,48 @@ class Settings extends AdminTools {
 					print( '</select>' );
 
 				}
+
+
+				public function at_check_plugins_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_check_plugins" name="at_options[at_check_plugins]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_check_plugins'], false )
+					);
+
+				}
+
+				public function at_check_themes_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_check_themes" name="at_options[at_check_themes]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_check_themes'], false )
+					);
+
+				}
+
+				public function at_check_wordpress_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_check_wordpress" name="at_options[at_check_wordpress]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_check_wordpress'], false )
+					);
+
+				}
+
+				public function at_check_php_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_check_php" name="at_options[at_check_php]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_check_php'], false )
+					);
+
+				}
+
 
 }
 
