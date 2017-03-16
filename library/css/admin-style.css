@@ -15,9 +15,14 @@
 	width: 33%;
 }
 
+.tablesthird {
+	float: left;
+	width: 32%;
+}
+
 .half {
 	float: left;
-	width: 49%;
+	width: 48%;
 }
 
 	.half h3 {
@@ -107,3 +112,35 @@
 	#ssl_note {
 		font-size: 12px;
 	}
+
+
+	/* Small Desktop ----------- */
+@media only screen and (max-width : 1280px) {
+
+table.widefat th, table.widefat td { font-size: 12px!important;  }
+
+	.tablesthird {
+		width: 66%;
+		float: none;
+		margin: 0px auto;
+	}
+
+	.twothirds {
+		width: 99%;
+	}
+
+	.half {
+	    width: 48%;
+	}
+
+	.indicator {
+		padding-top: 30px;
+	}
+
+		.indicator_light {
+			width: 18px;
+			height: 18px;
+
+		}
+
+}

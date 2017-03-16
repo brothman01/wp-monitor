@@ -23,21 +23,20 @@ class AdminTools {
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
 
-			'at_user_timeout' => 5,
 
 			'at_how_often'	=>	'daily',
 
-			'at_send_email' => false,
+			'at_send_email' => true,
 
-			'at_check_plugins' => false,
+			'at_check_plugins' => true,
 
-			'at_check_themes' => false,
+			'at_check_themes' => true,
 
-			'at_check_wordpress' => false,
+			'at_check_wordpress' => true,
 
-			'at_check_php' => false,
+			'at_check_php' => true,
 
-			'at_check_ssl' => false,
+			'at_check_ssl' => true,
 
 		] );
 
@@ -252,7 +251,7 @@ class AdminTools {
 						echo '</div>';
 
 
-						echo '<div class="onethird" >';
+						echo '<div class="tablesthird" >';
 
 
 							echo '<div class="half left_half">';
