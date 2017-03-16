@@ -48,17 +48,12 @@
 		margin-top: 10px;
 	}
 
-.guage_filling {
-	background: red;
-	padding: 5px 5px;
-	width: 40%;
-	border-radius: 0%;
-}
 
 .at_table {
 	display: block;
 	height: 500px;
 	overflow-y: scroll;
+	margin-bottom: 39px
 }
 
 .at_half_table {

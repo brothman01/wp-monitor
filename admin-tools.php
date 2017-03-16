@@ -58,8 +58,6 @@ class AdminTools {
 		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
 
-		include_once( plugin_dir_path( __FILE__ ) . 'user-log.php' );
-
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
 
 		include_once( plugin_dir_path( __FILE__ ) . 'send-email.php' );
@@ -281,7 +279,7 @@ class AdminTools {
 						echo '<div class="half">
 						<h3 style="text-align: center;">User Logins:</h3>
 
-								<table class="wp-list-table widefat fixed striped at_half_table">
+								<table class="wp-list-table widefat fixed striped at_table">
 
 									<thead>
 										<tr>
@@ -298,24 +296,6 @@ class AdminTools {
 
 						echo '</table>
 
-
-						<h3 style="text-align: center;">Referrals:</h3>
-
-								<table class="wp-list-table widefat fixed striped at_half_table">
-
-									<thead>
-										<tr>
-											<th>URL</th>
-											<th>Count</th>
-										</tr>
-									</thead>';
-
-
-
-							 $this->list_last_logins();
-
-
-						echo '</table>
 
 						</div>
 
