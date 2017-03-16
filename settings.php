@@ -75,14 +75,6 @@ class Settings extends AdminTools {
 				);
 
 
-							add_settings_field(
-								'at_user_timeout',      // id
-								'How Long Until A User Is Logged Out For Inactivity?',              // setting title
-								[ $this, 'at_user_timeout_callback' ],    // display callback
-								'options_page',                 // settings page
-								'general_section_id'                  // settings section
-							);
-
 				// 2. Add the section to the setting page
 				add_settings_section(
 					'options_br_id', // id for use in id attribute
@@ -168,8 +160,6 @@ class Settings extends AdminTools {
 
 					$valid['at_prevent_email_cron'] 	= (bool) empty( $input['at_prevent_email_cron'] ) ? false : true;
 
-					$valid['at_user_timeout']       	=  isset( $input['at_user_timeout'] ) ? $input['at_user_timeout'] : '0.05.00';
-
 					$valid['at_send_email']       		= (bool) empty( $input['at_send_email'] ) ? false : true;
 
 					$valid['at_how_often']  					= isset( $input['at_how_often'] ) ? sanitize_text_field( $input['at_how_often'] ) : 'Never';
@@ -199,16 +189,6 @@ class Settings extends AdminTools {
 				public function at_email_section_callback() {
 
 					echo 'Edit the settings for the email here.';
-
-				}
-
-				public function at_user_timeout_callback() {
-
-					// print the HTML to create the field
-					printf(
-						'<input id="at_user_timeout" name="at_options[at_user_timeout]" type="text" value="%1$s" /> %2$s',
-						Settings::$options['at_user_timeout'], 'minutes'
-					);
 
 				}
 
