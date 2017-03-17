@@ -1,0 +1,7 @@
+a:link.button,
+a:active.button,
+a:visited.button,
+a:hover.button {
+		margin: 30px 5px 0 2px;
+		padding: 7px 13px;
+}
