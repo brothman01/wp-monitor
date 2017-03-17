@@ -247,6 +247,10 @@ class AdminTools {
 							echo '</div>';
 
 						echo '</div>';
+				
+						echo '<div id="third_gauge_row">
+							<h2>For more information on Admin Tools Pro, go to http://www.nothing.com</h2>
+						</div>';
 
 
 						echo '<div class="tablesthird" >';
