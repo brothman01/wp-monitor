@@ -252,34 +252,26 @@ class AdminTools {
 
 
 						echo '<div class="tablesthird" >';
-
-
-							echo '<div class="half left_half">';
-
-							echo '<h3 style="text-align: center;">Variables</h3>';
-
-								echo '<table class="wp-list-table widefat fixed striped at_table">';
-
-									echo '<thead>';
-
-										echo '<tr>
-											<th>Variable</th>
-											<th>Value</th>
-										</tr>';
-
-										echo '</thead>';
-
-									echo $this->variable_table();
-
-						echo '</table>';
-
-						echo '</div>';
-
-						echo '<div class="half">
+					echo '
+					<div id="tabs">
+						<ul>
+							<li><a href="#tabs-1">Variables</a></li>
+							<li><a href="#tabs-2">User Logins</a></li>
+						</ul>
+						<div id="tabs-1">';
+						echo '<table class="wp-list-table widefat fixed striped at_table">';
+							echo '<thead>';
+								echo '<tr>
+									<th>Variable</th>
+									<th>Value</th>
+								</tr>';
+								echo '</thead>';
+							echo $this->variable_table();
+				echo '</table>';
+						echo '</div>
+						<div id="tabs-2">
 						<h3 style="text-align: center;">User Logins:</h3>
-
 								<table class="wp-list-table widefat fixed striped at_table">
-
 									<thead>
 										<tr>
 											<th>Username</th>
@@ -287,21 +279,12 @@ class AdminTools {
 											<th>Last IP Used</th>
 										</tr>
 									</thead>';
-
-
-
 							 $this->list_last_logins();
-
-
 						echo '</table>
-
-
-						</div>
-
-
-						</div>
-
 					</div>';
+				echo '</div>
+					</div>
+				</div>';
 
 			}
 
@@ -474,7 +457,7 @@ class AdminTools {
 
 					<div class="gauge overall">
 
-						<div class="counter">' . $value . '</div>' . 
+						<div class="counter">' . $value . '</div>' .
 
 					'</div>
 
@@ -719,6 +702,13 @@ class AdminTools {
 
 		wp_register_style( 'at_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
 		wp_enqueue_style( 'at_admin_css' );
+
+		/* Tabs */
+		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js', array( 'jquery-ui-tabs' ) );
+		wp_enqueue_script( 'tabs-init' );
+
+		wp_register_style( 'at_tabs_css',  'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css', false, '1.0.0' );
+		wp_enqueue_style( 'at_tabs_css' );
 
 		/* Gauges */
 		wp_register_style( 'at_justgage_css',  plugin_dir_url( __FILE__ ) . '/library/css/justgage.css', false, '1.0.0' );
