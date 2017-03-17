@@ -49,6 +49,9 @@
 	width: 65%;
 }
 
+#tabs {
+	float: left;
+}
 
 .cell {
 	margin-bottom: 1%;
