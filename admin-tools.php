@@ -55,8 +55,6 @@ class AdminTools {
 		add_filter( 'cron_schedules', [ $this, 'custom_cron_schedules' ] );
 
 		// include other files
-		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
-
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
 
 		include_once( plugin_dir_path( __FILE__ ) . 'send-email.php' );
@@ -238,13 +236,13 @@ class AdminTools {
 
 							echo '<div id="second_gauge_row" style="width: 100%; background: #F9F9F9; float: left;">';
 
-								echo '<h3>Summary</h3>';
+								echo '<h3>Summary (Pro Version Only)</h3>';
 
 										echo $this->ssl_cell( 'SSL', 'onethird' );
 
-										echo $this->counter_cell( 'Total Updates', ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] ) );
+										echo $this->counter_cell( 'Total Updates', '#' );
 
-										echo $this->counter_cell( 'Overall Grade', $this->calculate_grade() . '<br />' . '<span id="ssl_note">(' . $this->ssl_check( true ) . ')</span>');
+										echo $this->counter_cell( 'Overall Grade', '#' . '<br />' . '<span id="ssl_note">(' . 'SSL On/Off' . ')</span>');
 
 							echo '</div>';
 
@@ -276,27 +274,45 @@ class AdminTools {
 						echo '</div>';
 
 						echo '<div class="half">
-						<h3 style="text-align: center;">User Logins:</h3>
+						<h3 style="text-align: center;">User Logins:</h3>';
 
-								<table class="wp-list-table widefat fixed striped at_table">
+						// 		<table class="wp-list-table widefat fixed striped at_table">
+						//
+						// 			<thead>
+						// 				<tr>
+						// 					<th>Username</th>
+						// 					<th>Last Login Date/Time</th>
+						// 					<th>Last IP Used</th>
+						// 				</tr>
+						// 			</thead>';
+						//
+						//
+						//
+						// 	 $this->list_last_logins();
+						//
+						//
+						// echo '</table>
 
-									<thead>
-										<tr>
-											<th>Username</th>
-											<th>Last Login Date/Time</th>
-											<th>Last IP Used</th>
-										</tr>
-									</thead>';
+						echo '
+						<div id="tabs">
+						  <ul>
+						    <li><a href="#tabs-1">Nunc tincidunt</a></li>
+						    <li><a href="#tabs-2">Proin dolor</a></li>
+						    <li><a href="#tabs-3">Aenean lacinia</a></li>
+						  </ul>
+						  <div id="tabs-1">
+						    <p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>
+						  </div>
+						  <div id="tabs-2">
+						    <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+						  </div>
+						  <div id="tabs-3">
+						    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+						    <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+						  </div>
+						</div>';
 
-
-
-							 $this->list_last_logins();
-
-
-						echo '</table>
-
-
-						</div>
+					echo '</div>
 
 
 						</div>
@@ -447,15 +463,11 @@ class AdminTools {
 
 							setTimeout(function(){
 
-								if (  ssl == 1 ) {
-
 									ssl_green_light.style.background = "#01FC27";
-
-								} else {
 
 									ssl_red_light.style.background = "red";
 
-								}
+
 
 							}, 2000);
 
@@ -474,7 +486,7 @@ class AdminTools {
 
 					<div class="gauge overall">
 
-						<div class="counter">' . $value . '</div>' . 
+						<div class="counter">' . $value . '</div>' .
 
 					'</div>
 
@@ -720,11 +732,15 @@ class AdminTools {
 		wp_register_style( 'at_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
 		wp_enqueue_style( 'at_admin_css' );
 
+		/* Tabs */
+		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js' );
+		wp_enqueue_script( 'tabs-init' );
+
 		/* Gauges */
 		wp_register_style( 'at_justgage_css',  plugin_dir_url( __FILE__ ) . '/library/css/justgage.css', false, '1.0.0' );
 		wp_enqueue_style( 'at_justgage_css' );
 
-		wp_register_script( 'at_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js' );
+		wp_register_script( 'at_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js', array( 'jquery-ui-tabs' ) );
 		wp_enqueue_script( 'at_raphael' );
 
 		wp_register_script( 'at_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );

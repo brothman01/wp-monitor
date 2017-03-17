@@ -6,6 +6,7 @@ class EmailManager extends AdminTools {
 
 	public static $options;
 
+
 		public function __construct() {
 
 				$this->at_updates = get_option( 'at_update_info', false );
@@ -26,34 +27,34 @@ class EmailManager extends AdminTools {
 			$prevent_email_cron = get_option( 'at_prevent_email_cron' );
 
 			// schedule crontask if it has not already been scheduled
-		if ( 0 == $prevent_email_cron ||  ( 0 == $prevent_email_cron & $at_how_often != get_option( parent::$options['at_how_often'] ) ) ) {
-
-			wp_schedule_event( time(), $at_how_often, 'at_send_email' );
-
-			update_option( 'at_prevent_email_cron', 1 );
-
-		}
-
-		$current_frequency = wp_get_schedule( 'at_send_email' );
-
-		if ( $current_frequency == 'never' ) {
-
-			wp_clear_scheduled_hook( 'at_send_email' );
-
-		}
-
-
-		if ( $current_frequency <> $at_how_often ) {
-
-			wp_clear_scheduled_hook( 'at_send_email' );
-
-			wp_schedule_event( time(), $at_how_often, 'at_send_email' );
-
-			update_option( 'testing', 'wp_schedule_event( time()' . ', \'' . $at_how_often . '\', ' . '\'at_send_email\'' .  ' );' );
-
-			update_option( 'at_prevent_email_cron', 1 );
-
-		 }
+		// if ( 0 == $prevent_email_cron ||  ( 0 == $prevent_email_cron & $at_how_often != get_option( parent::$options['at_how_often'] ) ) ) {
+		//
+		// 	wp_schedule_event( time(), $at_how_often, 'at_send_email' );
+		//
+		// 	update_option( 'at_prevent_email_cron', 1 );
+		//
+		// }
+		//
+		// $current_frequency = wp_get_schedule( 'at_send_email' );
+		//
+		// if ( $current_frequency == 'never' ) {
+		//
+		// 	wp_clear_scheduled_hook( 'at_send_email' );
+		//
+		// }
+		//
+		//
+		// if ( $current_frequency <> $at_how_often ) {
+		//
+		// 	wp_clear_scheduled_hook( 'at_send_email' );
+		//
+		// 	wp_schedule_event( time(), $at_how_often, 'at_send_email' );
+		//
+		// 	update_option( 'testing', 'wp_schedule_event( time()' . ', \'' . $at_how_often . '\', ' . '\'at_send_email\'' .  ' );' );
+		//
+		// 	update_option( 'at_prevent_email_cron', 1 );
+		//
+		//  }
 
 		}
 
