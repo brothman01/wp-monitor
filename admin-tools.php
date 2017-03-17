@@ -61,8 +61,6 @@ class AdminTools {
 
 		include_once( plugin_dir_path( __FILE__ ) . 'send-email.php' );
 
-
-
 	}
 
 	public function init() {
@@ -198,7 +196,6 @@ class AdminTools {
 				$all_users = get_users( 'blog_id=1' );
 
 				foreach ($all_users as $user) {
-
 						echo '<tr>' .
 
 						'<th>' . $user->user_login . '</th>' .

@@ -4,8 +4,6 @@ class EmailManager extends AdminTools {
 
 	public $at_updates;
 
-	public static $options;
-
 		public function __construct() {
 
 				$this->at_updates = get_option( 'at_update_info', false );
@@ -18,10 +16,6 @@ class EmailManager extends AdminTools {
 		}
 
 		public function init() {
-
-			$at_how_often = parent::$options['at_how_often'];
-
-			//wp_die( $at_how_often );
 
 			$prevent_email_cron = get_option( 'at_prevent_email_cron' );
 
@@ -58,8 +52,6 @@ class EmailManager extends AdminTools {
 		}
 
 		public function at_send_email() {
-
-			$options = get_option( 'at_options' );
 
 			$admin_email = get_bloginfo('admin_email');
 
@@ -110,22 +102,13 @@ class EmailManager extends AdminTools {
 						<th>Update</th>
 						<th>Details</th>
 					</tr>
-					</thead>';
 
-					if ( $options['at_check_plugins'] == true ) {
-
-					$message .= '<tr>
 						<td>' . $this->at_updates['plugins'] . ' Plugin Update(s)</td>
 						<td>';
 
 					if ( $this->at_updates['plugins'] >= 1 ) {
 
-
 						foreach( $plugins_that_need_updates as $plugin) {
-
-							$message .= $plugin . "\r\n";
-
-						}
 
 					}
 
@@ -133,11 +116,6 @@ class EmailManager extends AdminTools {
 						'</td>
 					</tr>';
 
-				}
-
-
-
-					if ( $options['at_check_themes'] == true ) {
 
 					$message .=
 				'	<tr>
@@ -146,31 +124,12 @@ class EmailManager extends AdminTools {
 
 				if ( $this->at_updates['themes'] >= 1 ) {
 
-						foreach( $themes_that_need_updates as $theme) {
-
-							$message .= $theme . "\r\n";
-
-						}
-
-				}
-
-					$message .=
-						'</td>
-					</tr>';
-
-					}
-
-					if ( $options['at_check_wordpress'] == true ) {
-
 				$message .=
 					'<tr>
 						<td>' . $updates['WordPress'] . ' WordPress Update(s)'  . '</td>
 				 		<td>' . $this->wp_update_message( $updates['WordPress'] ) . '</td>
 					</tr>';
 
-				}
-
-				if ( $options['at_check_php'] == true ) {
 
 				$message .=
 				'<tr>
@@ -178,9 +137,6 @@ class EmailManager extends AdminTools {
 					<td>' . 'PHP ' . phpversion() . ' supported until ' . date("m-d-Y", $this->at_updates['PHP_warning']) . '.' . '</td>
 				</tr>';
 
-			}
-
-			if ( $options['at_check_ssl'] == true ) {
 
 				$message .=
 				'<tr>
@@ -190,12 +146,7 @@ class EmailManager extends AdminTools {
 
 			$message .=
 			'</table>
-			</center>';
 
-		}
-
-			$message .=
-			'</body>
 			</html>';
 
 			$headers = "MIME-Version: 1.0\r\n";
