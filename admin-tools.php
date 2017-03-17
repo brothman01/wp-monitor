@@ -270,7 +270,6 @@ class AdminTools {
 				echo '</table>';
 						echo '</div>
 						<div id="tabs-2">
-						<h3 style="text-align: center;">User Logins:</h3>
 								<table class="wp-list-table widefat fixed striped at_table">
 									<thead>
 										<tr>
