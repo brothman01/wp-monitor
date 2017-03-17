@@ -733,14 +733,14 @@ class AdminTools {
 		wp_enqueue_style( 'at_admin_css' );
 
 		/* Tabs */
-		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js' );
+		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js', array( 'jquery-ui-tabs' ) );
 		wp_enqueue_script( 'tabs-init' );
 
 		/* Gauges */
 		wp_register_style( 'at_justgage_css',  plugin_dir_url( __FILE__ ) . '/library/css/justgage.css', false, '1.0.0' );
 		wp_enqueue_style( 'at_justgage_css' );
 
-		wp_register_script( 'at_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js', array( 'jquery-ui-tabs' ) );
+		wp_register_script( 'at_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js' );
 		wp_enqueue_script( 'at_raphael' );
 
 		wp_register_script( 'at_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
