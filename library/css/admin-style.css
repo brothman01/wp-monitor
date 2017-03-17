@@ -38,6 +38,12 @@
 	opacity: 0.5;
 }
 
+
+.ui-state-active, .ui-state-active a {
+	background: #007FFF !important;
+	color: white !important;
+}
+
 .twothirds {
 	float: left;
 	width: 65%;

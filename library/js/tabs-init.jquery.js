@@ -1,3 +1,3 @@
- $( function() {
-	 $( "#tabs" ).tabs();
+ jQuery( function() {
+	 jQuery ( "#tabs" ).tabs();
  } );
