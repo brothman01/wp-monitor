@@ -21,7 +21,7 @@ class Settings extends AdminTools {
 	public function at_add_plugin_page() {
 
 			 // 1. Add the settings page
-			 add_options_page(
+			 add_management_page(
 				 'Options Page', // page title
 					'Admin Tools', // menu title
 					'manage_options', // capability required of user
@@ -75,14 +75,6 @@ class Settings extends AdminTools {
 				);
 
 
-							add_settings_field(
-								'at_user_timeout',      // id
-								'How Long Until A User Is Logged Out For Inactivity?',              // setting title
-								[ $this, 'at_user_timeout_callback' ],    // display callback
-								'options_page',                 // settings page
-								'general_section_id'                  // settings section
-							);
-
 				// 2. Add the section to the setting page
 				add_settings_section(
 					'options_br_id', // id for use in id attribute
@@ -104,6 +96,14 @@ class Settings extends AdminTools {
 									'at_send_email',      // id
 									'Send Email?',              // setting title
 									[ $this, 'at_send_email_callback' ],    // display callback
+									'options_page',                 // settings page
+									'options_br_id'                  // settings section
+								);
+
+								add_settings_field(
+									'at_how_often',      // id
+									'Email Frequency',              // setting title
+									[ $this, 'at_how_often_callback' ],    // display callback
 									'options_page',                 // settings page
 									'options_br_id'                  // settings section
 								);
@@ -140,6 +140,14 @@ class Settings extends AdminTools {
 									'options_br_id'                  // settings section
 								);
 
+								add_settings_field(
+									'at_check_ssl',      // id
+									'Check SSL?',              // setting title
+									[ $this, 'at_check_ssl_callback' ],    // display callback
+									'options_page',                 // settings page
+									'options_br_id'                  // settings section
+								);
+
 				}
 
 				public function at_sanitize( $input ) {
@@ -150,11 +158,11 @@ class Settings extends AdminTools {
 					// add the cleaned values of each field to the clean array on submit
 					// $valid['at_settings1'] = empty( $input['at_settings1'] ) ? '' : sanitize_text_field( $input['at_settings1'] );
 
-					$valid['at_prevent_email_cron'] = (bool) empty( $input['at_prevent_email_cron'] ) ? false : true;
+					$valid['at_prevent_email_cron'] 	= (bool) empty( $input['at_prevent_email_cron'] ) ? false : true;
 
-					$valid['at_user_timeout']       	=  isset( $input['at_user_timeout'] ) ? $input['at_user_timeout'] : '0.05.00';
+					$valid['at_send_email']       		= (bool) empty( $input['at_send_email'] ) ? false : true;
 
-					$valid['at_send_email']       	= (bool) empty( $input['at_send_email'] ) ? false : true;
+					$valid['at_how_often']  					= isset( $input['at_how_often'] ) ? sanitize_text_field( $input['at_how_often'] ) : 'Never';
 
 					$valid['at_check_plugins']       	= (bool) empty( $input['at_check_plugins'] ) ? false : true;
 
@@ -162,13 +170,121 @@ class Settings extends AdminTools {
 
 					$valid['at_check_wordpress']      = (bool) empty( $input['at_check_wordpress'] ) ? false : true;
 
-					$valid['at_check_php']      = (bool) empty( $input['at_check_php'] ) ? false : true;
+					$valid['at_check_php']     			  = (bool) empty( $input['at_check_php'] ) ? false : true;
+
+					$valid['at_check_ssl']     			  = (bool) empty( $input['at_check_ssl'] ) ? false : true;
 
 
 					// return the clean array
 					return $valid;
 
 				}
+
+				public function at_general_section_callback() {
+
+					echo 'Edit the settings for the plugin here.';
+
+				}
+
+				public function at_email_section_callback() {
+
+					echo 'Edit the settings for the email here.';
+
+				}
+
+				public function at_send_email_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_send_email" name="at_options[at_send_email]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_send_email'], false )
+					);
+
+				}
+
+				public function at_how_often_callback() {
+
+					$options = array(
+						'never'   => 'never',
+
+						'hourly'	=>	'hourly',
+
+						'daily'   => 'daily',
+
+						'weekly'  => 'weekly',
+
+						'monthly' => 'monthly',
+
+					);
+
+					print( '<select name="at_options[at_how_often]">' );
+
+					foreach ( $options as $value => $label ) {
+
+						printf(
+							'<option value="%1$s" %2$s>%3$s</option>',
+							esc_attr( $value ),
+							selected( self::$options['at_how_often'], $value ),
+							esc_html( $label )
+						);
+
+					}
+
+					print( '</select>' );
+
+				}
+
+
+				public function at_check_plugins_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_check_plugins" name="at_options[at_check_plugins]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_check_plugins'], false )
+					);
+
+				}
+
+				public function at_check_themes_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_check_themes" name="at_options[at_check_themes]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_check_themes'], false )
+					);
+
+				}
+
+				public function at_check_wordpress_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_check_wordpress" name="at_options[at_check_wordpress]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_check_wordpress'], false )
+					);
+
+				}
+
+				public function at_check_php_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_check_php" name="at_options[at_check_php]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_check_php'], false )
+					);
+
+				}
+
+				public function at_check_ssl_callback() {
+
+					// print the HTML to create the field
+					printf(
+						'<input id="at_check_ssl" name="at_options[at_check_ssl]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['at_check_ssl'], false )
+					);
+
+				}
+
 
 }
 

@@ -2,7 +2,7 @@
 /*
  * Plugin Name: Admin Tools
  * Description: Notify user when updates to WordPress are needed.
- * Version:     1.0.0
+ * Version:     0.0.1
  * Author:      Ben Rothman
  * Slug:				???
  * Author URI:  http://www.BenRothman.org
@@ -20,16 +20,24 @@ class AdminTools {
 
 	public function __construct( ) {
 
-
-
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
-			'at_user_timeout' => 5,
-			'at_send_email' => false,
-			'at_check_plugins' => false,
-			'at_check_themes' => false,
-			'at_check_wordpress' => false,
-			'at_check_php' => false,
+
+
+			'at_how_often'	=>	'daily',
+
+			'at_send_email' => true,
+
+			'at_check_plugins' => true,
+
+			'at_check_themes' => true,
+
+			'at_check_wordpress' => true,
+
+			'at_check_php' => true,
+
+			'at_check_ssl' => true,
+
 		] );
 
 		if ( empty( get_option( 'at_prevent_email_cron' ) ) ) {
@@ -39,14 +47,18 @@ class AdminTools {
 		}
 
 		// check for updates
-		add_action( 'admin_bar_menu', [ $this, 'at_check_for_updates' ] );
+		add_action( 'init', [ $this, 'at_check_for_updates' ] );
 
 		add_action( 'plugins_loaded', [ $this, 'init' ] );
 
+		//add cron times
+		add_filter( 'cron_schedules', [ $this, 'custom_cron_schedules' ] );
+
 		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
-		include_once( plugin_dir_path( __FILE__ ) . 'user-log.php' );
+
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
+
 		include_once( plugin_dir_path( __FILE__ ) . 'send-email.php' );
 
 	}
@@ -59,15 +71,39 @@ class AdminTools {
 		// dashboard widget
 		add_action( 'admin_footer', [ $this, 'at_dashboard_widget' ] );
 
-		//print_r( PHPVersioner::$info );
+	}
 
+	public function custom_cron_schedules( $schedules ) {
+
+
+		if ( ! isset( $schedules['weekly'] ) ) {
+
+			$schedules['weekly'] = array(
+				'interval' => 604800,
+				'display'  => __( 'Once Per Week' ),
+			);
+
+		}
+
+		if ( ! isset( $schedules['monthly'] ) ) {
+
+			$schedules['monthly'] = array(
+				'interval' => 2628000,
+				'display'  => __( 'Once Per Month' ),
+			);
+
+		}
+
+		return $schedules;
 
 	}
 
 	function at_dashboard_widget() {
 	// Bail if not viewing the main dashboard page
 	if ( get_current_screen()->base !== 'dashboard' ) {
+
 		return;
+
 	}
 	?>
 
@@ -149,7 +185,6 @@ class AdminTools {
 
 			update_option( 'at_update_info', self::$updates );
 
-			 //print_r( self::$updates );
 
 	}
 
@@ -161,7 +196,6 @@ class AdminTools {
 				$all_users = get_users( 'blog_id=1' );
 
 				foreach ($all_users as $user) {
-
 						echo '<tr>' .
 
 						'<th>' . $user->user_login . '</th>' .
@@ -214,7 +248,7 @@ class AdminTools {
 						echo '</div>';
 
 
-						echo '<div class="onethird" >';
+						echo '<div class="tablesthird" >';
 
 
 							echo '<div class="half left_half">';
@@ -241,7 +275,7 @@ class AdminTools {
 						echo '<div class="half">
 						<h3 style="text-align: center;">User Logins:</h3>
 
-								<table class="wp-list-table widefat fixed striped at_half_table">
+								<table class="wp-list-table widefat fixed striped at_table">
 
 									<thead>
 										<tr>
@@ -258,24 +292,6 @@ class AdminTools {
 
 						echo '</table>
 
-
-						<h3 style="text-align: center;">Referrals:</h3>
-
-								<table class="wp-list-table widefat fixed striped at_half_table">
-
-									<thead>
-										<tr>
-											<th>URL</th>
-											<th>Count</th>
-										</tr>
-									</thead>';
-
-
-
-							 $this->list_last_logins();
-
-
-						echo '</table>
 
 						</div>
 
@@ -363,7 +379,7 @@ class AdminTools {
 
 							<p>Supported Until: ' . self::$updates['PHP_supported_until'] . '</p>
 
-							<input id="php_action_field" type="text" maxlength="14" size="14" style="text-align: center; font-size: 18px; font-style: bold;" readonly />
+							<input id="php_action_field" type="text" maxlength="14" size="14" style="text-align: center; font-style: bold;" readonly />
 
 							<script>
 
@@ -453,9 +469,9 @@ class AdminTools {
 				return '<div class="onethird cell">
 				<h3>' . $title . '</h3>
 
-					<div class="gauge overall">' .
+					<div class="gauge overall">
 
-						$value .
+						<div class="counter">' . $value . '</div>' . 
 
 					'</div>
 
@@ -613,6 +629,39 @@ class AdminTools {
 				);
 
 			}
+
+			public function at_how_often_callback() {
+
+				$options = array(
+					'never'   => 'never',
+
+					'hourly'	=>	'hourly',
+
+					'daily'   => 'daily',
+
+					'weekly'  => 'weekly',
+
+					'monthly' => 'monthly',
+
+				);
+
+				print( '<select name="at_options[at_how_often]">' );
+
+				foreach ( $options as $value => $label ) {
+
+					printf(
+						'<option value="%1$s" %2$s>%3$s</option>',
+						esc_attr( $value ),
+						selected( self::$options['at_how_often'], $value ),
+						esc_html( $label )
+					);
+
+				}
+
+				print( '</select>' );
+
+			}
+
 
 			public function at_check_plugins_callback() {
 

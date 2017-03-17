@@ -17,17 +17,37 @@ class EmailManager extends AdminTools {
 
 		public function init() {
 
-
 			$prevent_email_cron = get_option( 'at_prevent_email_cron' );
 
-		 // schedule crontask if it has not already been scheduled
-		 if ( 0 == $prevent_email_cron ) {
+			// schedule crontask if it has not already been scheduled
+		if ( 0 == $prevent_email_cron ||  ( 0 == $prevent_email_cron & $at_how_often != get_option( parent::$options['at_how_often'] ) ) ) {
 
-				 wp_schedule_event( time(), 'daily', 'at_send_email' );
+			wp_schedule_event( time(), $at_how_often, 'at_send_email' );
 
-				 update_option( 'at_prevent_email_cron', 1 );
+			update_option( 'at_prevent_email_cron', 1 );
 
-	 }
+		}
+
+		$current_frequency = wp_get_schedule( 'at_send_email' );
+
+		if ( $current_frequency == 'never' ) {
+
+			wp_clear_scheduled_hook( 'at_send_email' );
+
+		}
+
+
+		if ( $current_frequency <> $at_how_often ) {
+
+			wp_clear_scheduled_hook( 'at_send_email' );
+
+			wp_schedule_event( time(), $at_how_often, 'at_send_email' );
+
+			update_option( 'testing', 'wp_schedule_event( time()' . ', \'' . $at_how_often . '\', ' . '\'at_send_email\'' .  ' );' );
+
+			update_option( 'at_prevent_email_cron', 1 );
+
+		 }
 
 		}
 
@@ -82,27 +102,20 @@ class EmailManager extends AdminTools {
 						<th>Update</th>
 						<th>Details</th>
 					</tr>
-					</thead>
 
-					<tr>
 						<td>' . $this->at_updates['plugins'] . ' Plugin Update(s)</td>
 						<td>';
 
 					if ( $this->at_updates['plugins'] >= 1 ) {
 
-
 						foreach( $plugins_that_need_updates as $plugin) {
-
-							$message .= $plugin . ', ';
-
-						}
-
 
 					}
 
 					$message .=
 						'</td>
 					</tr>';
+
 
 					$message .=
 				'	<tr>
@@ -111,30 +124,19 @@ class EmailManager extends AdminTools {
 
 				if ( $this->at_updates['themes'] >= 1 ) {
 
-					foreach( $themes_that_need_updates as $theme) {
-
-						$message .= $theme . ', ';
-
-					}
-
-			}
-
-			$message .=
-				'</td>
-			</tr>';
-
-
 				$message .=
 					'<tr>
 						<td>' . $updates['WordPress'] . ' WordPress Update(s)'  . '</td>
 				 		<td>' . $this->wp_update_message( $updates['WordPress'] ) . '</td>
 					</tr>';
 
+
 				$message .=
 				'<tr>
 					<td>'. $updates['PHP_update'] . ' PHP Update(s)' . '</td>
 					<td>' . 'PHP ' . phpversion() . ' supported until ' . date("m-d-Y", $this->at_updates['PHP_warning']) . '.' . '</td>
 				</tr>';
+
 
 				$message .=
 				'<tr>
@@ -144,9 +146,7 @@ class EmailManager extends AdminTools {
 
 			$message .=
 			'</table>
-			</center>
 
-			</body>
 			</html>';
 
 			$headers = "MIME-Version: 1.0\r\n";

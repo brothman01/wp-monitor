@@ -1,3 +1,4 @@
+
 /* Settings Page Dashboard */
 #dashboard_main {
 	width: 100%;
@@ -15,9 +16,14 @@
 	width: 33%;
 }
 
+.tablesthird {
+	float: left;
+	width: 32%;
+}
+
 .half {
 	float: left;
-	width: 49%;
+	width: 48%;
 }
 
 	.half h3 {
@@ -31,7 +37,6 @@
 .twothirds {
 	float: left;
 	width: 65%;
-
 }
 
 
@@ -48,17 +53,16 @@
 		margin-top: 10px;
 	}
 
-.guage_filling {
-	background: red;
-	padding: 5px 5px;
-	width: 40%;
-	border-radius: 0%;
-}
+	#gauge {
+			width: 300px;
+			height: 300px;
+	}
 
 .at_table {
 	display: block;
 	height: 500px;
 	overflow-y: scroll;
+	margin-bottom: 39px
 }
 
 .at_half_table {
@@ -99,9 +103,10 @@
 					margin-right: 5%;
 				}
 
-	.timeline_canvas {
-		border: solid black 1px;
-		width: 100%;
+#php_action_field {
+		text-align: center;
+		font-size: 18px;
+		background: rgb(1, 252, 39);
 	}
 
 .overall {
@@ -112,3 +117,105 @@
 	#ssl_note {
 		font-size: 12px;
 	}
+
+	/* Small Desktop Resized ----------- */
+@media only screen and (max-width : 2230px) {
+
+	.indicator_light {
+		width: 25px;
+		height: 25px;
+
+	}
+
+}
+
+	/* Small Desktop ----------- */
+@media only screen and (max-width : 1366px) {
+
+table.widefat th, table.widefat td { font-size: 12px!important;  }
+
+	.tablesthird {
+		width: 100%;
+		float: none;
+		margin: 0px auto;
+	}
+
+	.twothirds {
+		width: 99%;
+	}
+
+	.half {
+	    width: 48%;
+	}
+
+	.indicator {
+		padding-top: 30px;
+	}
+
+		.indicator_light {
+			width: 18px;
+			height: 18px;
+
+		}
+
+}
+
+/* iPad ----------- */
+@media only screen and (max-width : 1024px) {
+
+	#gauge {
+			width: 100px;
+			height: 100px;
+	}
+
+}
+
+/* iPhone ----------- */
+@media only screen and (max-width : 640px) {
+
+	.onequarter {
+		float: left;
+		width: 50%;
+	}
+
+	#gauge {
+			width: 300px!important;
+			height: 300px!important;
+	}
+
+	.indicator_light {
+		margin-bottom: 10px;
+	}
+
+}
+
+/* Low-end Windows Phone ----------- */
+@media only screen and (max-width : 640px) {
+
+	#gauge {
+			width: 20px;
+			height: 20px;
+	}
+
+	#php_action_field {
+		width: 95%;
+		font-size: 10px;
+	}
+
+}
+
+/* HGVA (old iPhones, small androids, etc) ----------- */
+@media only screen and (max-width : 640px) {
+
+	.indicator {
+		padding-top: 10px;
+	}
+
+	#gauge {
+			width: 10px;
+			height: 10px;
+	}
+
+
+
+}
