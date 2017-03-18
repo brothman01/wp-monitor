@@ -113,8 +113,9 @@
 
 #php_action_field {
 		text-align: center;
-		font-size: 18px;
-		background: rgb(1, 252, 39);
+		font-size: 12px;
+		background: #88a95a;
+		color: white;
 	}
 
 .overall {
@@ -128,6 +129,14 @@
 
 	/* Small Desktop Resized ----------- */
 @media only screen and (max-width : 2230px) {
+
+	.tablesthird {
+		width: 100%;
+	}
+
+	#tabs {
+		width: 100%;
+	}
 
 	.indicator_light {
 		width: 25px;

@@ -377,13 +377,13 @@ class AdminTools {
 
 											if ("' . self::$updates['PHP_action'] .'" == "Up To Date") {
 
-												php_action_field.style.background = "#01FC27";
+												php_action_field.style.background = "#88A95A";
 
 												php_action_field.value = "' . self::$updates['PHP_action'] .'";
 
 											} else {
 
-												php_action_field.style.background = "red";
+												php_action_field.style.background = "#DA6768";
 
 												php_action_field.style.color = "white";
 
