@@ -80,7 +80,7 @@
 }
 
 .indicator {
-	width: 50%;
+	width: 75%;
 	margin-top: 15%;
 	margin: 0px auto;
 	padding: 10px 10px;
@@ -128,7 +128,7 @@
 	}
 
 	/* Small Desktop Resized ----------- */
-@media only screen and (max-width : 2230px) {
+/*@media only screen and (max-width : 2230px) {
 
 	.tablesthird {
 		width: 100%;
@@ -144,7 +144,7 @@
 
 	}
 
-}
+}*/
 
 	/* Small Desktop ----------- */
 @media only screen and (max-width : 1366px) {
@@ -155,6 +155,10 @@ table.widefat th, table.widefat td { font-size: 12px!important;  }
 		width: 100%;
 		float: none;
 		margin: 0px auto;
+	}
+
+	#tabs {
+		width: 100%;
 	}
 
 	.twothirds {
