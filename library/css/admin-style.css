@@ -19,6 +19,7 @@
 .tablesthird {
 	float: left;
 	width: 32%;
+	clear: both;
 }
 
 .half {
@@ -35,11 +36,20 @@
 }
 
 #second_gauge_row {
+	float: left;
 	opacity: 0.5;
 }
 
+#third_gauge_row {
+	float: left;
+	width: 99%;
+	text-align: center;
+	padding-top: 2%;
+}
 
-.ui-state-active, .ui-state-active a {
+
+.ui-state-active,
+.ui-state-active a {
 	background: #007FFF !important;
 	color: white !important;
 }
@@ -118,8 +128,9 @@
 
 #php_action_field {
 		text-align: center;
-		font-size: 18px;
-		background: rgb(1, 252, 39);
+		font-size: 12px;
+		background: #88A95A;
+		color: white;
 	}
 
 .overall {
@@ -131,7 +142,7 @@
 		font-size: 12px;
 	}
 
-	/* Small Desktop Resized ----------- */
+	/* Small Desktop larger ----------- */
 @media only screen and (max-width : 2230px) {
 
 	.indicator_light {
@@ -149,8 +160,6 @@ table.widefat th, table.widefat td { font-size: 12px!important;  }
 
 	.tablesthird {
 		width: 100%;
-		float: none;
-		margin: 0px auto;
 	}
 
 	.twothirds {
@@ -173,6 +182,19 @@ table.widefat th, table.widefat td { font-size: 12px!important;  }
 
 }
 
+/* Small Desktop ----------- */
+@media only screen and (max-width : 1366px) {
+
+.tablesthird {
+	width: 100%;
+	margin-top: 2%;
+}
+
+#tabs{
+	width: 100%;
+}
+
+}
 /* iPad ----------- */
 @media only screen and (max-width : 1024px) {
 
