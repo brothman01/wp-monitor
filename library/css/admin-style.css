@@ -37,7 +37,6 @@
 
 #second_gauge_row {
 	float: left;
-	opacity: 0.5;
 }
 
 #third_gauge_row {
@@ -62,7 +61,17 @@
 #tabs {
 	float: left;
 	width: 100%;
+	display: table;
 }
+	table {
+		display: block;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+		tbody {
+			display: block;
+		}
 
 .cell {
 	margin-bottom: 1%;

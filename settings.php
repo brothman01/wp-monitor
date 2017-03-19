@@ -76,12 +76,12 @@ class Settings extends AdminTools {
 
 
 				// 2. Add the section to the setting page
-				add_settings_section(
-					'options_br_id', // id for use in id attribute
-					'Email Settings', // title of the section
-					[ $this, 'at_email_section_callback' ], // callback function
-					'options_page' // page
-				);
+				// add_settings_section(
+				// 	'options_br_id', // id for use in id attribute
+				// 	'Email Settings', // title of the section
+				// 	[ $this, 'at_email_section_callback' ], // callback function
+				// 	'options_page' // page
+				// );
 
 								// 5. Add each settings field
 								// add_settings_field(
@@ -92,61 +92,61 @@ class Settings extends AdminTools {
 								// 	'options_br_id'                  // settings section
 								// );
 
-								add_settings_field(
-									'at_send_email',      // id
-									'Send Email?',              // setting title
-									[ $this, 'at_send_email_callback' ],    // display callback
-									'options_page',                 // settings page
-									'options_br_id'                  // settings section
-								);
-
-								add_settings_field(
-									'at_how_often',      // id
-									'Email Frequency',              // setting title
-									[ $this, 'at_how_often_callback' ],    // display callback
-									'options_page',                 // settings page
-									'options_br_id'                  // settings section
-								);
-
-								add_settings_field(
-									'at_check_plugins',      // id
-									'Check Plugins?',              // setting title
-									[ $this, 'at_check_plugins_callback' ],    // display callback
-									'options_page',                 // settings page
-									'options_br_id'                  // settings section
-								);
-
-								add_settings_field(
-									'at_check_themes',      // id
-									'Check Themes?',              // setting title
-									[ $this, 'at_check_themes_callback' ],    // display callback
-									'options_page',                 // settings page
-									'options_br_id'                  // settings section
-								);
-
-								add_settings_field(
-									'at_check_wordpress',      // id
-									'Check WordPress?',              // setting title
-									[ $this, 'at_check_wordpress_callback' ],    // display callback
-									'options_page',                 // settings page
-									'options_br_id'                  // settings section
-								);
-
-								add_settings_field(
-									'at_check_php',      // id
-									'Check PHP?',              // setting title
-									[ $this, 'at_check_php_callback' ],    // display callback
-									'options_page',                 // settings page
-									'options_br_id'                  // settings section
-								);
-
-								add_settings_field(
-									'at_check_ssl',      // id
-									'Check SSL?',              // setting title
-									[ $this, 'at_check_ssl_callback' ],    // display callback
-									'options_page',                 // settings page
-									'options_br_id'                  // settings section
-								);
+								// add_settings_field(
+								// 	'at_send_email',      // id
+								// 	'Send Email?',              // setting title
+								// 	[ $this, 'at_send_email_callback' ],    // display callback
+								// 	'options_page',                 // settings page
+								// 	'options_br_id'                  // settings section
+								// );
+								//
+								// add_settings_field(
+								// 	'at_how_often',      // id
+								// 	'Email Frequency',              // setting title
+								// 	[ $this, 'at_how_often_callback' ],    // display callback
+								// 	'options_page',                 // settings page
+								// 	'options_br_id'                  // settings section
+								// );
+								//
+								// add_settings_field(
+								// 	'at_check_plugins',      // id
+								// 	'Check Plugins?',              // setting title
+								// 	[ $this, 'at_check_plugins_callback' ],    // display callback
+								// 	'options_page',                 // settings page
+								// 	'options_br_id'                  // settings section
+								// );
+								//
+								// add_settings_field(
+								// 	'at_check_themes',      // id
+								// 	'Check Themes?',              // setting title
+								// 	[ $this, 'at_check_themes_callback' ],    // display callback
+								// 	'options_page',                 // settings page
+								// 	'options_br_id'                  // settings section
+								// );
+								//
+								// add_settings_field(
+								// 	'at_check_wordpress',      // id
+								// 	'Check WordPress?',              // setting title
+								// 	[ $this, 'at_check_wordpress_callback' ],    // display callback
+								// 	'options_page',                 // settings page
+								// 	'options_br_id'                  // settings section
+								// );
+								//
+								// add_settings_field(
+								// 	'at_check_php',      // id
+								// 	'Check PHP?',              // setting title
+								// 	[ $this, 'at_check_php_callback' ],    // display callback
+								// 	'options_page',                 // settings page
+								// 	'options_br_id'                  // settings section
+								// );
+								//
+								// add_settings_field(
+								// 	'at_check_ssl',      // id
+								// 	'Check SSL?',              // setting title
+								// 	[ $this, 'at_check_ssl_callback' ],    // display callback
+								// 	'options_page',                 // settings page
+								// 	'options_br_id'                  // settings section
+								// );
 
 				}
 
@@ -182,7 +182,7 @@ class Settings extends AdminTools {
 
 				public function at_general_section_callback() {
 
-					echo 'Edit the settings for the plugin here.';
+					echo 'Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at http://www.nothing.com';
 
 				}
 

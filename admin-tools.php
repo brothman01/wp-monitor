@@ -57,7 +57,7 @@ class AdminTools {
 		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
 
-		include_once( plugin_dir_path( __FILE__ ) . 'send-email.php' );
+		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
 
 
 
@@ -236,20 +236,17 @@ class AdminTools {
 
 							echo '<div id="second_gauge_row" style="width: 100%; background: #F9F9F9; float: left;">';
 
-								echo '<h3>Summary (Pro Version Only)</h3>';
+								echo '<h3>Summary</h3>';
 
 										echo $this->ssl_cell( 'SSL', 'onethird' );
 
-										echo $this->counter_cell( 'Total Updates', '#' );
+										echo $this->counter_cell( 'Total Updates', ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] ) );
 
-										echo $this->counter_cell( 'Overall Grade', '#' . '<br />' . '<span id="ssl_note">(' . 'SSL On/Off' . ')</span>');
+										echo $this->counter_cell( 'Overall Grade', $this->calculate_grade() . '<br />' . '<span id="ssl_note">(' . $this->ssl_check( true ) . ')</span>' );
 
 							echo '</div>';
 
 							echo '<div id="third_gauge_row">
-								<h2>For more information on Admin Tools Pro, go to http://www.nothing.com</h2>
-
-								<h3>Email Notifications available too!</h3>
 
 							</div>';
 
@@ -429,48 +426,30 @@ class AdminTools {
 
 			public function ssl_cell( $title, $class) {
 
-					return '<div class="' . $class . ' cell">
-
-					<h3>' . $title . '</h3>
-
-					<div class="gauge indicator">
-
-						<div class="inner_indicator">
-
-							<div class="indicator_light" id="ssl_red_light">&nbsp;</div>
-
-							<div class="indicator_light" id="ssl_green_light">&nbsp;</div>
-
-						</div>
-
+				return '<div class="' . $class . ' cell">
+				<h3>' . $title . '</h3>
+				<div class="gauge indicator">
+					<div class="inner_indicator">
+						<div class="indicator_light" id="ssl_red_light">&nbsp;</div>
+						<div class="indicator_light" id="ssl_green_light">&nbsp;</div>
 					</div>
+				</div>
+				<script>
+					document.addEventListener( "DOMContentLoaded", function( event ) {
+						var ssl = ' . $this->ssl_check( false ) . ';' . '
+						var ssl_green_light = document.getElementById("ssl_green_light");
+						var ssl_red_light = document.getElementById("ssl_red_light");
+						setTimeout(function(){
+							if (  ssl == 1 ) {
+								ssl_green_light.style.background = "#01FC27";
+							} else {
+								ssl_red_light.style.background = "red";
+							}
+						}, 2000);
+					} );
+				</script>
+			</div>';
 
-					<script>
-
-						document.addEventListener( "DOMContentLoaded", function( event ) {
-
-							var ssl = ' . $this->ssl_check( false ) . ';' . '
-
-							var ssl_green_light = document.getElementById("ssl_green_light");
-
-							var ssl_red_light = document.getElementById("ssl_red_light");
-
-
-							setTimeout(function(){
-
-									ssl_green_light.style.background = "#01FC27";
-
-									ssl_red_light.style.background = "red";
-
-
-
-							}, 2000);
-
-
-						} );
-					</script>
-
-				</div>';
 
 			}
 
