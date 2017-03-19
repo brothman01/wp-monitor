@@ -53,20 +53,6 @@ class Settings extends AdminTools {
 
 			public function at_settings_init() {
 
-				register_setting( // (actually a settings group)
-					'at_options_group',                 // group name
-					'at_options',          // option name
-					[ $this, 'at_sanitize' ]  // validation callback
-				);
-
-				register_setting( // (actually a settings group)
-					'at_prevent_email_cron',                 // group name
-					'at_prevent_email_cron',          // option name
-					[ $this, 'at_sanitize' ]  // validation callback
-				);
-
-
-
 				add_settings_section(
 					'general_section_id', // id for use in id attribute
 					'General Settings', // title of the section
@@ -74,111 +60,9 @@ class Settings extends AdminTools {
 					'options_page' // page
 				);
 
-
-				// 2. Add the section to the setting page
-				// add_settings_section(
-				// 	'options_br_id', // id for use in id attribute
-				// 	'Email Settings', // title of the section
-				// 	[ $this, 'at_email_section_callback' ], // callback function
-				// 	'options_page' // page
-				// );
-
-								// 5. Add each settings field
-								// add_settings_field(
-								// 	'at_settings1',      // id
-								// 	'Text Field',              // setting title
-								// 	[ $this, 'at_text_field_callback' ],    // display callback
-								// 	'options_page',                 // settings page
-								// 	'options_br_id'                  // settings section
-								// );
-
-								// add_settings_field(
-								// 	'at_send_email',      // id
-								// 	'Send Email?',              // setting title
-								// 	[ $this, 'at_send_email_callback' ],    // display callback
-								// 	'options_page',                 // settings page
-								// 	'options_br_id'                  // settings section
-								// );
-								//
-								// add_settings_field(
-								// 	'at_how_often',      // id
-								// 	'Email Frequency',              // setting title
-								// 	[ $this, 'at_how_often_callback' ],    // display callback
-								// 	'options_page',                 // settings page
-								// 	'options_br_id'                  // settings section
-								// );
-								//
-								// add_settings_field(
-								// 	'at_check_plugins',      // id
-								// 	'Check Plugins?',              // setting title
-								// 	[ $this, 'at_check_plugins_callback' ],    // display callback
-								// 	'options_page',                 // settings page
-								// 	'options_br_id'                  // settings section
-								// );
-								//
-								// add_settings_field(
-								// 	'at_check_themes',      // id
-								// 	'Check Themes?',              // setting title
-								// 	[ $this, 'at_check_themes_callback' ],    // display callback
-								// 	'options_page',                 // settings page
-								// 	'options_br_id'                  // settings section
-								// );
-								//
-								// add_settings_field(
-								// 	'at_check_wordpress',      // id
-								// 	'Check WordPress?',              // setting title
-								// 	[ $this, 'at_check_wordpress_callback' ],    // display callback
-								// 	'options_page',                 // settings page
-								// 	'options_br_id'                  // settings section
-								// );
-								//
-								// add_settings_field(
-								// 	'at_check_php',      // id
-								// 	'Check PHP?',              // setting title
-								// 	[ $this, 'at_check_php_callback' ],    // display callback
-								// 	'options_page',                 // settings page
-								// 	'options_br_id'                  // settings section
-								// );
-								//
-								// add_settings_field(
-								// 	'at_check_ssl',      // id
-								// 	'Check SSL?',              // setting title
-								// 	[ $this, 'at_check_ssl_callback' ],    // display callback
-								// 	'options_page',                 // settings page
-								// 	'options_br_id'                  // settings section
-								// );
-
 				}
 
-				public function at_sanitize( $input ) {
 
-					// create an empty 'clean' array
-					$valid = array();
-
-					// add the cleaned values of each field to the clean array on submit
-					// $valid['at_settings1'] = empty( $input['at_settings1'] ) ? '' : sanitize_text_field( $input['at_settings1'] );
-
-					$valid['at_prevent_email_cron'] 	= (bool) empty( $input['at_prevent_email_cron'] ) ? false : true;
-
-					$valid['at_send_email']       		= (bool) empty( $input['at_send_email'] ) ? false : true;
-
-					$valid['at_how_often']  					= isset( $input['at_how_often'] ) ? sanitize_text_field( $input['at_how_often'] ) : 'Never';
-
-					$valid['at_check_plugins']       	= (bool) empty( $input['at_check_plugins'] ) ? false : true;
-
-					$valid['at_check_themes']       	= (bool) empty( $input['at_check_themes'] ) ? false : true;
-
-					$valid['at_check_wordpress']      = (bool) empty( $input['at_check_wordpress'] ) ? false : true;
-
-					$valid['at_check_php']     			  = (bool) empty( $input['at_check_php'] ) ? false : true;
-
-					$valid['at_check_ssl']     			  = (bool) empty( $input['at_check_ssl'] ) ? false : true;
-
-
-					// return the clean array
-					return $valid;
-
-				}
 
 				public function at_general_section_callback() {
 

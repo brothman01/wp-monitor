@@ -40,19 +40,11 @@ class AdminTools {
 
 		] );
 
-		if ( empty( get_option( 'at_prevent_email_cron' ) ) ) {
 
-			update_option( 'at_prevent_email_cron', 0, 1 );
-
-		}
-
-		// check for updates
 		add_action( 'init', [ $this, 'at_check_for_updates' ] );
 
 		add_action( 'plugins_loaded', [ $this, 'init' ] );
 
-		//add cron times
-		add_filter( 'cron_schedules', [ $this, 'custom_cron_schedules' ] );
 
 		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
@@ -73,30 +65,7 @@ class AdminTools {
 
 	}
 
-	public function custom_cron_schedules( $schedules ) {
 
-
-		if ( ! isset( $schedules['weekly'] ) ) {
-
-			$schedules['weekly'] = array(
-				'interval' => 604800,
-				'display'  => __( 'Once Per Week' ),
-			);
-
-		}
-
-		if ( ! isset( $schedules['monthly'] ) ) {
-
-			$schedules['monthly'] = array(
-				'interval' => 2628000,
-				'display'  => __( 'Once Per Month' ),
-			);
-
-		}
-
-		return $schedules;
-
-	}
 
 	function at_dashboard_widget() {
 	// Bail if not viewing the main dashboard page
@@ -593,11 +562,11 @@ class AdminTools {
 
 			}
 
-			public function at_email_section_callback() {
-
-				echo 'Edit the settings for the email here.';
-
-			}
+			// public function at_email_section_callback() {
+			//
+			// 	echo 'Edit the settings for the email here.';
+			//
+			// }
 
 			public function at_user_timeout_callback() {
 
