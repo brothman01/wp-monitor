@@ -182,7 +182,7 @@ class Settings extends AdminTools {
 
 				public function at_general_section_callback() {
 
-					echo 'Edit the settings for the plugin here.';
+					echo 'Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at <a href="http://www.nothing.com">www.nothing.com</a>.';
 
 				}
 
