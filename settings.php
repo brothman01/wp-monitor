@@ -184,6 +184,13 @@ class Settings extends AdminTools {
 
 					echo 'Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at <a href="http://www.nothing.com">www.nothing.com</a>.';
 
+						echo
+						'<br />
+						<h3>Active Addons:</h3>
+						<select multiple>
+						  <option style="color: red;" value="volvo">Email Notifications</option>
+						</select>';
+
 				}
 
 				public function at_email_section_callback() {
