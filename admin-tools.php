@@ -1,15 +1,15 @@
 <?php
 /*
- * Plugin Name: Admin Tools
- * Description: Notify user when updates to WordPress are needed.
- * Version:     0.0.1
+ * Plugin Name: Admin Tools Email Addon
+ * Description: Extends Admin Tools to send an email at a rate set by the user.
+ * Version:     1.0.0
  * Author:      Ben Rothman
  * Slug:				???
  * Author URI:  http://www.BenRothman.org
  * License:     GPL-2.0+
  */
 
-class AdminTools {
+class at_EmailAddon {
 
 	public static $updates;
 
@@ -725,4 +725,4 @@ class AdminTools {
 
 }
 
-$admin_tools = new AdminTools();
+$admin_tools = new at_EmailAddon();

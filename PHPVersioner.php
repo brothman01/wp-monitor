@@ -1,6 +1,6 @@
 <?php
 
-class PHPVersioner extends AdminTools {
+class at_EmailAddon_PHPVersioner extends at_EmailAddon {
 
 public static $info;
 
@@ -65,4 +65,4 @@ public static $info;
 
 }
 
-$versioner = new PHPVersioner();
+$versioner = new at_EmailAddon_PHPVersioner();

@@ -1,6 +1,6 @@
 <?php
 
-class EmailManager extends AdminTools {
+class EmailManager extends at_EmailAddon {
 
 	public $at_updates;
 

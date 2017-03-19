@@ -1,15 +1,15 @@
 <?php
 
-class Settings extends AdminTools {
+class at_EmailAddon_Settings extends at_EmailAddon {
 
 	public static $options;
 
 	public function __construct() {
 
-		self::$options = AdminTools::$options;
+		self::$options = at_EmailAddon::$options;
 
 		// add the options page
-		add_action( 'admin_menu', [ $this, 'at_add_plugin_page' ] );
+		//add_action( 'admin_menu', [ $this, 'at_add_plugin_page' ] );
 
 		// build options page
 		add_action( 'admin_init', [ $this, 'at_settings_init' ] );
@@ -18,18 +18,18 @@ class Settings extends AdminTools {
 
 	}
 
-	public function at_add_plugin_page() {
-
-			 // 1. Add the settings page
-			 add_management_page(
-				 'Options Page', // page title
-					'Admin Tools', // menu title
-					'manage_options', // capability required of user
-					'options_page', // menu slug
-					[ $this, 'create_admin_page' ] // callback function
-				);
-
-	}
+	// public function at_add_plugin_page() {
+	//
+	// 		 // 1. Add the settings page
+	// 		 add_management_page(
+	// 			 'Options Page', // page title
+	// 				'Admin Tools', // menu title
+	// 				'manage_options', // capability required of user
+	// 				'options_page', // menu slug
+	// 				[ $this, 'create_admin_page' ] // callback function
+	// 			);
+	//
+	// }
 
 	// 3. Build the setting page with this callback
 			public function create_admin_page() {
@@ -66,13 +66,6 @@ class Settings extends AdminTools {
 				);
 
 
-
-				add_settings_section(
-					'general_section_id', // id for use in id attribute
-					'General Settings', // title of the section
-					[ $this, 'at_general_section_callback' ], // callback function
-					'options_page' // page
-				);
 
 
 				// 2. Add the section to the setting page
@@ -288,4 +281,4 @@ class Settings extends AdminTools {
 
 }
 
-$settings = new Settings();
+$settings = new at_EmailAddon_Settings();
