@@ -23,7 +23,7 @@ class AdminTools {
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
 
-			'at_how_often'	=>	'daily',
+			'at_how_often'	=>	__( 'daily', 'admin-tools' ),
 
 			'at_send_email' => true,
 
@@ -190,13 +190,13 @@ class AdminTools {
 
 								echo '<h3>Updates</h3>';
 
-										echo $this->gauge_cell( 'Plugins', 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
+										echo $this->gauge_cell( __( 'Plugins',  'admin-tools' ), 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
 
-										echo $this->gauge_cell( 'Themes', 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
+										echo $this->gauge_cell( __( 'Themes',  'admin-tools' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
-										echo $this->indicator_cell( 'WordPress Core', 'wordpress', self::$updates['WordPress'] );
+										echo $this->indicator_cell( __('WordPress Core',  'admin-tools' ), 'wordpress', self::$updates['WordPress'] );
 
-										echo $this->php_cell( 'PHP' );
+										echo $this->php_cell( __( 'PHP',  'admin-tools' ) );
 
 							echo '</div>';
 
@@ -205,15 +205,15 @@ class AdminTools {
 
 								echo '<h3>Summary</h3>';
 
-										echo $this->ssl_cell( 'SSL', 'onethird' );
+										echo $this->ssl_cell( __( 'SSL',  'admin-tools' ), 'onethird' );
 
 										$final_grade = ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] );
 
-										echo $this->counter_cell( 'Total Updates', (integer) $final_grade, 'total' );
+										echo $this->counter_cell( __( 'Total Updates',  'admin-tools' ), (integer) $final_grade, 'total' );
 
-										echo $this->counter_cell( 'Overall Grade', (integer) $this->calculate_grade(), 'grade' );
+										echo $this->counter_cell( __( 'Overall Grade',  'admin-tools' ), (integer) $this->calculate_grade(), 'grade' );
 
-										// echo  . '<br />' . '<span id="ssl_note">(' . $this->ssl_check( true ) . ')</span>';
+										// echo  . '<br />' . '<span id="ssl_note">(' . __( $this->ssl_check( true ),  'admin-tools' ) . ')</span>';
 
 							echo '</div>';
 
@@ -232,8 +232,8 @@ class AdminTools {
 						echo '
 						<div id="tabs">
 						  <ul>
-						    <li><a href="#tabs-1">Variables</a></li>
-						    <li><a href="#tabs-2">User Logins</a></li>
+						    <li><a href="#tabs-1">' . __( "Variables",  "admin-tools" ) . '</a></li>
+						    <li><a href="#tabs-2">' . __( "User Logins",  "admin-tools" ) . '</a></li>
 						  </ul>
 						  <div id="tabs-1">';
 
@@ -242,8 +242,8 @@ class AdminTools {
 								echo '<thead>';
 
 									echo '<tr>
-										<th>Variable</th>
-										<th>Value</th>
+										<th>' . __("Variable",  "admin-tools" ) . '</th>
+										<th>' . __("Value",  "admin-tools" ) . '</th>
 									</tr>';
 
 									echo '</thead>';
@@ -255,15 +255,13 @@ class AdminTools {
 						  echo '</div>
 						  <div id="tabs-2">
 
-							<h3 style="text-align: center;">User Logins:</h3>
-
 									<table class="wp-list-table widefat fixed striped at_table">
 
 										<thead>
 											<tr>
-												<th>Username</th>
-												<th>Last Login Date/Time</th>
-												<th>Last IP Used</th>
+												<th>' . __( "Username",  "admin-tools" ) . '</th>
+												<th>' . __( "Last Login Date/Time",  "admin-tools" ) . '</th>
+												<th>' . __( "Last IP Used",  "admin-tools" ) . '</th>
 											</tr>
 										</thead>';
 
@@ -525,35 +523,35 @@ class AdminTools {
 
 				$variables = array(
 
-					'WP Version'	=> get_bloginfo('version'),
+					__('WP Version', "admin-tools" )	=> get_bloginfo('version'),
 
-					'PHP Version'	=> phpversion(),
+					__('PHP Version', "admin-tools" )	=> phpversion(),
 
-					'Name'				=> get_bloginfo('name'),
+					__('Name', "admin-tools" )				=> get_bloginfo('name'),
 
-					'URL'					=>	get_bloginfo('url'),
+					__('URL', "admin-tools" )					=>	get_bloginfo('url'),
 
-					'Charset'			=>	get_bloginfo('charset'),
+					__('Charset', "admin-tools" )			=>	get_bloginfo('charset'),
 
-					'Admin Email'	=>	get_bloginfo('admin_email'),
+					__('Admin Email', "admin-tools" )	=>	get_bloginfo('admin_email'),
 
-					'Language'		=>	get_bloginfo('language'),
+					__('Language', "admin-tools" )		=>	get_bloginfo('language'),
 
-					'Stylesheet Directory'	=>	get_bloginfo('stylesheet_directory'),
+					__('Stylesheet Directory', "admin-tools" )	=>	get_bloginfo('stylesheet_directory'),
 
-					'Anyone Can Register'			=>	$anyone_can_register,
+					__('Anyone Can Register', "admin-tools" )			=>	$anyone_can_register,
 
-					'Front Page Displays'			=> get_option( 'show_on_front' ),
+					__('Front Page Displays', "admin-tools" )			=> get_option( 'show_on_front' ),
 
-					'Posts Per Page'					=>	get_option( 'posts_per_page' ),
+					__('Posts Per Page', "admin-tools" )					=>	get_option( 'posts_per_page' ),
 
-					'Atom URL'								=>	get_bloginfo('atom_url'),
+					__('Atom URL', "admin-tools" )								=>	get_bloginfo('atom_url'),
 
-					'SMTP'										=>	ini_get("SMTP"),
+					__('SMTP', "admin-tools" )										=>	ini_get("SMTP"),
 
-					'Discourage Search Engines'=>	$blog_public,
+					__('Discourage Search Engines', "admin-tools" )	=>	$blog_public,
 
-					'PHP Memory Limit'				=>	ini_get("memory_limit"),
+					__('PHP Memory Limit', "admin-tools" )				=>	ini_get("memory_limit"),
 
 				);
 
@@ -578,7 +576,7 @@ class AdminTools {
 
 				if ( $print ) {
 
-				return is_ssl() ? 'SSL' : 'No SSL';
+				return is_ssl() ? __('SSL', "admin-tools" ) : __('No SSL', "admin-tools" );
 
 			} else {
 
@@ -595,88 +593,6 @@ class AdminTools {
 			}
 
 
-			public function at_send_email_callback() {
-
-				// print the HTML to create the field
-				printf(
-					'<input id="at_send_email" name="at_options[at_send_email]" type="checkbox" value="1" %1$s />',
-					checked( true, Settings::$options['at_send_email'], false )
-				);
-
-			}
-
-			public function at_how_often_callback() {
-
-				$options = array(
-					'never'   => 'never',
-
-					'hourly'	=>	'hourly',
-
-					'daily'   => 'daily',
-
-					'weekly'  => 'weekly',
-
-					'monthly' => 'monthly',
-
-				);
-
-				print( '<select name="at_options[at_how_often]">' );
-
-				foreach ( $options as $value => $label ) {
-
-					printf(
-						'<option value="%1$s" %2$s>%3$s</option>',
-						esc_attr( $value ),
-						selected( self::$options['at_how_often'], $value ),
-						esc_html( $label )
-					);
-
-				}
-
-				print( '</select>' );
-
-			}
-
-
-			public function at_check_plugins_callback() {
-
-				// print the HTML to create the field
-				printf(
-					'<input id="at_check_plugins" name="at_options[at_check_plugins]" type="checkbox" value="1" %1$s />',
-					checked( true, Settings::$options['at_check_plugins'], false )
-				);
-
-			}
-
-			public function at_check_themes_callback() {
-
-				// print the HTML to create the field
-				printf(
-					'<input id="at_check_themes" name="at_options[at_check_themes]" type="checkbox" value="1" %1$s />',
-					checked( true, Settings::$options['at_check_themes'], false )
-				);
-
-			}
-
-			public function at_check_wordpress_callback() {
-
-				// print the HTML to create the field
-				printf(
-					'<input id="at_check_wordpress" name="at_options[at_check_wordpress]" type="checkbox" value="1" %1$s />',
-					checked( true, Settings::$options['at_check_wordpress'], false )
-				);
-
-			}
-
-			public function at_check_php_callback() {
-
-				// print the HTML to create the field
-				printf(
-					'<input id="at_check_php" name="at_options[at_check_php]" type="checkbox" value="1" %1$s />',
-					checked( true, Settings::$options['at_check_php'], false )
-				);
-
-			}
 
 
 	public function at_enqueue_admin_styles( $hook ) {

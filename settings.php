@@ -66,116 +66,17 @@ class Settings extends AdminTools {
 
 				public function at_general_section_callback() {
 
-					echo 'Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at <a href="http://www.nothing.com">www.nothing.com</a>.';
+					_e('Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at', "admin-tools" );
+					 echo ' <a href="http://www.nothing.com">www.nothing.com</a>.';
 
 						echo
 						'<br />
-						<h3>Active Addons:</h3>
+						<h3>' . __("Active Addons", "admin-tools" ) . ':</h3>
 						<select multiple>
 						  <option style="color: red;" value="volvo">Email Notifications</option>
 						</select>';
 
 				}
-
-				public function at_email_section_callback() {
-
-					echo 'Edit the settings for the email here.';
-
-				}
-
-				public function at_send_email_callback() {
-
-					// print the HTML to create the field
-					printf(
-						'<input id="at_send_email" name="at_options[at_send_email]" type="checkbox" value="1" %1$s />',
-						checked( true, Settings::$options['at_send_email'], false )
-					);
-
-				}
-
-				public function at_how_often_callback() {
-
-					$options = array(
-						'never'   => 'never',
-
-						'hourly'	=>	'hourly',
-
-						'daily'   => 'daily',
-
-						'weekly'  => 'weekly',
-
-						'monthly' => 'monthly',
-
-					);
-
-					print( '<select name="at_options[at_how_often]">' );
-
-					foreach ( $options as $value => $label ) {
-
-						printf(
-							'<option value="%1$s" %2$s>%3$s</option>',
-							esc_attr( $value ),
-							selected( self::$options['at_how_often'], $value ),
-							esc_html( $label )
-						);
-
-					}
-
-					print( '</select>' );
-
-				}
-
-
-				public function at_check_plugins_callback() {
-
-					// print the HTML to create the field
-					printf(
-						'<input id="at_check_plugins" name="at_options[at_check_plugins]" type="checkbox" value="1" %1$s />',
-						checked( true, Settings::$options['at_check_plugins'], false )
-					);
-
-				}
-
-				public function at_check_themes_callback() {
-
-					// print the HTML to create the field
-					printf(
-						'<input id="at_check_themes" name="at_options[at_check_themes]" type="checkbox" value="1" %1$s />',
-						checked( true, Settings::$options['at_check_themes'], false )
-					);
-
-				}
-
-				public function at_check_wordpress_callback() {
-
-					// print the HTML to create the field
-					printf(
-						'<input id="at_check_wordpress" name="at_options[at_check_wordpress]" type="checkbox" value="1" %1$s />',
-						checked( true, Settings::$options['at_check_wordpress'], false )
-					);
-
-				}
-
-				public function at_check_php_callback() {
-
-					// print the HTML to create the field
-					printf(
-						'<input id="at_check_php" name="at_options[at_check_php]" type="checkbox" value="1" %1$s />',
-						checked( true, Settings::$options['at_check_php'], false )
-					);
-
-				}
-
-				public function at_check_ssl_callback() {
-
-					// print the HTML to create the field
-					printf(
-						'<input id="at_check_ssl" name="at_options[at_check_ssl]" type="checkbox" value="1" %1$s />',
-						checked( true, Settings::$options['at_check_ssl'], false )
-					);
-
-				}
-
 
 }
 
