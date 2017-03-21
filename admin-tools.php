@@ -23,7 +23,6 @@ class AdminTools {
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
 
-
 			'at_how_often'	=>	'daily',
 
 			'at_send_email' => true,
@@ -208,9 +207,13 @@ class AdminTools {
 
 										echo $this->ssl_cell( 'SSL', 'onethird' );
 
-										echo $this->counter_cell( 'Total Updates', ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] ) );
+										$final_grade = ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] );
 
-										echo $this->counter_cell( 'Overall Grade', $this->calculate_grade() . '<br />' . '<span id="ssl_note">(' . $this->ssl_check( true ) . ')</span>' );
+										echo $this->counter_cell( 'Total Updates', (integer) $final_grade, 'total' );
+
+										echo $this->counter_cell( 'Overall Grade', (integer) $this->calculate_grade(), 'grade' );
+
+										// echo  . '<br />' . '<span id="ssl_note">(' . $this->ssl_check( true ) . ')</span>';
 
 							echo '</div>';
 
@@ -421,18 +424,204 @@ class AdminTools {
 
 			}
 
-			public function counter_cell( $title, $value ) {
+			// public function counter_cell( $title, $value, $class_prefix ) {
+			//
+			// 	return '<div class="onethird cell">
+			//
+			// 	<h3>' . $title . '</h3>
+			//
+			// 		<div class="gauge overall">
+			//
+			// 			<div class="counter" id="' . $class_prefix . '_counter">' . '&nbsp;' . '</div>' .
+			//
+			// 		'</div>
+			//
+			// 	</div>
+			//
+			// 	<script>
+			//
+			// 		document.addEventListener( "DOMContentLoaded", function( event ) {
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 200);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 300);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 400);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 500);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 600);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 700);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 800);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 900);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 1000);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 1100);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 1200);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 1300);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 1400);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 1500);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 1600);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 1700);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			// 			}, 1800);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				var number = Math.floor(Math.random() * 100) + 1
+			// 				counter.innerHTML = number;
+			//
+			// 			}, 1900);
+			//
+			// 			setTimeout(function(){
+			// 				var counter = document.getElementById("' . $class_prefix . '_counter");
+			// 				counter.innerHTML = "' . $value . '";
+			//
+			// 			}, 2000);
+			//
+			//
+			//
+			// 		} );
+			//
+			// 	</script>';
+			//
+			// }
+
+			public function counter_cell( $title, $value, $class_prefix ) {
 
 				return '<div class="onethird cell">
+
 				<h3>' . $title . '</h3>
 
 					<div class="gauge overall">
 
-						<div class="counter">' . $value . '</div>' .
+						<div class="counter" id="' . $class_prefix . '_counter">' . '&nbsp;' . '</div>' .
 
 					'</div>
 
-				</div>';
+				</div>
+
+				<script>
+
+					document.addEventListener( "DOMContentLoaded", function( event ) {
+						var x;
+
+						for (x = 0; x < 25; x++) {
+
+						setTimeout(function(){
+							var counter = document.getElementById("' . $class_prefix . '_counter");
+							var number = Math.floor(Math.random() * 100) + 1
+							counter.innerHTML = number;
+
+						}, (x * 100) );
+
+					}
+
+						setTimeout(function(){
+							var counter = document.getElementById("' . $class_prefix . '_counter");
+							counter.innerHTML = "' . $value . '";
+
+						}, ((x + 1) * 100) );
+
+
+
+					} );
+
+				</script>';
 
 			}
 
