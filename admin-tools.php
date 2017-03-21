@@ -18,12 +18,12 @@ class AdminTools {
 	public static $grades;
 
 
-	public function __construct( ) {
+	public function __construct() {
 
 		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', [
 
-			'at_how_often'	=>	__( 'daily', 'admin-tools' ),
+			'at_how_often'	=> __( 'daily', 'admin-tools' ),
 
 			'at_send_email' => true,
 
@@ -43,22 +43,17 @@ class AdminTools {
 
 		add_action( 'plugins_loaded', [ $this, 'init' ] );
 
-
 		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
 
 		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
 
-
-
 	}
 
 	public function init() {
 
-		// enqueue the admin stylesheet
 		add_action( 'admin_enqueue_scripts', [ $this, 'at_enqueue_admin_styles' ] );
 
-		// dashboard widget
 		add_action( 'admin_footer', [ $this, 'at_dashboard_widget' ] );
 
 	}
@@ -66,12 +61,12 @@ class AdminTools {
 
 
 	function at_dashboard_widget() {
-	// Bail if not viewing the main dashboard page
-	if ( get_current_screen()->base !== 'dashboard' ) {
+		// Bail if not viewing the main dashboard page
+		if ( get_current_screen()->base !== 'dashboard' ) {
 
-		return;
+			return;
 
-	}
+		}
 	?>
 
 	<div id="custom-id" class="welcome-panel" style="display: none;">
@@ -105,86 +100,84 @@ class AdminTools {
 
 			$php_info = PHPVersioner::$info;
 
-			$current_php_version = ( 2 == substr_count( phpversion(), '.' ) ) ? substr(phpversion(), 0, -2) : phpversion();
+			$current_php_version = ( 2 == substr_count( phpversion(), '.' ) ) ? substr( phpversion(), 0, -2 ) : phpversion();
 
 			$user_version_info = $php_info[ $current_php_version ];
 
-			$user_version_supported_until = $user_version_info[ 'supported_until' ];
+			$user_version_supported_until = $user_version_info['supported_until'];
 
 			$current_date = date_create();
 
-			$PHP_action = ($user_version_supported_until < date_timestamp_get($current_date) ) ? 'Upgrade Now' : 'Up To Date';
+			$php_action = ( $user_version_supported_until < date_timestamp_get( $current_date ) ) ? 'Upgrade Now' : 'Up To Date';
 
 			//print_r( $user_version_supported_until . ' vs ' . date_timestamp_get($current_date) );
 
-			if ( $PHP_action == "Upgrade Now" ) {
+		if ( 'Upgrade Now' == $php_action ) {
 
 				$php_update = 1;
 
-			} else {
+		} else {
 
 				$php_update = 0;
 
-			}
+		}
 
-			$user_version_supported_until = gmdate("m-d-Y", $user_version_supported_until);
-
+			$user_version_supported_until = gmdate( 'm-d-Y', $user_version_supported_until );
 
 			self::$updates = array(
 
-				'plugins'	=>	$update_data['counts']['plugins'],
+				'plugins'	=> $update_data['counts']['plugins'],
 
-				'themes'	=>	$update_data['counts']['themes'],
+				'themes'	=> $update_data['counts']['themes'],
 
-				'WordPress'	=>	$update_data['counts']['wordpress'],
+				'WordPress'	=> $update_data['counts']['wordpress'],
 
 				'PHP_supported_until' => $user_version_supported_until,
 
-				'PHP_action'	=>	$PHP_action,
+				'php_action'	=> $php_action,
 
-				'PHP_update'	=>	$php_update,
+				'PHP_update'	=> $php_update,
 
-				'PHP_warning' => $user_version_info[ 'supported_until' ],
+				'PHP_warning' => $user_version_info['supported_until'],
 
-				'SSL'					=>	$this->ssl_check( false ),
+				'SSL'					=> $this->ssl_check( false ),
 
 			);
 
 			update_option( 'at_update_info', self::$updates );
-
 
 	}
 
 
 
 
-			function list_last_logins() {
+	function list_last_logins() {
 
 				$all_users = get_users( 'blog_id=1' );
 
-				foreach ($all_users as $user) {
+		foreach ( $all_users as $user ) {
 
 						echo '<tr>' .
 
 						'<th>' . $user->user_login . '</th>' .
 
-						'<th>' . get_user_meta(  $user->ID, 'last_login_timestamp', true ) . '</th>' .
+						'<th>' . get_user_meta( $user->ID, 'last_login_timestamp', true ) . '</th>' .
 
-						'<th>' . get_user_meta(  $user->ID, 'last_ip', true ) . '</th>' .
+						'<th>' . get_user_meta( $user->ID, 'last_ip', true ) . '</th>' .
 
 						'</tr>';
 
-				}
-
 		}
 
-			public function at_dashboard_callback() {
+	}
 
-					echo '<div id="dashboard_main">';
+	public function at_dashboard_callback() {
 
-						echo '<div class="twothirds">
+			echo '<div id="dashboard_main">';
 
-						<h1 style="text-align: center; background: #F9F9F9;">Site Status:</h1>';
+				echo '<div class="twothirds">
+
+				<h1 style="text-align: center; background: #F9F9F9;">Site Status:</h1>';
 
 							echo '<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">';
 
@@ -194,12 +187,11 @@ class AdminTools {
 
 										echo $this->gauge_cell( __( 'Themes',  'admin-tools' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
-										echo $this->indicator_cell( __('WordPress Core',  'admin-tools' ), 'wordpress', self::$updates['WordPress'] );
+										echo $this->indicator_cell( __( 'WordPress Core',  'admin-tools' ), 'wordpress', self::$updates['WordPress'] );
 
 										echo $this->php_cell( __( 'PHP',  'admin-tools' ) );
 
 							echo '</div>';
-
 
 							echo '<div id="second_gauge_row" style="width: 100%; background: #F9F9F9; float: left;">';
 
@@ -223,17 +215,13 @@ class AdminTools {
 
 						echo '</div>';
 
-
-
 						echo '<div class="tablesthird" >';
-
-
 
 						echo '
 						<div id="tabs">
 						  <ul>
-						    <li><a href="#tabs-1">' . __( "Variables",  "admin-tools" ) . '</a></li>
-						    <li><a href="#tabs-2">' . __( "User Logins",  "admin-tools" ) . '</a></li>
+						    <li><a href="#tabs-1">' . __( 'Variables',  'admin-tools' ) . '</a></li>
+						    <li><a href="#tabs-2">' . __( 'User Logins',  'admin-tools' ) . '</a></li>
 						  </ul>
 						  <div id="tabs-1">';
 
@@ -242,8 +230,8 @@ class AdminTools {
 								echo '<thead>';
 
 									echo '<tr>
-										<th>' . __("Variable",  "admin-tools" ) . '</th>
-										<th>' . __("Value",  "admin-tools" ) . '</th>
+										<th>' . __( 'Variable',  'admin-tools' ) . '</th>
+										<th>' . __( 'Value',  'admin-tools' ) . '</th>
 									</tr>';
 
 									echo '</thead>';
@@ -259,16 +247,13 @@ class AdminTools {
 
 										<thead>
 											<tr>
-												<th>' . __( "Username",  "admin-tools" ) . '</th>
-												<th>' . __( "Last Login Date/Time",  "admin-tools" ) . '</th>
-												<th>' . __( "Last IP Used",  "admin-tools" ) . '</th>
+												<th>' . __( 'Username',  'admin-tools' ) . '</th>
+												<th>' . __( 'Last Login Date/Time',  'admin-tools' ) . '</th>
+												<th>' . __( 'Last IP Used',  'admin-tools' ) . '</th>
 											</tr>
 										</thead>';
 
-
-
 								 $this->list_last_logins();
-
 
 							echo '</table>
 						</div>';
@@ -280,9 +265,9 @@ class AdminTools {
 
 					</div>';
 
-			}
+	}
 
-			public function gauge_cell( $title, $gauge_class, $value, $max ) {
+	public function gauge_cell( $title, $gauge_class, $value, $max ) {
 
 				return '<div class="onequarter cell">
 
@@ -302,9 +287,9 @@ class AdminTools {
 
 				</div>';
 
-			}
+	}
 
-			public function indicator_cell( $title, $class_prefix, $setting ) {
+	public function indicator_cell( $title, $class_prefix, $setting ) {
 
 				return '<div class="onequarter cell">
 				<h3>' . $title . '</h3>
@@ -331,7 +316,7 @@ class AdminTools {
 
 										setTimeout(function(){
 
-											if (' . $setting .' == 1) {
+											if (' . $setting . ' == 1) {
 
 												green_light.style.background = "#01FC27";
 
@@ -348,9 +333,9 @@ class AdminTools {
 
 								</div>';
 
-			}
+	}
 
-			public function php_cell( $title ) {
+	public function php_cell( $title ) {
 
 						return '<div class="onequarter cell" style="text-align: center;">
 						<h3 style="margin-bottom: 5px;">' . $title . '</h3>
@@ -370,11 +355,11 @@ class AdminTools {
 
 									setTimeout(function(){
 
-											if ("' . self::$updates['PHP_action'] .'" == "Up To Date") {
+											if ("' . self::$updates['php_action'] . '" == "Up To Date") {
 
 												php_action_field.style.background = "#88A95A";
 
-												php_action_field.value = "' . self::$updates['PHP_action'] .'";
+												php_action_field.value = "' . self::$updates['php_action'] . '";
 
 											} else {
 
@@ -391,9 +376,9 @@ class AdminTools {
 
 					</div>';
 
-			}
+	}
 
-			public function ssl_cell( $title, $class) {
+	public function ssl_cell( $title, $class ) {
 
 				return '<div class="' . $class . ' cell">
 				<h3>' . $title . '</h3>
@@ -419,11 +404,10 @@ class AdminTools {
 				</script>
 			</div>';
 
+	}
 
-			}
 
-
-			public function counter_cell( $title, $value, $class_prefix ) {
+	public function counter_cell( $title, $value, $class_prefix ) {
 
 				return '<div class="onethird cell">
 
@@ -465,9 +449,9 @@ class AdminTools {
 
 				</script>';
 
-			}
+	}
 
-			public function calculate_grade() {
+	public function calculate_grade() {
 
 				$grades = array(
 
@@ -475,122 +459,114 @@ class AdminTools {
 
 						'Themes' => ( ( sizeof( wp_get_themes() ) - self::$updates['themes'] ) / sizeof( wp_get_themes() ) * 100),
 
-						'WordPress' =>	( self::$updates['WordPress'] == 0 ) ? 100 : 0,
+						'WordPress' => ( 0 == self::$updates['WordPress'] ) ? 100 : 0,
 
-						'PHP' =>	( self::$updates['PHP_update'] == 0 ) ? 100 : 25,
+						'PHP' => ( 0 == self::$updates['PHP_update'] ) ? 100 : 25,
 
 				);
 
 					$subtotal = $grades['Plugins'] + $grades['Themes'] + $grades['WordPress'] + $grades['PHP'];
 
-
 				$subtotal = $subtotal / 4;
 
 				$subtotal = round( $subtotal, 0 );
 
-
-
 				return $subtotal;
-			}
+	}
 
 
 
-			public function variable_table() {
+	public function variable_table() {
 
 				$all_vars = '';
 
-				if ( ( get_option('users_can_register') == 0 ) || empty( get_option('users_can_register') ) ) {
+		if ( ( get_option( 'users_can_register' ) == 0 ) || empty( get_option( 'users_can_register' ) ) ) {
 
 					$anyone_can_register = 'false';
 
-				} else {
+		} else {
 
 					$anyone_can_register = 'true';
 
-				}
+		}
 
-
-				if ( ( get_option('blog_public') == 0 ) || empty( get_option('blog_public') ) ) {
+		if ( ( get_option( 'blog_public' ) == 0 ) || empty( get_option( 'blog_public' ) ) ) {
 
 					$blog_public = 'true';
 
-				} else {
+		} else {
 
 					$blog_public = 'false';
 
-				}
-
+		}
 
 				$variables = array(
 
-					__('WP Version', "admin-tools" )	=> get_bloginfo('version'),
+					__( 'WP Version', 'admin-tools' )	=> get_bloginfo( 'version' ),
 
-					__('PHP Version', "admin-tools" )	=> phpversion(),
+					__( 'PHP Version', 'admin-tools' )	=> phpversion(),
 
-					__('Name', "admin-tools" )				=> get_bloginfo('name'),
+					__( 'Name', 'admin-tools' )				=> get_bloginfo( 'name' ),
 
-					__('URL', "admin-tools" )					=>	get_bloginfo('url'),
+					__( 'URL', 'admin-tools' )					=> get_bloginfo( 'url' ),
 
-					__('Charset', "admin-tools" )			=>	get_bloginfo('charset'),
+					__( 'Charset', 'admin-tools' )			=> get_bloginfo( 'charset' ),
 
-					__('Admin Email', "admin-tools" )	=>	get_bloginfo('admin_email'),
+					__( 'Admin Email', 'admin-tools' )	=> get_bloginfo( 'admin_email' ),
 
-					__('Language', "admin-tools" )		=>	get_bloginfo('language'),
+					__( 'Language', 'admin-tools' )		=> get_bloginfo( 'language' ),
 
-					__('Stylesheet Directory', "admin-tools" )	=>	get_bloginfo('stylesheet_directory'),
+					__( 'Stylesheet Directory', 'admin-tools' )	=> get_bloginfo( 'stylesheet_directory' ),
 
-					__('Anyone Can Register', "admin-tools" )			=>	$anyone_can_register,
+					__( 'Anyone Can Register', 'admin-tools' )			=> $anyone_can_register,
 
-					__('Front Page Displays', "admin-tools" )			=> get_option( 'show_on_front' ),
+					__( 'Front Page Displays', 'admin-tools' )			=> get_option( 'show_on_front' ),
 
-					__('Posts Per Page', "admin-tools" )					=>	get_option( 'posts_per_page' ),
+					__( 'Posts Per Page', 'admin-tools' )					=> get_option( 'posts_per_page' ),
 
-					__('Atom URL', "admin-tools" )								=>	get_bloginfo('atom_url'),
+					__( 'Atom URL', 'admin-tools' )								=> get_bloginfo( 'atom_url' ),
 
-					__('SMTP', "admin-tools" )										=>	ini_get("SMTP"),
+					__( 'SMTP', 'admin-tools' )										=> ini_get( 'SMTP' ),
 
-					__('Discourage Search Engines', "admin-tools" )	=>	$blog_public,
+					__( 'Discourage Search Engines', 'admin-tools' )	=> $blog_public,
 
-					__('PHP Memory Limit', "admin-tools" )				=>	ini_get("memory_limit"),
+					__( 'PHP Memory Limit', 'admin-tools' )				=> ini_get( 'memory_limit' ),
 
 				);
 
-				foreach($variables as $key => $value) {
+		foreach ( $variables as $key => $value ) {
 
 					$all_vars = $all_vars .
 					'<tr>
 						<th>' . $key . '</th>
-						<th>' . $value .'</th>
+						<th>' . $value . '</th>
 					</tr>';
 
-				}
+		}
 
 				return $all_vars;
 
+	}
 
+	public function ssl_check( $print ) {
 
+		if ( $print ) {
 
-			}
+			return is_ssl() ? __( 'SSL', 'admin-tools' ) : __( 'No SSL', 'admin-tools' );
 
-			public function ssl_check( $print ) {
-
-				if ( $print ) {
-
-				return is_ssl() ? __('SSL', "admin-tools" ) : __('No SSL', "admin-tools" );
-
-			} else {
+		} else {
 
 				return is_ssl() ? 1 : 0;
 
-			}
+		}
 
-			}
+	}
 
-			public function at_general_section_callback() {
+	public function at_general_section_callback() {
 
 				echo 'Edit the settings for the plugin here.';
 
-			}
+	}
 
 
 

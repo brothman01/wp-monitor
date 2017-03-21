@@ -69,12 +69,15 @@ class Settings extends AdminTools {
 					_e('Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at', "admin-tools" );
 					 echo ' <a href="http://www.nothing.com">www.nothing.com</a>.';
 
-						echo
-						'<br />
-						<h3>' . __("Active Addons", "admin-tools" ) . ':</h3>
-						<select multiple>
-						  <option style="color: red;" value="volvo">Email Notifications</option>
-						</select>';
+					 printf(
+					    '<br />
+					    <h3>%1$s</h3>' .
+					    '<select multiple>
+					       <option>%2$s</option>
+					    </select>',
+					    esc_html__( 'Active Addons', 'admin-tools' ),
+					    esc_html__( 'Email Notifications', 'admin-tools' )
+					 );
 
 				}
 
