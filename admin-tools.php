@@ -40,7 +40,6 @@ class AdminTools {
 
 		] );
 
-
 		add_action( 'init', [ $this, 'at_check_for_updates' ] );
 
 		add_action( 'plugins_loaded', [ $this, 'init' ] );
@@ -562,21 +561,6 @@ class AdminTools {
 
 			}
 
-			// public function at_email_section_callback() {
-			//
-			// 	echo 'Edit the settings for the email here.';
-			//
-			// }
-
-			public function at_user_timeout_callback() {
-
-				// print the HTML to create the field
-				printf(
-					'<input id="at_user_timeout" name="at_options[at_user_timeout]" type="text" value="%1$s" /> %2$s',
-					Settings::$options['at_user_timeout'], 'minutes'
-				);
-
-			}
 
 			public function at_send_email_callback() {
 
