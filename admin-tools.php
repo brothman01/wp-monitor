@@ -159,7 +159,7 @@ class AdminTools {
 
 				$body = wp_remote_retrieve_body( $response );
 
-				$json = json_decode( $body, true );
+				$data = json_decode( $body, true );
 
 		foreach ( $all_users as $user ) {
 
@@ -171,7 +171,7 @@ class AdminTools {
 
 						'<th>' . get_user_meta( $user->ID, 'last_ip', true ) . '</th>' .
 
-						'<th>' . $json['city'] . '</th>' .
+						'<th>' . $data['city'] . '</th>' .
 
 						'</tr>';
 
