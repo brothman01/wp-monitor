@@ -155,6 +155,12 @@ class AdminTools {
 
 				$all_users = get_users( 'blog_id=1' );
 
+				$response = wp_remote_get('http://www.ip-api.com/json/' . get_user_meta( $user->ID, 'last_ip', true ) );
+
+				$body = wp_remote_retrieve_body( $response );
+
+				$json = json_decode( $body, true );
+
 		foreach ( $all_users as $user ) {
 
 						echo '<tr>' .
@@ -164,6 +170,8 @@ class AdminTools {
 						'<th>' . get_user_meta( $user->ID, 'last_login_timestamp', true ) . '</th>' .
 
 						'<th>' . get_user_meta( $user->ID, 'last_ip', true ) . '</th>' .
+
+						'<th>' . $json['city'] . '</th>' .
 
 						'</tr>';
 
@@ -250,6 +258,7 @@ class AdminTools {
 												<th>' . __( 'Username',  'admin-tools' ) . '</th>
 												<th>' . __( 'Last Login Date/Time',  'admin-tools' ) . '</th>
 												<th>' . __( 'Last IP Used',  'admin-tools' ) . '</th>
+												<th>' . __( 'Location',  'admin-tools' ) . '</th>
 											</tr>
 										</thead>';
 
