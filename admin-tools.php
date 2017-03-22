@@ -388,35 +388,7 @@ class AdminTools {
 
 					'</div>
 
-				</div>
-
-				<script>
-
-					document.addEventListener( "DOMContentLoaded", function( event ) {
-						var x;
-
-						for (x = 0; x < 25; x++) {
-
-						// setTimeout(function(){
-						// 	var counter = document.getElementById("' . $class_prefix . '_counter");
-						// 	var number = Math.floor(Math.random() * 100) + 1
-						// 	counter.innerHTML = number;
-						//
-						// }, (x * 50) );
-
-					}
-
-						// setTimeout(function(){
-						// 	var counter = document.getElementById("' . $class_prefix . '_counter");
-						// 	counter.innerHTML = "' . $value . '";
-						//
-						// }, ((x + 1) * 50) );
-
-
-
-					} );
-
-				</script>';
+				</div>';
 
 	}
 
