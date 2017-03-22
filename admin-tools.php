@@ -21,7 +21,7 @@ class AdminTools {
 	public function __construct() {
 
 		// get option 'at_options' value from the database and put it in the array $options
-		self::$options = get_option( 'at_options', [
+		self::$options = get_option( 'at_options', array(
 
 			'at_how_often'	=> __( 'daily', 'admin-tools' ),
 
@@ -37,11 +37,11 @@ class AdminTools {
 
 			'at_check_ssl' => true,
 
-		] );
+		) );
 
-		add_action( 'init', [ $this, 'at_check_for_updates' ] );
+		add_action( 'init', array( $this, 'at_check_for_updates' ) );
 
-		add_action( 'plugins_loaded', [ $this, 'init' ] );
+		add_action( 'plugins_loaded', array( $this, 'init' ) );
 
 		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
@@ -52,9 +52,9 @@ class AdminTools {
 
 	public function init() {
 
-		add_action( 'admin_enqueue_scripts', [ $this, 'at_enqueue_admin_styles' ] );
+		add_action( 'admin_enqueue_scripts', array( $this, 'at_enqueue_admin_styles' ) );
 
-		add_action( 'admin_footer', [ $this, 'at_dashboard_widget' ] );
+		add_action( 'admin_footer', array( $this, 'at_dashboard_widget' ) );
 
 	}
 
@@ -306,31 +306,6 @@ class AdminTools {
 
 					</div>
 
-								<script>
-
-									document.addEventListener( "DOMContentLoaded", function( event ) {
-
-										var green_light = document.getElementById("' . $class_prefix . '_green_light");
-
-										var red_light = document.getElementById("' . $class_prefix . '_red_light");
-
-										setTimeout(function(){
-
-											if (' . $setting . ' == 1) {
-
-												green_light.style.background = "#01FC27";
-
-											} else {
-
-												red_light.style.background = "#FF0000";
-
-											}
-
-										}, 1500);
-
-									} );
-								</script>
-
 								</div>';
 
 	}
@@ -381,27 +356,21 @@ class AdminTools {
 	public function ssl_cell( $title, $class ) {
 
 				return '<div class="' . $class . ' cell">
+
 				<h3>' . $title . '</h3>
+
 				<div class="gauge indicator">
+
 					<div class="inner_indicator">
+
 						<div class="indicator_light" id="ssl_red_light">&nbsp;</div>
+
 						<div class="indicator_light" id="ssl_green_light">&nbsp;</div>
+
 					</div>
+
 				</div>
-				<script>
-					document.addEventListener( "DOMContentLoaded", function( event ) {
-						var ssl = ' . $this->ssl_check( false ) . ';' . '
-						var ssl_green_light = document.getElementById("ssl_green_light");
-						var ssl_red_light = document.getElementById("ssl_red_light");
-						setTimeout(function(){
-							if (  ssl == 1 ) {
-								ssl_green_light.style.background = "#01FC27";
-							} else {
-								ssl_red_light.style.background = "red";
-							}
-						}, 2000);
-					} );
-				</script>
+
 			</div>';
 
 	}
@@ -583,6 +552,21 @@ class AdminTools {
 
 		wp_register_style( 'at_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
 		wp_enqueue_style( 'at_admin_css' );
+
+		/* Dashboard Scripts */
+		wp_register_script( 'at_indicator', plugin_dir_url( __FILE__ ) . '/library/js/indicator.js', array('jquery'), '1.0.0');
+		wp_localize_script('at_indicator', 'at_data', array(
+
+			'wordpress'	=> self::$updates['wordpress'],
+
+			'ssl'	=> self::$updates['SSL'],
+
+		) );
+		wp_enqueue_script( 'at_indicator' );
+
+		// wp_register_script();
+		// wp_localize_script();
+		// wp_enqueue_script();
 
 		/* Tabs */
 		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js', array( 'jquery-ui-tabs' ) );
