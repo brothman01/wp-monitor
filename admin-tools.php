@@ -171,7 +171,7 @@ class AdminTools {
 
 						'<th>' . get_user_meta( $user->ID, 'last_ip', true ) . '</th>' .
 
-						'<th>' . $data['city'] . '</th>' .
+						'<th>' . $data['city'] . ', ' . $data['region'] . ', ' . $data['country'] . '</th>' .
 
 						'</tr>';
 
