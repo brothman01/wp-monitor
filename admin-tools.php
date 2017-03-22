@@ -201,9 +201,9 @@ class AdminTools {
 
 										$final_grade = ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] );
 
-										echo $this->counter_cell( __( 'Total Updates',  'admin-tools' ), (integer) $final_grade, 'total' );
+										echo $this->counter_cell( __( 'Total Updates',  'admin-tools' ), 'total' );
 
-										echo $this->counter_cell( __( 'Overall Grade',  'admin-tools' ), (integer) $this->calculate_grade(), 'grade' );
+										echo $this->counter_cell( __( 'Overall Grade',  'admin-tools' ), 'grade' );
 
 										// echo  . '<br />' . '<span id="ssl_note">(' . __( $this->ssl_check( true ),  'admin-tools' ) . ')</span>';
 
@@ -332,7 +332,7 @@ class AdminTools {
 
 											if ("' . self::$updates['php_action'] . '" == "Up To Date") {
 
-												php_action_field.style.background = "#88A95A";
+												php_action_field.style.background = "#00CB25";
 
 												php_action_field.value = "' . self::$updates['php_action'] . '";
 
@@ -376,7 +376,7 @@ class AdminTools {
 	}
 
 
-	public function counter_cell( $title, $value, $class_prefix ) {
+	public function counter_cell( $title, $prefix ) {
 
 				return '<div class="onethird cell">
 
@@ -384,7 +384,7 @@ class AdminTools {
 
 					<div class="gauge overall">
 
-						<div class="counter" id="' . $class_prefix . '_counter">' . '&nbsp;' . '</div>' .
+						<span class="counter" id="' . $prefix . '_counter">' . '&nbsp;' . '</span>' .
 
 					'</div>
 
@@ -397,20 +397,20 @@ class AdminTools {
 
 						for (x = 0; x < 25; x++) {
 
-						setTimeout(function(){
-							var counter = document.getElementById("' . $class_prefix . '_counter");
-							var number = Math.floor(Math.random() * 100) + 1
-							counter.innerHTML = number;
-
-						}, (x * 50) );
+						// setTimeout(function(){
+						// 	var counter = document.getElementById("' . $class_prefix . '_counter");
+						// 	var number = Math.floor(Math.random() * 100) + 1
+						// 	counter.innerHTML = number;
+						//
+						// }, (x * 50) );
 
 					}
 
-						setTimeout(function(){
-							var counter = document.getElementById("' . $class_prefix . '_counter");
-							counter.innerHTML = "' . $value . '";
-
-						}, ((x + 1) * 50) );
+						// setTimeout(function(){
+						// 	var counter = document.getElementById("' . $class_prefix . '_counter");
+						// 	counter.innerHTML = "' . $value . '";
+						//
+						// }, ((x + 1) * 50) );
 
 
 
@@ -554,7 +554,7 @@ class AdminTools {
 		wp_enqueue_style( 'at_admin_css' );
 
 		/* Dashboard Scripts */
-		wp_register_script( 'at_indicator', plugin_dir_url( __FILE__ ) . '/library/js/indicator.js', array('jquery'), '1.0.0');
+		wp_register_script( 'at_indicator', plugin_dir_url( __FILE__ ) . '/library/js/indicator.js', array('jquery'), '1.0.0' );
 		wp_localize_script('at_indicator', 'at_data', array(
 
 			'wordpress'	=> self::$updates['wordpress'],
@@ -564,9 +564,15 @@ class AdminTools {
 		) );
 		wp_enqueue_script( 'at_indicator' );
 
-		// wp_register_script();
-		// wp_localize_script();
-		// wp_enqueue_script();
+		wp_register_script('at_counter', plugin_dir_url( __FILE__ ) . '/library/js/counter.js', array('jquery'), '1.0.0' );
+		wp_localize_script('at_counter', 'at_data', array(
+
+			'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['php_update'],
+
+			'grade'	=> (integer) $this->calculate_grade(),
+
+		) );
+		wp_enqueue_script( 'at_counter' );
 
 		/* Tabs */
 		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js', array( 'jquery-ui-tabs' ) );
