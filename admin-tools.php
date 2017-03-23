@@ -17,7 +17,6 @@ class AdminTools {
 
 	public static $grades;
 
-
 	public function __construct() {
 
 		// get option 'at_options' value from the database and put it in the array $options
@@ -100,7 +99,7 @@ class AdminTools {
 
 			$php_info = PHPVersioner::$info;
 
-			$current_php_version = ( 2 == substr_count( phpversion(), '.' ) ) ? substr( phpversion(), 0, -2 ) : phpversion();
+			$current_php_version = $this->php_version( 2 );
 
 			$user_version_info = $php_info[ $current_php_version ];
 
@@ -140,13 +139,24 @@ class AdminTools {
 
 				'PHP_warning' => $user_version_info['supported_until'],
 
-				'SSL'					=> $this->ssl_check( false ),
+				'SSL'					=> $this->ssl_check(),
 
 			);
 
 			update_option( 'at_update_info', self::$updates );
 
 	}
+
+	public function php_version( $parts ) {
+
+	 if ( $parts == 2 ) {
+
+		 return (string) substr( (string) phpversion(), 0, 3 );
+
+	 }
+
+			return (string) phpversion();
+		}
 
 
 
@@ -205,7 +215,7 @@ class AdminTools {
 
 								echo '<h3>Summary</h3>';
 
-										echo $this->ssl_cell( __( 'SSL',  'admin-tools' ), 'onethird' );
+										echo $this->ssl_cell( __( 'SSL',  'admin-tools' ) );
 
 										$final_grade = ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] );
 
@@ -322,9 +332,10 @@ class AdminTools {
 	public function php_cell( $title ) {
 
 						return '<div class="onequarter cell" style="text-align: center;">
+
 						<h3 style="margin-bottom: 5px;">' . $title . '</h3>
 
-							<p>Running Version: ' . phpversion() . '</p>
+							<p>Running Version: ' . $this->php_version( 2 ) . '</p>
 
 							<p>Supported Until: ' . self::$updates['PHP_supported_until'] . '</p>
 
@@ -347,9 +358,11 @@ class AdminTools {
 
 											} else {
 
-												php_action_field.style.background = "#DA6768";
+												php_action_field.style.background = "#FF0000";
 
 												php_action_field.style.color = "white";
+
+												php_action_field.value = "' . self::$updates['php_action'] . '";
 
 											}
 
@@ -362,9 +375,9 @@ class AdminTools {
 
 	}
 
-	public function ssl_cell( $title, $class ) {
+	public function ssl_cell( $title ) {
 
-				return '<div class="' . $class . ' cell">
+				return '<div class="onethird cell">
 
 				<h3>' . $title . '</h3>
 
@@ -498,17 +511,9 @@ class AdminTools {
 
 	}
 
-	public function ssl_check( $print ) {
+	public function ssl_check() {
 
-		if ( $print ) {
-
-			return is_ssl() ? __( 'SSL', 'admin-tools' ) : __( 'No SSL', 'admin-tools' );
-
-		} else {
-
-				return is_ssl() ? 1 : 0;
-
-		}
+		return is_ssl() ? 0 : 1;
 
 	}
 
@@ -538,9 +543,9 @@ class AdminTools {
 		wp_register_script( 'at_indicator', plugin_dir_url( __FILE__ ) . '/library/js/indicator.js', array('jquery'), '1.0.0' );
 		wp_localize_script('at_indicator', 'at_data', array(
 
-			'wordpress'	=> self::$updates['wordpress'],
+			'wordpress'	=> intval( self::$updates['wordpress'] ),
 
-			'ssl'	=> self::$updates['SSL'],
+			'ssl'	=> intval( self::$updates['SSL'] ),
 
 		) );
 		wp_enqueue_script( 'at_indicator' );

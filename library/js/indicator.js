@@ -21,7 +21,7 @@ jQuery(document).ready(function() {
 
 			}
 
-			if (at_data.ssl === 1) {
+			if (at_data.ssl === 1 ) {
 
 				ssl_green_light.css( 'background', green );
 

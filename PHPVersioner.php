@@ -51,8 +51,11 @@ public static $info;
 			foreach ( $column_text as $php_info ) {
 
 				$php_version_info[ $php_info[0] ] = array(
+
 					'released'        => strtotime( $php_info[1] ),
+
 					'supported_until' => strtotime( $php_info[3] ),
+
 					'security_until'  => strtotime( $php_info[5] ),
 				);
 
