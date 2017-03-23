@@ -73,11 +73,26 @@ class Settings extends AdminTools {
 						 '<br />
 							<h3>%1$s</h3>' .
 							'<select multiple>
-					       <option>%2$s</option>
+					       <option %2$s>%3$s</option>
 								 </select>',
 						 esc_html__( 'Active Addons', 'admin-tools' ),
+						 $this->get_color( 'emailaddon'),
 						 esc_html__( 'Email Notifications', 'admin-tools' )
 					 );
+
+	}
+
+	public function get_color( $line ) {
+
+		$option = (string) get_option( 'at_addons' );
+
+		if ( strpos( $option, $line ) !== false ) {
+
+			return 'style="color: green;"';
+
+		}
+
+		return 'style="color: red;"';
 
 	}
 

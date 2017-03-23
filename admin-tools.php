@@ -56,6 +56,7 @@ class AdminTools {
 
 		add_action( 'admin_footer', array( $this, 'at_dashboard_widget' ) );
 
+
 	}
 
 
