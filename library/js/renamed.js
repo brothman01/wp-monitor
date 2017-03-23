@@ -19,11 +19,9 @@ jQuery(document).ready(function() {
 
 		setTimeout(function(){
 
-			var total_conter = jQuery('#total_counter');
+			jQuery('#total_counter').text( at_data_counter.total );
 
-			jQuery('#total_counter').text(at_data.total);
-
-			jQuery('#grade_counter').text(at_data.grade);
+			jQuery('#grade_counter').text( at_data_counter.grade );
 
 		}, ((x + 1) * 50) );
 

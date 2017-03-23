@@ -38,6 +38,7 @@ class AdminTools {
 
 		) );
 
+
 		add_action( 'init', array( $this, 'at_check_for_updates' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
@@ -139,7 +140,7 @@ class AdminTools {
 
 				'PHP_warning' => $user_version_info['supported_until'],
 
-				'SSL'					=> $this->ssl_check(),
+				'SSL'					=> is_ssl() ? 1 : 0,
 
 			);
 
@@ -418,19 +419,21 @@ class AdminTools {
 
 				$grades = array(
 
-						'Plugins' => ( ( sizeof( get_plugins() ) - self::$updates['plugins'] ) / sizeof( get_plugins() ) * 100),
+						'Plugins' => ( ( ( sizeof( get_plugins() ) - self::$updates['plugins'] )  / sizeof( get_plugins() ) ) * 100 ),
 
-						'Themes' => ( ( sizeof( wp_get_themes() ) - self::$updates['themes'] ) / sizeof( wp_get_themes() ) * 100),
+						'Themes' => ( ( ( sizeof( wp_get_themes() ) - self::$updates['themes'] ) / sizeof( wp_get_themes() ) ) * 100 ),
 
-						'WordPress' => ( 0 == self::$updates['WordPress'] ) ? 100 : 0,
+						'WordPress' => ( 0 == self::$updates['WordPress'] ) ? 100 : 50,
 
-						'PHP' => ( 0 == self::$updates['PHP_update'] ) ? 100 : 25,
+						'PHP' => ( 0 == self::$updates['PHP_update'] ) ? 100 : 50,
+
+						'SSL'	=>	self::$updates['SSL'] ? 100 : 50,
 
 				);
 
-					$subtotal = $grades['Plugins'] + $grades['Themes'] + $grades['WordPress'] + $grades['PHP'];
+				$subtotal = $grades['Plugins'] + $grades['Themes'] + $grades['WordPress'] + $grades['PHP'] + $grades['SSL'];
 
-				$subtotal = $subtotal / 4;
+				$subtotal = $subtotal / 5;
 
 				$subtotal = round( $subtotal, 0 );
 
@@ -540,18 +543,19 @@ class AdminTools {
 		wp_enqueue_style( 'at_admin_css' );
 
 		/* Dashboard Scripts */
-		wp_register_script( 'at_indicator', plugin_dir_url( __FILE__ ) . '/library/js/indicator.js', array('jquery'), '1.0.0' );
-		wp_localize_script('at_indicator', 'at_data', array(
+		wp_register_script( 'at_indicator', plugin_dir_url( __FILE__ ) . '/library/js/other.js', array('jquery'), '1.0.0' );
+		wp_localize_script('at_indicator', 'at_data2', array(
 
 			'wordpress'	=> intval( self::$updates['wordpress'] ),
 
-			'ssl'	=> intval( self::$updates['SSL'] ),
+			'ssl'	=> self::$updates['SSL'],
 
 		) );
 		wp_enqueue_script( 'at_indicator' );
 
-		wp_register_script('at_counter', plugin_dir_url( __FILE__ ) . '/library/js/counter.js', array('jquery'), '1.0.0' );
-		wp_localize_script('at_counter', 'at_data', array(
+
+		wp_register_script('at_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', array('jquery'), '1.0.0' );
+		wp_localize_script('at_counter', 'at_data_counter', array(
 
 			'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['php_update'],
 

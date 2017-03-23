@@ -11,7 +11,7 @@ jQuery(document).ready(function() {
 			var green = '#01FC27',
 					red = '#FF0000';
 
-			if (at_data.wordpress === 1) {
+			if ( at_data2.wordpress == 0) {
 
 				wordpress_green_light.css( 'background', green );
 
@@ -21,13 +21,13 @@ jQuery(document).ready(function() {
 
 			}
 
-			if (at_data.ssl === 1 ) {
+			if ( at_data2.ssl == 0 ) {
 
-				ssl_green_light.css( 'background', green );
+				ssl_red_light.css( 'background', red );
 
 			} else {
 
-				ssl_red_light.css( 'background', red );
+				ssl_green_light.css( 'background', green );
 
 			}
 
