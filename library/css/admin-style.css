@@ -6,6 +6,10 @@
 	overflow-y: hidden;
 }
 
+#welcome-panel {
+	display: none;
+}
+
 .onequarter {
 	float: left;
 	width: 24%;
