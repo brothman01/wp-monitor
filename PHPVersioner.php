@@ -1,6 +1,6 @@
 <?php
 
-class PHPVersioner extends AdminTools {
+class PHPVersioner extends WPMonitor {
 
 	public static $info;
 

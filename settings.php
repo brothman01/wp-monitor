@@ -1,12 +1,12 @@
 <?php
 
-class Settings extends AdminTools {
+class Settings extends WPMonitor {
 
 	public static $options;
 
 	public function __construct() {
 
-		self::$options = AdminTools::$options;
+		self::$options = WPMonitor::$options;
 
 		add_action( 'admin_menu', array( $this, 'wpm_add_plugin_page' ) );
 

@@ -9,7 +9,7 @@
  * License:     GPL-2.0+
  */
 
-class AdminTools {
+class WPMonitor {
 
 	public static $updates;
 
@@ -574,4 +574,4 @@ class AdminTools {
 
 }
 
-$admin_tools = new AdminTools();
+$wp_monitor = new WPMonitor();
