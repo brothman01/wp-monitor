@@ -535,7 +535,7 @@ class WPMonitor {
 		wp_register_script( 'wpm_indicator', plugin_dir_url( __FILE__ ) . '/library/js/other.js', array( 'jquery' ), '1.0.0' );
 		wp_localize_script('wpm_indicator', 'wpm_data2', array(
 
-			'wordpress'	=> intval( self::$updates['wordpress'] ),
+			'wordpress'	=> intval( self::$updates['WordPress'] ),
 
 			'ssl'	=> self::$updates['SSL'],
 
@@ -545,7 +545,7 @@ class WPMonitor {
 		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', array( 'jquery' ), '1.0.0' );
 		wp_localize_script( 'wpm_counter', 'wpm_data_counter', array(
 
-			'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['php_update'],
+			'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['PHP_update'],
 
 			'grade'	=> (integer) $this->calculate_grade(),
 
