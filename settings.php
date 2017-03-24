@@ -18,7 +18,7 @@ class Settings extends AdminTools {
 
 			 add_management_page(
 				 'Options Page',
-				 'Admin Tools',
+				 'WP Monitor',
 				 'manage_options',
 				 'options_page',
 				 array( $this, 'create_admin_page' )

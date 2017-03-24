@@ -19,25 +19,25 @@ class AdminTools {
 
 	public function __construct() {
 
-		self::$options = get_option( 'at_options', array(
+		self::$options = get_option( 'wpm_options', array(
 
-			'at_how_often'	=> __( 'daily', 'admin-tools' ),
+			'wpm_how_often'	=> __( 'daily', 'admin-tools' ),
 
-			'at_send_email' => true,
+			'wpm_send_email' => true,
 
-			'at_check_plugins' => true,
+			'wpm_check_plugins' => true,
 
-			'at_check_themes' => true,
+			'wpm_check_themes' => true,
 
-			'at_check_wordpress' => true,
+			'wpm_check_wordpress' => true,
 
-			'at_check_php' => true,
+			'wpm_check_php' => true,
 
-			'at_check_ssl' => true,
+			'wpm_check_ssl' => true,
 
 		) );
 
-		add_action( 'init', array( $this, 'at_check_for_updates' ) );
+		add_action( 'init', array( $this, 'wpm_check_for_updates' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 
@@ -49,15 +49,15 @@ class AdminTools {
 
 	public function init() {
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'at_enqueue_admin_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'wpm_enqueue_admin_styles' ) );
 
-		add_action( 'admin_footer', array( $this, 'at_dashboard_widget' ) );
+		add_action( 'admin_footer', array( $this, 'wpm_dashboard_widget' ) );
 
 	}
 
 
 
-	function at_dashboard_widget() {
+	function wpm_dashboard_widget() {
 
 		if ( get_current_screen()->base !== 'dashboard' ) {
 
@@ -68,7 +68,7 @@ class AdminTools {
 
 	<div id="custom-id" class="welcome-panel" style="display: none;">
 
-		<?php $this->at_dashboard_callback(); ?>
+		<?php $this->wpm_dashboard_callback(); ?>
 
 	</div>
 
@@ -84,7 +84,7 @@ class AdminTools {
 
 
 
-	public function at_check_for_updates() {
+	public function wpm_check_for_updates() {
 
 		if ( ! current_user_can( 'install_plugins' ) ) {
 
@@ -138,7 +138,7 @@ class AdminTools {
 
 			);
 
-			update_option( 'at_update_info', self::$updates );
+			update_option( 'wpm_update_info', self::$updates );
 
 	}
 
@@ -184,7 +184,7 @@ class AdminTools {
 
 	}
 
-	public function at_dashboard_callback() {
+	public function wpm_dashboard_callback() {
 
 			echo '<div id="dashboard_main">';
 
@@ -236,7 +236,7 @@ class AdminTools {
 						  </ul>
 						  <div id="tabs-1">';
 
-							echo '<table class="wp-list-table widefat fixed striped at_table">';
+							echo '<table class="wp-list-table widefat fixed striped wpm_table">';
 
 								echo '<thead>';
 
@@ -254,7 +254,7 @@ class AdminTools {
 						  echo '</div>
 						  <div id="tabs-2">
 
-									<table class="wp-list-table widefat fixed striped at_table">
+									<table class="wp-list-table widefat fixed striped wpm_table">
 
 										<thead>
 											<tr>
@@ -512,7 +512,7 @@ class AdminTools {
 
 	}
 
-	public function at_general_section_callback() {
+	public function wpm_general_section_callback() {
 
 				echo 'Edit the settings for the plugin here.';
 
@@ -521,7 +521,7 @@ class AdminTools {
 
 
 
-	public function at_enqueue_admin_styles( $hook ) {
+	public function wpm_enqueue_admin_styles( $hook ) {
 
 		if ( 'index.php' !== $hook ) {
 
@@ -529,44 +529,44 @@ class AdminTools {
 
 		}
 
-		wp_register_style( 'at_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
-		wp_enqueue_style( 'at_admin_css' );
+		wp_register_style( 'wpm_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
+		wp_enqueue_style( 'wpm_admin_css' );
 
-		wp_register_script( 'at_indicator', plugin_dir_url( __FILE__ ) . '/library/js/other.js', array( 'jquery' ), '1.0.0' );
-		wp_localize_script('at_indicator', 'at_data2', array(
+		wp_register_script( 'wpm_indicator', plugin_dir_url( __FILE__ ) . '/library/js/other.js', array( 'jquery' ), '1.0.0' );
+		wp_localize_script('wpm_indicator', 'wpm_data2', array(
 
 			'wordpress'	=> intval( self::$updates['wordpress'] ),
 
 			'ssl'	=> self::$updates['SSL'],
 
 		) );
-		wp_enqueue_script( 'at_indicator' );
+		wp_enqueue_script( 'wpm_indicator' );
 
-		wp_register_script( 'at_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', array( 'jquery' ), '1.0.0' );
-		wp_localize_script( 'at_counter', 'at_data_counter', array(
+		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', array( 'jquery' ), '1.0.0' );
+		wp_localize_script( 'wpm_counter', 'wpm_data_counter', array(
 
 			'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['php_update'],
 
 			'grade'	=> (integer) $this->calculate_grade(),
 
 		) );
-		wp_enqueue_script( 'at_counter' );
+		wp_enqueue_script( 'wpm_counter' );
 
 		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js', array( 'jquery-ui-tabs' ) );
 		wp_enqueue_script( 'tabs-init' );
 
-		wp_register_style( 'at_tabs_css',  'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css', false, '1.0.0' );
-		wp_enqueue_style( 'at_tabs_css' );
+		wp_register_style( 'wpm_tabs_css',  'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css', false, '1.0.0' );
+		wp_enqueue_style( 'wpm_tabs_css' );
 
 		/* Gauges */
-		wp_register_style( 'at_justgage_css',  plugin_dir_url( __FILE__ ) . '/library/css/justgage.css', false, '1.0.0' );
-		wp_enqueue_style( 'at_justgage_css' );
+		wp_register_style( 'wpm_justgage_css',  plugin_dir_url( __FILE__ ) . '/library/css/justgage.css', false, '1.0.0' );
+		wp_enqueue_style( 'wpm_justgage_css' );
 
-		wp_register_script( 'at_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js' );
-		wp_enqueue_script( 'at_raphael' );
+		wp_register_script( 'wpm_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js' );
+		wp_enqueue_script( 'wpm_raphael' );
 
-		wp_register_script( 'at_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
-		wp_enqueue_script( 'at_justgage' );
+		wp_register_script( 'wpm_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
+		wp_enqueue_script( 'wpm_justgage' );
 
 	}
 
