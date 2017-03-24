@@ -29,7 +29,7 @@ class Settings extends AdminTools {
 	public function create_admin_page() {
 							?>
 							<div class="wrap">
-								<h1>Admin Tools</h1>
+								<h1>WP Monitor</h1>
 								<form method="post" action="options.php">
 									<?php
 
