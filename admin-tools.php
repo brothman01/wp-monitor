@@ -19,7 +19,6 @@ class AdminTools {
 
 	public function __construct() {
 
-		// get option 'at_options' value from the database and put it in the array $options
 		self::$options = get_option( 'at_options', array(
 
 			'at_how_often'	=> __( 'daily', 'admin-tools' ),
@@ -38,12 +37,10 @@ class AdminTools {
 
 		) );
 
-
 		add_action( 'init', array( $this, 'at_check_for_updates' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 
-		// include other files
 		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
 
 		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
@@ -56,13 +53,12 @@ class AdminTools {
 
 		add_action( 'admin_footer', array( $this, 'at_dashboard_widget' ) );
 
-
 	}
 
 
 
 	function at_dashboard_widget() {
-		// Bail if not viewing the main dashboard page
+
 		if ( get_current_screen()->base !== 'dashboard' ) {
 
 			return;
@@ -96,7 +92,6 @@ class AdminTools {
 
 		}
 
-		// get update data (only after role of user has been checked)
 			$update_data = wp_get_update_data();
 
 			$php_info = PHPVersioner::$info;
@@ -110,8 +105,6 @@ class AdminTools {
 			$current_date = date_create();
 
 			$php_action = ( $user_version_supported_until < date_timestamp_get( $current_date ) ) ? 'Upgrade Now' : 'Up To Date';
-
-			//print_r( $user_version_supported_until . ' vs ' . date_timestamp_get($current_date) );
 
 		if ( 'Upgrade Now' == $php_action ) {
 
@@ -151,14 +144,14 @@ class AdminTools {
 
 	public function php_version( $parts ) {
 
-	 if ( $parts == 2 ) {
+		if ( 2 == $parts ) {
 
-		 return (string) substr( (string) phpversion(), 0, 3 );
+			return (string) substr( (string) phpversion(), 0, 3 );
 
-	 }
+		}
 
 			return (string) phpversion();
-		}
+	}
 
 
 
@@ -167,7 +160,7 @@ class AdminTools {
 
 				$all_users = get_users( 'blog_id=1' );
 
-				$response = wp_remote_get('http://www.ip-api.com/json/' . get_user_meta( $user->ID, 'last_ip', true ) );
+				$response = wp_remote_get( 'http://www.ip-api.com/json/' . get_user_meta( $user->ID, 'last_ip', true ) );
 
 				$body = wp_remote_retrieve_body( $response );
 
@@ -224,8 +217,6 @@ class AdminTools {
 										echo $this->counter_cell( __( 'Total Updates',  'admin-tools' ), 'total' );
 
 										echo $this->counter_cell( __( 'Overall Grade',  'admin-tools' ), 'grade' );
-
-										// echo  . '<br />' . '<span id="ssl_note">(' . __( $this->ssl_check( true ),  'admin-tools' ) . ')</span>';
 
 							echo '</div>';
 
@@ -420,7 +411,7 @@ class AdminTools {
 
 				$grades = array(
 
-						'Plugins' => ( ( ( sizeof( get_plugins() ) - self::$updates['plugins'] )  / sizeof( get_plugins() ) ) * 100 ),
+						'Plugins' => ( ( ( sizeof( get_plugins() ) - self::$updates['plugins'] ) / sizeof( get_plugins() ) ) * 100 ),
 
 						'Themes' => ( ( ( sizeof( wp_get_themes() ) - self::$updates['themes'] ) / sizeof( wp_get_themes() ) ) * 100 ),
 
@@ -428,7 +419,7 @@ class AdminTools {
 
 						'PHP' => ( 0 == self::$updates['PHP_update'] ) ? 100 : 50,
 
-						'SSL'	=>	self::$updates['SSL'] ? 100 : 50,
+						'SSL'	=> self::$updates['SSL'] ? 100 : 50,
 
 				);
 
@@ -532,8 +523,6 @@ class AdminTools {
 
 	public function at_enqueue_admin_styles( $hook ) {
 
-		// wp_die( $hook );
-
 		if ( 'index.php' !== $hook ) {
 
 			return;
@@ -543,8 +532,7 @@ class AdminTools {
 		wp_register_style( 'at_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
 		wp_enqueue_style( 'at_admin_css' );
 
-		/* Dashboard Scripts */
-		wp_register_script( 'at_indicator', plugin_dir_url( __FILE__ ) . '/library/js/other.js', array('jquery'), '1.0.0' );
+		wp_register_script( 'at_indicator', plugin_dir_url( __FILE__ ) . '/library/js/other.js', array( 'jquery' ), '1.0.0' );
 		wp_localize_script('at_indicator', 'at_data2', array(
 
 			'wordpress'	=> intval( self::$updates['wordpress'] ),
@@ -554,9 +542,8 @@ class AdminTools {
 		) );
 		wp_enqueue_script( 'at_indicator' );
 
-
-		wp_register_script('at_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', array('jquery'), '1.0.0' );
-		wp_localize_script('at_counter', 'at_data_counter', array(
+		wp_register_script( 'at_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', array( 'jquery' ), '1.0.0' );
+		wp_localize_script( 'at_counter', 'at_data_counter', array(
 
 			'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['php_update'],
 
@@ -565,7 +552,6 @@ class AdminTools {
 		) );
 		wp_enqueue_script( 'at_counter' );
 
-		/* Tabs */
 		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js', array( 'jquery-ui-tabs' ) );
 		wp_enqueue_script( 'tabs-init' );
 

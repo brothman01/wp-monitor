@@ -1,5 +1,5 @@
 # Admin Tools
 
-A simple WordPress plugin that watches for new updates and emails the admin as soon as they are available.  Select the type(s) of updates to watch from the options page and choose to get emails or alerts when new updates become available.
+A simple WordPress plugin that puts update, important site and important server data in one convenient and easy-to-find place.  Monitor one or multiple websites on the go, this plugin makes your job as a site administrator easier by eliminating the need to look through the site and server for the information that WP Monitor stores right on the dashboard.
 
-UNDER CONSTRUCTION
+Special Thanks to Evan Herman
