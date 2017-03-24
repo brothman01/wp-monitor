@@ -19,9 +19,9 @@ jQuery(document).ready(function() {
 
 		setTimeout(function(){
 
-			jQuery('#total_counter').text( at_data_counter.total );
+			jQuery('#total_counter').text( wpm_data_counter.total );
 
-			jQuery('#grade_counter').text( at_data_counter.grade );
+			jQuery('#grade_counter').text( wpm_data_counter.grade );
 
 		}, ((x + 1) * 50) );
 

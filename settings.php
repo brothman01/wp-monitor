@@ -8,13 +8,13 @@ class Settings extends AdminTools {
 
 		self::$options = AdminTools::$options;
 
-		add_action( 'admin_menu', array( $this, 'at_add_plugin_page' ) );
+		add_action( 'admin_menu', array( $this, 'wpm_add_plugin_page' ) );
 
-		add_action( 'admin_init', array( $this, 'at_settings_init' ) );
+		add_action( 'admin_init', array( $this, 'wpm_settings_init' ) );
 
 	}
 
-	public function at_add_plugin_page() {
+	public function wpm_add_plugin_page() {
 
 			 add_management_page(
 				 'Options Page',
@@ -33,7 +33,7 @@ class Settings extends AdminTools {
 								<form method="post" action="options.php">
 									<?php
 
-										settings_fields( 'at_options_group' );
+										settings_fields( 'wpm_options_group' );
 
 										do_settings_sections( 'options_page' );
 
@@ -45,12 +45,12 @@ class Settings extends AdminTools {
 								<?php
 	}
 
-	public function at_settings_init() {
+	public function wpm_settings_init() {
 
 				add_settings_section(
 					'general_section_id',
 					'General Settings',
-					array( $this, 'at_general_section_callback' ),
+					array( $this, 'wpm_general_section_callback' ),
 					'options_page'
 				);
 
@@ -58,7 +58,7 @@ class Settings extends AdminTools {
 
 
 
-	public function at_general_section_callback() {
+	public function wpm_general_section_callback() {
 
 		_e( 'Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at', 'admin-tools' );
 					 echo ' <a href="http://www.nothing.com">www.nothing.com</a>.';
@@ -78,7 +78,7 @@ class Settings extends AdminTools {
 
 	public function get_color( $line ) {
 
-		$option = (string) get_option( 'at_addons' );
+		$option = (string) get_option( 'wpm_addons' );
 
 		if ( strpos( $option, $line ) !== false ) {
 

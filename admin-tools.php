@@ -1,6 +1,6 @@
 <?php
 /*
- * Plugin Name: Admin Tools
+ * Plugin Name: WP Monitor
  * Description: Notify user when updates to WordPress are needed.
  * Version:     0.0.1
  * Author:      Ben Rothman

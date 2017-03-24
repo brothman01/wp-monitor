@@ -6,11 +6,11 @@ class PHPVersioner extends AdminTools {
 
 	public function __construct() {
 
-		self::$info = $this->at_version_info();
+		self::$info = $this->wpm_version_info();
 
 	}
 
-	public function at_version_info() {
+	public function wpm_version_info() {
 
 			$contents = wp_remote_get( 'http://php.net/supported-versions.php' );
 
