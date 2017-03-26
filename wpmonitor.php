@@ -4,7 +4,7 @@
  * Description: Notify user when updates to WordPress are needed.
  * Version:     0.0.1
  * Author:      Ben Rothman
- * Slug:				???
+ * Slug:				wp-monitor
  * Author URI:  http://www.BenRothman.org
  * License:     GPL-2.0+
  */
@@ -21,7 +21,7 @@ class WPMonitor {
 
 		self::$options = get_option( 'wpm_options', array(
 
-			'wpm_how_often'	=> __( 'daily', 'admin-tools' ),
+			'wpm_how_often'	=> __( 'daily', 'wp-monitor' ),
 
 			'wpm_send_email' => true,
 
@@ -196,13 +196,13 @@ class WPMonitor {
 
 								echo '<h3>Updates</h3>';
 
-										echo $this->gauge_cell( __( 'Plugins',  'admin-tools' ), 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
+										echo $this->gauge_cell( __( 'Plugins',  'wp-monitor' ), 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
 
-										echo $this->gauge_cell( __( 'Themes',  'admin-tools' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
+										echo $this->gauge_cell( __( 'Themes',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
-										echo $this->indicator_cell( __( 'WordPress Core',  'admin-tools' ), 'wordpress', self::$updates['WordPress'] );
+										echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress', self::$updates['WordPress'] );
 
-										echo $this->php_cell( __( 'PHP',  'admin-tools' ) );
+										echo $this->php_cell( __( 'PHP',  'wp-monitor' ) );
 
 							echo '</div>';
 
@@ -210,13 +210,13 @@ class WPMonitor {
 
 								echo '<h3>Summary</h3>';
 
-										echo $this->ssl_cell( __( 'SSL',  'admin-tools' ) );
+										echo $this->ssl_cell( __( 'SSL',  'wp-monitor' ) );
 
 										$final_grade = ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] );
 
-										echo $this->counter_cell( __( 'Total Updates',  'admin-tools' ), 'total' );
+										echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
 
-										echo $this->counter_cell( __( 'Overall Grade',  'admin-tools' ), 'grade' );
+										echo $this->counter_cell( __( 'Overall Grade',  'wp-monitor' ), 'grade' );
 
 							echo '</div>';
 
@@ -231,8 +231,8 @@ class WPMonitor {
 						echo '
 						<div id="tabs">
 						  <ul>
-						    <li><a href="#tabs-1">' . __( 'Variables',  'admin-tools' ) . '</a></li>
-						    <li><a href="#tabs-2">' . __( 'User Logins',  'admin-tools' ) . '</a></li>
+						    <li><a href="#tabs-1">' . __( 'Variables',  'wp-monitor' ) . '</a></li>
+						    <li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>
 						  </ul>
 						  <div id="tabs-1">';
 
@@ -241,8 +241,8 @@ class WPMonitor {
 								echo '<thead>';
 
 									echo '<tr>
-										<th>' . __( 'Variable',  'admin-tools' ) . '</th>
-										<th>' . __( 'Value',  'admin-tools' ) . '</th>
+										<th>' . __( 'Variable',  'wp-monitor' ) . '</th>
+										<th>' . __( 'Value',  'wp-monitor' ) . '</th>
 									</tr>';
 
 									echo '</thead>';
@@ -258,10 +258,10 @@ class WPMonitor {
 
 										<thead>
 											<tr>
-												<th>' . __( 'Username',  'admin-tools' ) . '</th>
-												<th>' . __( 'Last Login Date/Time',  'admin-tools' ) . '</th>
-												<th>' . __( 'Last IP Used',  'admin-tools' ) . '</th>
-												<th>' . __( 'Location',  'admin-tools' ) . '</th>
+												<th>' . __( 'Username',  'wp-monitor' ) . '</th>
+												<th>' . __( 'Last Login Date/Time',  'wp-monitor' ) . '</th>
+												<th>' . __( 'Last IP Used',  'wp-monitor' ) . '</th>
+												<th>' . __( 'Location',  'wp-monitor' ) . '</th>
 											</tr>
 										</thead>';
 
@@ -460,35 +460,35 @@ class WPMonitor {
 
 				$variables = array(
 
-					__( 'WP Version', 'admin-tools' )	=> get_bloginfo( 'version' ),
+					__( 'WP Version', 'wp-monitor' )	=> get_bloginfo( 'version' ),
 
-					__( 'PHP Version', 'admin-tools' )	=> phpversion(),
+					__( 'PHP Version', 'wp-monitor' )	=> phpversion(),
 
-					__( 'Name', 'admin-tools' )				=> get_bloginfo( 'name' ),
+					__( 'Name', 'wp-monitor' )				=> get_bloginfo( 'name' ),
 
-					__( 'URL', 'admin-tools' )					=> get_bloginfo( 'url' ),
+					__( 'URL', 'wp-monitor' )					=> get_bloginfo( 'url' ),
 
-					__( 'Charset', 'admin-tools' )			=> get_bloginfo( 'charset' ),
+					__( 'Charset', 'wp-monitor' )			=> get_bloginfo( 'charset' ),
 
-					__( 'Admin Email', 'admin-tools' )	=> get_bloginfo( 'admin_email' ),
+					__( 'Admin Email', 'wp-monitor' )	=> get_bloginfo( 'admin_email' ),
 
-					__( 'Language', 'admin-tools' )		=> get_bloginfo( 'language' ),
+					__( 'Language', 'wp-monitor' )		=> get_bloginfo( 'language' ),
 
-					__( 'Stylesheet Directory', 'admin-tools' )	=> get_bloginfo( 'stylesheet_directory' ),
+					__( 'Stylesheet Directory', 'wp-monitor' )	=> get_bloginfo( 'stylesheet_directory' ),
 
-					__( 'Anyone Can Register', 'admin-tools' )			=> $anyone_can_register,
+					__( 'Anyone Can Register', 'wp-monitor' )			=> $anyone_can_register,
 
-					__( 'Front Page Displays', 'admin-tools' )			=> get_option( 'show_on_front' ),
+					__( 'Front Page Displays', 'wp-monitor' )			=> get_option( 'show_on_front' ),
 
-					__( 'Posts Per Page', 'admin-tools' )					=> get_option( 'posts_per_page' ),
+					__( 'Posts Per Page', 'wp-monitor' )					=> get_option( 'posts_per_page' ),
 
-					__( 'Atom URL', 'admin-tools' )								=> get_bloginfo( 'atom_url' ),
+					__( 'Atom URL', 'wp-monitor' )								=> get_bloginfo( 'atom_url' ),
 
-					__( 'SMTP', 'admin-tools' )										=> ini_get( 'SMTP' ),
+					__( 'SMTP', 'wp-monitor' )										=> ini_get( 'SMTP' ),
 
-					__( 'Discourage Search Engines', 'admin-tools' )	=> $blog_public,
+					__( 'Discourage Search Engines', 'wp-monitor' )	=> $blog_public,
 
-					__( 'PHP Memory Limit', 'admin-tools' )				=> ini_get( 'memory_limit' ),
+					__( 'PHP Memory Limit', 'wp-monitor' )				=> ini_get( 'memory_limit' ),
 
 				);
 
