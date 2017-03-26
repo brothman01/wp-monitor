@@ -61,7 +61,7 @@ class Settings extends WPMonitor {
 	public function wpm_general_section_callback() {
 
 		_e( 'Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at', 'admin-tools' );
-					 echo ' <a href="http://www.nothing.com">www.nothing.com</a>.';
+					 echo ' <a href="http://www.wp-monitor.net">www.wp-monitor.net</a>.';
 
 					 printf(
 						 '<br />
