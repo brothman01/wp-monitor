@@ -1,7 +1,7 @@
-=== WP-Monitor ===
+=== WP Monitor ===
 Contributors: brothman01
 Donate link: wp-monitor.net
-Tags: comments, spam
+Tags: monitor, updates, php, variables, admin
 Requires at least: 4.6
 Tested up to: 4.7
 Stable tag: 4.3
@@ -36,7 +36,9 @@ WP-Monitor Information:
  OR
  install the plugin via the plugin repository.
 
+ == Screenshots ==
 
+ 1. Screenshot of the WP Monitor dashboard display.
 
 == Frequently Asked Questions ==
 
