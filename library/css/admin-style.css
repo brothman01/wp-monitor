@@ -6,6 +6,10 @@
 	overflow-y: hidden;
 }
 
+#welcome-panel {
+	display: none;
+}
+
 .onequarter {
 	float: left;
 	width: 24%;
@@ -19,6 +23,7 @@
 .tablesthird {
 	float: left;
 	width: 32%;
+	overflow-x: hidden;
 }
 
 .half {
@@ -34,11 +39,43 @@
 		margin-right: 10px;
 }
 
+#second_gauge_row {
+	float: left;
+}
+
+#third_gauge_row {
+	float: left;
+	width: 99%;
+	text-align: center;
+	padding-top: 2%;
+}
+
+
+.ui-state-active,
+.ui-state-active a {
+	background: #007FFF !important;
+	color: white !important;
+}
+
 .twothirds {
 	float: left;
 	width: 65%;
 }
 
+#tabs {
+	float: left;
+	width: 100%;
+	display: table;
+}
+	table {
+		display: block;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+		tbody {
+			display: block;
+		}
 
 .cell {
 	margin-bottom: 1%;
@@ -58,21 +95,21 @@
 			height: 300px;
 	}
 
-.at_table {
+.wpm_table {
 	display: block;
 	height: 500px;
 	overflow-y: scroll;
 	margin-bottom: 39px
 }
 
-.at_half_table {
+.wpm_half_table {
 	display: block;
 	height: 225px;
 	overflow-y: scroll;
 }
 
 .indicator {
-	width: 50%;
+	width: 75%;
 	margin-top: 15%;
 	margin: 0px auto;
 	padding: 10px 10px;
@@ -105,8 +142,9 @@
 
 #php_action_field {
 		text-align: center;
-		font-size: 18px;
-		background: rgb(1, 252, 39);
+		font-size: 12px;
+		background: #F9F9F9;
+		color: white;
 	}
 
 .overall {
@@ -118,8 +156,8 @@
 		font-size: 12px;
 	}
 
-	/* Small Desktop Resized ----------- */
-@media only screen and (max-width : 2230px) {
+	/* Small Desktop larger ----------- */
+/*@media only screen and (max-width : 2230px) {
 
 	.indicator_light {
 		width: 25px;
@@ -127,7 +165,7 @@
 
 	}
 
-}
+}*/
 
 	/* Small Desktop ----------- */
 @media only screen and (max-width : 1366px) {
@@ -135,9 +173,7 @@
 table.widefat th, table.widefat td { font-size: 12px!important;  }
 
 	.tablesthird {
-		width: 100%;
-		float: none;
-		margin: 0px auto;
+		/* width: 100%; */
 	}
 
 	.twothirds {
@@ -160,6 +196,19 @@ table.widefat th, table.widefat td { font-size: 12px!important;  }
 
 }
 
+/* Small Desktop ----------- */
+@media only screen and (max-width : 1366px) {
+
+.tablesthird {
+	width: 100%;
+	margin-top: 2%;
+}
+
+#tabs{
+	width: 100%;
+}
+
+}
 /* iPad ----------- */
 @media only screen and (max-width : 1024px) {
 
