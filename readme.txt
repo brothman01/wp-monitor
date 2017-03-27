@@ -1,7 +1,7 @@
 === WP Monitor ===
 Contributors: brothman01
 Donate link: wp-monitor.net
-Tags: monitor, updates, php, variables, admin
+Tags: productivity, monitor, updates, php, variables, admin
 Requires at least: 4.6
 Tested up to: 4.7
 Stable tag: 4.3
