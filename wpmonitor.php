@@ -160,13 +160,21 @@ class WPMonitor {
 
 				$all_users = get_users( 'blog_id=1' );
 
-				$response = wp_remote_get( 'http://www.ip-api.com/json/' . get_user_meta( $user->ID, 'last_ip', true ) );
-
-				$body = wp_remote_retrieve_body( $response );
-
-				$data = json_decode( $body, true );
-
 		foreach ( $all_users as $user ) {
+
+						$response = wp_remote_get( 'http://www.ip-api.com/json/' . get_user_meta( $user->ID, 'last_ip', true ) );
+
+						$body = wp_remote_retrieve_body( $response );
+
+						$data = json_decode( $body, true );
+
+						// Check for error
+						if ( is_wp_error( $body ) || 'fail' === $data['status'] ) {
+
+							$data = array( 'city' => 'Address Doesn\'t exist', 'region' => '' , 'country' => '' );
+
+						}
+
 
 						echo '<tr>' .
 
@@ -176,7 +184,7 @@ class WPMonitor {
 
 						'<th>' . get_user_meta( $user->ID, 'last_ip', true ) . '</th>' .
 
-						'<th>' . $data['city'] . ', ' . $data['region'] . ', ' . $data['country'] . '</th>' .
+						'<th>' . $data['city'] . ' ' . $data['region'] . ' ' . $data['country'] . '</th>' .
 
 						'</tr>';
 
@@ -438,15 +446,7 @@ class WPMonitor {
 
 				$all_vars = '';
 
-		if ( ( get_option( 'users_can_register' ) == 0 ) || isset( get_option( 'users_can_register' ) ) ) {
 
-					$anyone_can_register = 'false';
-
-		} else {
-
-					$anyone_can_register = 'true';
-
-		}
 
 		if ( ( get_option( 'blog_public' ) == 0 ) || empty( get_option( 'blog_public' ) ) ) {
 
@@ -476,7 +476,6 @@ class WPMonitor {
 
 					__( 'Stylesheet Directory', 'wp-monitor' )	=> get_bloginfo( 'stylesheet_directory' ),
 
-					__( 'Anyone Can Register', 'wp-monitor' )			=> $anyone_can_register,
 
 					__( 'Front Page Displays', 'wp-monitor' )			=> get_option( 'show_on_front' ),
 
