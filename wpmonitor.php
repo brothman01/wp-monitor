@@ -2,7 +2,7 @@
 /*
  * Plugin Name: WP Monitor
  * Description: Notify user when updates to WordPress are needed.
- * Version:     0.0.1
+ * Version:     1.0.0
  * Author:      Ben Rothman
  * Slug:				wp-monitor
  * Author URI:  http://www.BenRothman.org
@@ -438,7 +438,7 @@ class WPMonitor {
 
 				$all_vars = '';
 
-		if ( ( get_option( 'users_can_register' ) == 0 ) || empty( get_option( 'users_can_register' ) ) ) {
+		if ( ( get_option( 'users_can_register' ) == 0 ) || isset( get_option( 'users_can_register' ) ) ) {
 
 					$anyone_can_register = 'false';
 
