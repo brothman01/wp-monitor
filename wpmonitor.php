@@ -45,6 +45,14 @@ class WPMonitor {
 
 		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
 
+		add_filter( 'wpm_mail_indicator', [ $this, 'wpm_mail_indicator' ] );
+
+	}
+
+	public function wpm_mail_indicator() {
+
+		return false === self::$options['wpm_send_email'] ? '<img title="Email Not Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/no-mail.png', __FILE__ ) . '"  />' : '<img title="Email Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/yes-mail.png', __FILE__ ) . '"  />';
+
 	}
 
 	public function init() {
@@ -198,7 +206,8 @@ class WPMonitor {
 
 				echo '<div class="twothirds">
 
-				<h1 style="text-align: center; background: #F9F9F9;">Site Status:</h1>';
+				<h1 style="text-align: center; background: #F9F9F9;">' . apply_filters( 'wpm_mail_indicator', '' ) . ' Site Status:</h1>';
+
 
 							echo '<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">';
 

@@ -26,6 +26,14 @@
 	overflow-x: hidden;
 }
 
+#mail_indicator {
+	position: absolute;
+	top: 25px;
+	left: 5px;
+
+	border-radius: 100%;
+}
+
 .half {
 	float: left;
 	width: 48%;
@@ -156,6 +164,9 @@
 		font-size: 12px;
 	}
 
+
+
+
 	/* Small Desktop larger ----------- */
 /*@media only screen and (max-width : 2230px) {
 
@@ -264,7 +275,5 @@ table.widefat th, table.widefat td { font-size: 12px!important;  }
 			width: 10px;
 			height: 10px;
 	}
-
-
 
 }
