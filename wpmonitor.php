@@ -351,36 +351,6 @@ class WPMonitor {
 
 							<input id="php_action_field" type="text" maxlength="14" size="14" style="text-align: center; font-style: bold;" readonly />
 
-							<script>
-
-								document.addEventListener( "DOMContentLoaded", function( event ) {
-
-									var php_action_field = document.getElementById("php_action_field");
-
-
-									setTimeout(function(){
-
-											if ("' . self::$updates['php_action'] . '" == "Up To Date") {
-
-												php_action_field.style.background = "#00CB25";
-
-												php_action_field.value = "' . self::$updates['php_action'] . '";
-
-											} else {
-
-												php_action_field.style.background = "#FF0000";
-
-												php_action_field.style.color = "white";
-
-												php_action_field.value = "' . self::$updates['php_action'] . '";
-
-											}
-
-									}, 1000);
-
-								} );
-							</script>
-
 					</div>';
 
 	}
@@ -559,6 +529,14 @@ class WPMonitor {
 
 		) );
 		wp_enqueue_script( 'wpm_counter' );
+
+		wp_register_script( 'wpm_phpcell', plugin_dir_url( __FILE__ ) . 'library/js/phpcell.js', array( 'jquery' ), '1.0.0' );
+		wp_localize_script( 'wpm_phpcell', 'wpm_data_php', array(
+
+			'state'	=> self::$updates['php_action'],
+
+		) );
+		wp_enqueue_script( 'wpm_phpcell' );
 
 		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js', array( 'jquery-ui-tabs' ) );
 		wp_enqueue_script( 'tabs-init' );
