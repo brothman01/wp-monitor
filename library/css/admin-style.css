@@ -85,6 +85,10 @@
 			display: block;
 		}
 
+		.centertext {
+			text-align: center !important;
+		}
+
 .cell {
 	margin-bottom: 1%;
 }
@@ -142,17 +146,21 @@
 				.indicator_light {
 					width: 35px;
 					height: 35px;
-					float: left;
 					background: #EDEBEB;
 					border-radius: 100%;
-					margin-right: 5%;
+					margin: 0px auto;
 				}
 
-#php_action_field {
+#wpm_php_indicator {
 		text-align: center;
 		font-size: 12px;
 		background: #F9F9F9;
 		color: white;
+		corder: solid black 1px;
+	}
+
+	.breakdown_link {
+		font-size: 10px;
 	}
 
 .overall {
@@ -181,7 +189,9 @@
 	/* Small Desktop ----------- */
 @media only screen and (max-width : 1366px) {
 
-table.widefat th, table.widefat td { font-size: 12px!important;  }
+table.widefat th, table.widefat td {
+	font-size: 12px!important;
+}
 
 	.tablesthird {
 		/* width: 100%; */

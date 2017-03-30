@@ -29,6 +29,8 @@ WP-Monitor Information:
 * Final website grade based on the site info gathered in the previous steps
 
 
+Special Thanks to Evan Herman
+
 == Installation ==
 
 1. Download the zip file containing the plugin
@@ -55,5 +57,3 @@ The settings page is a sub-item in the 'Tools' menu.
 
 = 1.0 =
 A Plugin is born
-
-Special Thanks to Evan Herman

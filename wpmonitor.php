@@ -2,7 +2,7 @@
 /*
  * Plugin Name: WP Monitor
  * Description: Notify user when updates to WordPress are needed.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      Ben Rothman
  * Slug:				wp-monitor
  * Author URI:  http://www.BenRothman.org
@@ -23,7 +23,7 @@ class WPMonitor {
 
 			'wpm_how_often'	=> __( 'daily', 'wp-monitor' ),
 
-			'wpm_send_email' => true,
+			'wpm_send_email' => false,
 
 			'wpm_check_plugins' => true,
 
@@ -49,17 +49,30 @@ class WPMonitor {
 
 	}
 
-	public function wpm_mail_indicator() {
-
-		return false === self::$options['wpm_send_email'] ? '<img title="Email Not Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/no-mail.png', __FILE__ ) . '"  />' : '<img title="Email Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/yes-mail.png', __FILE__ ) . '"  />';
-
-	}
-
 	public function init() {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'wpm_enqueue_admin_styles' ) );
 
 		add_action( 'admin_footer', array( $this, 'wpm_dashboard_widget' ) );
+
+		add_filter('screen_settings', [ $this, 'screen_options_checkbox' ], 10, 2);
+	}
+
+	public function screen_options_checkbox( $current, $screen ) {
+
+    $desired_screen = convert_to_screen('index.php');
+
+    if ( $screen->id == $desired_screen->id ){
+
+        $current .=	'<br /><b style="line-height: 30px;">Plugins:</b><br /><input id="wpm_send_email" name="wpm_options[wpm_send_email]" type="checkbox" value="1" ' . checked( true, Settings::$options['wpm_send_email'], false ) .  '/> WP Monitor';
+
+    }
+    return $current;
+}
+
+	public function wpm_mail_indicator() {
+
+		return false === self::$options['wpm_send_email'] || ! isset( self::$options['wpm_send_email'] ) ? '<img title="Email Not Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/no-mail.png', __FILE__ ) . '"  />' : '<img title="Email Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/yes-mail.png', __FILE__ ) . '"  />';
 
 	}
 
@@ -177,22 +190,26 @@ class WPMonitor {
 						$data = json_decode( $body, true );
 
 						// Check for error
-						if ( is_wp_error( $body ) || 'fail' === $data['status'] ) {
+			if ( is_wp_error( $body ) || 'fail' === $data['status'] ) {
 
-							$data = array( 'city' => 'Address Doesn\'t exist', 'region' => '' , 'country' => '' );
+					$data = array( 'city' => 'Address Doesn\'t exist', 'region' => '' , 'country' => '' );
 
 						}
+
+						$timestamp = get_user_meta( $user->ID, 'last_login_timestamp', true ) ? get_user_meta( $user->ID, 'last_login_timestamp', true ) : ' - ';
+
+						$ip = get_user_meta( $user->ID, 'last_ip', true ) ? get_user_meta( $user->ID, 'last_ip', true ) : ' - ';
 
 
 						echo '<tr>' .
 
-						'<th>' . $user->user_login . '</th>' .
+						'<td>' . $user->user_login . '</td>' .
 
-						'<th>' . get_user_meta( $user->ID, 'last_login_timestamp', true ) . '</th>' .
+						'<td class="centertext">' . $timestamp . '</td>' .
 
-						'<th>' . get_user_meta( $user->ID, 'last_ip', true ) . '</th>' .
+						'<td class="centertext">' . $ip . '</td>' .
 
-						'<th>' . $data['city'] . ' ' . $data['region'] . ' ' . $data['country'] . '</th>' .
+						'<td>' . $data['city'] . ' ' . $data['region'] . ' ' . $data['country'] . '</td>' .
 
 						'</tr>';
 
@@ -206,7 +223,7 @@ class WPMonitor {
 
 				echo '<div class="twothirds">
 
-				<h1 style="text-align: center; background: #F9F9F9;">' . apply_filters( 'wpm_mail_indicator', '' ) . ' Site Status:</h1>';
+				<h1 style="text-align: center; background: #F9F9F9;">Site Status:' . '<div style="float: right; font-size: 14px;">Email Indicator: ' . apply_filters( 'wpm_mail_indicator', '' ) . '</div></h1>';
 
 
 							echo '<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">';
@@ -227,7 +244,7 @@ class WPMonitor {
 
 								echo '<h3>Summary</h3>';
 
-										echo $this->ssl_cell( __( 'SSL',  'wp-monitor' ) );
+										echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl', '' );
 
 										$final_grade = ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] );
 
@@ -248,10 +265,16 @@ class WPMonitor {
 						echo '
 						<div id="tabs">
 						  <ul>
+
 						    <li><a href="#tabs-1">' . __( 'Variables',  'wp-monitor' ) . '</a></li>
-						    <li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>
-						  </ul>
-						  <div id="tabs-1">';
+
+						    <li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>';
+
+								echo apply_filters( 'wpm_tabs', '');
+
+						  echo '</ul>';
+
+						  echo '<div id="tabs-1">';
 
 							echo '<table class="wp-list-table widefat fixed striped wpm_table">';
 
@@ -268,24 +291,27 @@ class WPMonitor {
 
 					echo '</table>';
 
-						  echo '</div>
-						  <div id="tabs-2">
+				echo '</div>';
+
+						  echo '<div id="tabs-2">
 
 									<table class="wp-list-table widefat fixed striped wpm_table">
 
 										<thead>
 											<tr>
 												<th>' . __( 'Username',  'wp-monitor' ) . '</th>
-												<th>' . __( 'Last Login Date/Time',  'wp-monitor' ) . '</th>
+												<th>' . __( 'Date/Time',  'wp-monitor' ) . '</th>
 												<th>' . __( 'Last IP Used',  'wp-monitor' ) . '</th>
 												<th>' . __( 'Location',  'wp-monitor' ) . '</th>
 											</tr>
 										</thead>';
 
-								 $this->list_last_logins();
+								 $this->list_last_logins( 'wpm_table_tab', '' );
 
 							echo '</table>
 						</div>';
+
+						echo apply_filters( 'wpm_table_tab' , '' );
 
 					echo '</div>
 
@@ -310,6 +336,20 @@ class WPMonitor {
 									min: 0,
 									max: ' . $max . ',
 									title: "' . $title . '",
+
+									customSectors: {
+									percents: true,
+									ranges: [{
+										color : "#FF0000",
+										lo : 0,
+										hi : 50
+									},{
+										color : "#0000FF",
+										lo : 51,
+										hi : 100
+									}]
+								}
+
 									} );
 							} );
 						</script>
@@ -318,22 +358,18 @@ class WPMonitor {
 
 	}
 
-	public function indicator_cell( $title, $class_prefix, $setting ) {
+	public function indicator_cell( $title, $prefix, $setting ) {
 
 				return '<div class="onequarter cell">
 				<h3>' . $title . '</h3>
 
 					<div class="gauge indicator">
 
-						<div class="inner_indicator">
-
-							<div class="indicator_light" id="' . $class_prefix . '_red_light">&nbsp;</div>
-
-							<div class="indicator_light" id="' . $class_prefix . '_green_light">&nbsp;</div>
-
-						</div>
+							<div class="indicator_light" id="' . $prefix . '_light">&nbsp;</div>
 
 					</div>
+
+					<p id="wpm_' . $prefix . '_message"></p>
 
 								</div>';
 
@@ -343,39 +379,20 @@ class WPMonitor {
 
 						return '<div class="onequarter cell" style="text-align: center;">
 
-						<h3 style="margin-bottom: 5px;">' . $title . '</h3>
+						<h3>' . $title . '</h3>
 
-							<p>Running Version: ' . $this->php_version( 2 ) . '</p>
+						<div id="wpm_php_indicator" class="indicator_light">&nbsp;</div>
 
-							<p>Supported Until: ' . self::$updates['PHP_supported_until'] . '</p>
+							<p id="wpm_php_version">Running Version: ???</p>
 
-							<input id="php_action_field" type="text" maxlength="14" size="14" style="text-align: center; font-style: bold;" readonly />
+							<p id="wpm_php_support">Supported Until: ' . '??-??-????' . '</p>
+
+							<p id="php_message"></p>
 
 					</div>';
 
 	}
 
-	public function ssl_cell( $title ) {
-
-				return '<div class="onethird cell">
-
-				<h3>' . $title . '</h3>
-
-				<div class="gauge indicator">
-
-					<div class="inner_indicator">
-
-						<div class="indicator_light" id="ssl_red_light">&nbsp;</div>
-
-						<div class="indicator_light" id="ssl_green_light">&nbsp;</div>
-
-					</div>
-
-				</div>
-
-			</div>';
-
-	}
 
 
 	public function counter_cell( $title, $prefix ) {
@@ -386,9 +403,13 @@ class WPMonitor {
 
 					<div class="gauge overall">
 
-						<span class="counter" id="' . $prefix . '_counter">' . '&nbsp;' . '</span>' .
+						<span class="counter" id="' . $prefix . '_counter">' . '&nbsp;' . '</span>
 
-					'</div>
+						<br />
+
+						<span id="' . $prefix . '_breakdown_link" class="breakdown_link">' . '&nbsp;' . '</span>
+
+					</div>
 
 				</div>';
 
@@ -437,6 +458,25 @@ class WPMonitor {
 
 		}
 
+
+		$upload_dir = wp_upload_dir();
+
+		$upload_dir = $upload_dir['path'];
+
+		$upload_dir = strrev( $upload_dir );
+
+		$upload_dir = substr( $upload_dir, strpos( $upload_dir, '/' ), strlen( $upload_dir ) );
+
+		$upload_dir = substr( $upload_dir, strpos( $upload_dir, '/' ) + 1, strlen( $upload_dir ) );
+
+		$upload_dir = substr( $upload_dir, strpos( $upload_dir, '/' ), strlen( $upload_dir ) );
+
+		$upload_dir = substr( $upload_dir, strpos( $upload_dir, '/' ) + 1, strlen( $upload_dir ) );
+
+		$upload_dir = strrev( $upload_dir );
+
+		$uploads_size = $this->wpm_foldersize( $upload_dir );
+
 				$variables = array(
 
 					__( 'WP Version', 'wp-monitor' )	=> get_bloginfo( 'version' ),
@@ -447,6 +487,8 @@ class WPMonitor {
 
 					__( 'URL', 'wp-monitor' )					=> get_bloginfo( 'url' ),
 
+					__( 'Server IP', 'wp-monitor') 	=>	$_SERVER['SERVER_ADDR'],
+
 					__( 'Charset', 'wp-monitor' )			=> get_bloginfo( 'charset' ),
 
 					__( 'Admin Email', 'wp-monitor' )	=> get_bloginfo( 'admin_email' ),
@@ -455,6 +497,9 @@ class WPMonitor {
 
 					__( 'Stylesheet Directory', 'wp-monitor' )	=> get_bloginfo( 'stylesheet_directory' ),
 
+					__( 'Uploads Directory ', 'wp-monitor' )	=>	$upload_dir,
+
+					__( 'Uploads Directory Size', 'wp-monitor' )	=>	round( $uploads_size / 1048576, 2 ) . ' mb',
 
 					__( 'Front Page Displays', 'wp-monitor' )			=> get_option( 'show_on_front' ),
 
@@ -484,6 +529,42 @@ class WPMonitor {
 
 	}
 
+	public function wpm_foldersize( $path ) {
+
+		$total_size = 0;
+
+		$files = scandir( $path );
+
+		 $clean_path = rtrim( $path, '/' ) . '/';
+
+		foreach ( $files as $t ) {
+
+			if ( $t <> '.' && $t <> '..' ) {
+
+				$current_file = $clean_path . $t;
+
+				if (is_dir( $current_file )) {
+
+					$size = $this->wpm_foldersize( $current_file );
+
+					$total_size += $size;
+
+				} else {
+
+					$size = filesize( $current_file );
+
+					$total_size += $size;
+
+				}
+
+			}
+
+		}
+
+		return $total_size;
+
+	}
+
 	public function ssl_check() {
 
 		return is_ssl() ? 0 : 1;
@@ -510,22 +591,30 @@ class WPMonitor {
 		wp_register_style( 'wpm_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
 		wp_enqueue_style( 'wpm_admin_css' );
 
-		wp_register_script( 'wpm_indicator', plugin_dir_url( __FILE__ ) . '/library/js/other.js', array( 'jquery' ), '1.0.0' );
-		wp_localize_script('wpm_indicator', 'wpm_data2', array(
+		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', array( 'jquery' ), '1.0.0' );
+		wp_localize_script( 'wpm_counter', 'wpm_data', array(
+
+			'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['PHP_update'],
+
+			'grade'	=> (integer) $this->calculate_grade(),
 
 			'wordpress'	=> intval( self::$updates['WordPress'] ),
 
 			'ssl'	=> self::$updates['SSL'],
 
-		) );
-		wp_enqueue_script( 'wpm_indicator' );
+			'plugin_updates' => self::$updates['plugins'],
 
-		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', array( 'jquery' ), '1.0.0' );
-		wp_localize_script( 'wpm_counter', 'wpm_data_counter', array(
+			'total_plugins'	=>	sizeof ( get_plugins() ),
 
-			'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['PHP_update'],
+			'total_themes'	=>	sizeof ( wp_get_themes() ),
 
-			'grade'	=> (integer) $this->calculate_grade(),
+			'theme_updates' => self::$updates['themes'],
+
+			'wordpress_updates' => self::$updates['WordPress'],
+
+			'php_updates' => self::$updates['php_action'],
+
+			'ssl' => self::$updates['SSL'] ? 'On' : 'Off',
 
 		) );
 		wp_enqueue_script( 'wpm_counter' );
@@ -533,7 +622,10 @@ class WPMonitor {
 		wp_register_script( 'wpm_phpcell', plugin_dir_url( __FILE__ ) . 'library/js/phpcell.js', array( 'jquery' ), '1.0.0' );
 		wp_localize_script( 'wpm_phpcell', 'wpm_data_php', array(
 
+			'current_version' => $this->php_version( 2 ),
+
 			'state'	=> self::$updates['php_action'],
+
 
 		) );
 		wp_enqueue_script( 'wpm_phpcell' );

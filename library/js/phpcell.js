@@ -5,17 +5,23 @@ jQuery(document).ready(function() {
 
 		setTimeout(function(){
 
+			jQuery('#wpm_php_version').text('Running Version: ' + wpm_data_php.current_version);
+
+			jQuery('#wpm_php_support').text('Supported Until: ' + wpm_data_php.supported_until);
+
 				if (wpm_data_php.state == "Up To Date") {
 
-					jQuery('#php_action_field').css( 'background',  '#00CB25' );
+					jQuery('#wpm_php_indicator').css( 'background',  '#01FC27' );
 
 				} else {
 
-					jQuery('#php_action_field').css( 'background', '#FF0000');
+					jQuery('#wpm_php_indicator').css( 'background', '#FF0000');
 
 				}
 
-					jQuery('#php_action_field').val( wpm_data_php.state + '' );
+					jQuery('#wpm_php_indicator').val( wpm_data_php.state + '' );
+
+					jQuery('#php_message').html('<a href="http://wp-monitor.net/2017/03/30/why-upgrade-my-php/">Why Upgrade PHP?</a>')
 
 
 		}, 1000);
