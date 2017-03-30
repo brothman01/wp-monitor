@@ -187,6 +187,7 @@ class WPMonitor {
 
 						$ip = get_user_meta( $user->ID, 'last_ip', true ) ? get_user_meta( $user->ID, 'last_ip', true ) : ' - ';
 
+						$location = $data['city'] . ' ' . $data['region'] . ' ' . $data['country'];
 
 						echo '<tr>' .
 
@@ -194,9 +195,9 @@ class WPMonitor {
 
 						'<td class="centertext">' . $timestamp . '</td>' .
 
-						'<td class="centertext">' . $ip . '</td>' .
+						'<td class="centertext">' . '<a class="reveal-ip" style="color: blue; text-decoration: underline; href="#" data-ip="' . $ip . '" >Reveal</a>' . '</td>' .
 
-						'<td>' . $data['city'] . ' ' . $data['region'] . ' ' . $data['country'] . '</td>' .
+						'<td class="centertext">' . '<a class="reveal-address" style="color: blue; text-decoration: underline; href="#" data-address="' . $location . '" >Reveal</a>' . '</td>' .
 
 						'</tr>';
 
@@ -635,6 +636,10 @@ class WPMonitor {
 
 		wp_register_script( 'wpm_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
 		wp_enqueue_script( 'wpm_justgage' );
+
+		/* Reveal */
+		 wp_register_script( 'wpm_revealer',  plugin_dir_url( __FILE__ ) . '/library/js/revealer.js', array( 'jquery' ), '1.0.0' );
+		 wp_enqueue_script( 'wpm_revealer' );
 
 	}
 
