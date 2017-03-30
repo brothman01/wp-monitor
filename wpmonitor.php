@@ -25,15 +25,7 @@ class WPMonitor {
 
 			'wpm_send_email' => false,
 
-			'wpm_check_plugins' => true,
-
-			'wpm_check_themes' => true,
-
-			'wpm_check_wordpress' => true,
-
-			'wpm_check_php' => true,
-
-			'wpm_check_ssl' => true,
+			'wpm_show_monitor' => true,
 
 		) );
 
@@ -53,26 +45,21 @@ class WPMonitor {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'wpm_enqueue_admin_styles' ) );
 
-		add_action( 'admin_footer', array( $this, 'wpm_dashboard_widget' ) );
+		$option = get_option('wpm_options');
 
-		add_filter('screen_settings', [ $this, 'screen_options_checkbox' ], 10, 2);
+		$option = 1 == $option['wpm_show_monitor'] ? true : false;
+
+		if ( true == $option ) {
+			add_action( 'admin_footer', array( $this, 'wpm_dashboard_widget' ) );
+		}
+
+
+
 	}
-
-	public function screen_options_checkbox( $current, $screen ) {
-
-    $desired_screen = convert_to_screen('index.php');
-
-    if ( $screen->id == $desired_screen->id ){
-
-        $current .=	'<br /><b style="line-height: 30px;">Plugins:</b><br /><input id="wpm_send_email" name="wpm_options[wpm_send_email]" type="checkbox" value="1" ' . checked( true, Settings::$options['wpm_send_email'], false ) .  '/> WP Monitor';
-
-    }
-    return $current;
-}
 
 	public function wpm_mail_indicator() {
 
-		return false === self::$options['wpm_send_email'] || ! isset( self::$options['wpm_send_email'] ) ? '<img title="Email Not Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/no-mail.png', __FILE__ ) . '"  />' : '<img title="Email Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/yes-mail.png', __FILE__ ) . '"  />';
+		return ! isset( self::$options['wpm_send_email'] ) || false === self::$options['wpm_send_email'] ? '<img title="Email Not Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/no-mail.png', __FILE__ ) . '"  />' : '<img title="Email Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/yes-mail.png', __FILE__ ) . '"  />';
 
 	}
 
