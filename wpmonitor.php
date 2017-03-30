@@ -278,6 +278,8 @@ class WPMonitor {
 
 					echo '</table>';
 
+					echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does-that-value-mean/">What Does That Value Mean?</a>';
+
 				echo '</div>';
 
 						  echo '<div id="tabs-2">
@@ -295,8 +297,9 @@ class WPMonitor {
 
 								 $this->list_last_logins( 'wpm_table_tab', '' );
 
-							echo '</table>
-						</div>';
+							echo '</table>';
+
+						echo '</div>';
 
 						echo apply_filters( 'wpm_table_tab' , '' );
 
