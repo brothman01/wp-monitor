@@ -170,24 +170,24 @@ class WPMonitor {
 
 		foreach ( $all_users as $user ) {
 
-						$response = wp_remote_get( 'http://www.ip-api.com/json/' . get_user_meta( $user->ID, 'last_ip', true ) );
-
-						$body = wp_remote_retrieve_body( $response );
-
-						$data = json_decode( $body, true );
-
-						// Check for error
-			if ( is_wp_error( $body ) || 'fail' === $data['status'] ) {
-
-					$data = array( 'city' => 'Address Doesn\'t exist', 'region' => '' , 'country' => '' );
-
-						}
+			// 			$response = wp_remote_get( 'http://www.ip-api.com/json/' . get_user_meta( $user->ID, 'last_ip', true ) );
+			//
+			// 			$body = wp_remote_retrieve_body( $response );
+			//
+			// 			$data = json_decode( $body, true );
+			//
+			// 			// Check for error
+			// if ( is_wp_error( $body ) || 'fail' === $data['status'] ) {
+			//
+			// 		$data = array( 'city' => 'Address Doesn\'t exist', 'region' => '' , 'country' => '' );
+			//
+			// 			}
 
 						$timestamp = get_user_meta( $user->ID, 'last_login_timestamp', true ) ? get_user_meta( $user->ID, 'last_login_timestamp', true ) : ' - ';
 
 						$ip = get_user_meta( $user->ID, 'last_ip', true ) ? get_user_meta( $user->ID, 'last_ip', true ) : ' - ';
 
-						$location = $data['city'] . ' ' . $data['region'] . ' ' . $data['country'];
+						//$location = $data['city'] . ' ' . $data['region'] . ' ' . $data['country'];
 
 						echo '<tr>' .
 
@@ -195,9 +195,9 @@ class WPMonitor {
 
 						'<td class="centertext">' . $timestamp . '</td>' .
 
-						'<td class="centertext">' . '<a class="reveal-ip" style="color: blue; text-decoration: underline; href="#" data-ip="' . $ip . '" >Reveal</a>' . '</td>' .
+						'<td class="centertext">' . $ip . '</td>' .
 
-						'<td class="centertext">' . '<a class="reveal-address" style="color: blue; text-decoration: underline; href="#" data-address="' . $location . '" >Reveal</a>' . '</td>' .
+						'<td class="centertext">' . '<a class="reveal-address" style="color: blue; text-decoration: underline; href="#" data-ip="' . $ip . '">Reveal</a>' . '</td>' .
 
 						'</tr>';
 
