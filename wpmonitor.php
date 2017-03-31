@@ -320,7 +320,7 @@ class WPMonitor {
 
 				$content .= '<h3>' . $title . '</h3>';
 
-				  $content .= '<div class="GaugeMeter" id="PreviewGaugeMeter_2" data-percent="' . ( $value / $max ) * 100 . '" data-append="%" data-size="200" data-theme="blue" data-back="RGBa(0,0,0,.5)" data-animate_gauge_colors="1" data-animate_text_colors="1" data-width="15" data-label="Speed" data-style="Arch" data-label_color="#FFF"></div>';
+				  $content .= '<div class="GaugeMeter" id="PreviewGaugeMeter_2" data-percent="' . ( $value / $max ) * 100 . '" data-append="%" data-size="200" data-theme="blue" data-back="RGBa(0,0,0,.5)" data-animate_gauge_colors="1" data-animate_text_colors="1" data-width="10" data-label="Up To Date" data-style="Arch" data-label_color="#000"></div>';
 
 				$content .= '</div>';
 
