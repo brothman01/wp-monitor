@@ -1,7 +1,7 @@
 === WP Monitor ===
 Contributors: brothman01
 Donate link: wp-monitor.net
-Tags: productivity, monitor, updates, php, variables, admin
+Tags: productivity, wp monitor, WP Monitor, updates, php, variables, admin, admins
 Requires at least: 4.6
 Tested up to: 4.7
 Stable tag: 1.0.1
@@ -13,10 +13,13 @@ A simple WordPress plugin that puts important information on the dashboard.
 == Description ==
 
 A simple WordPress plugin that puts update, important site and important server information in one convenient and easy-to-find place on the dashboard.  Monitor one or multiple websites on the go, this plugin makes your job as a site administrator easier by eliminating the need to look through the site and server for the information that WP Monitor stores all together right on the dashboard.
-
 The display is on the dashboard and the settings page is a sub-item in the 'Tools' menu.
 
-WP-Monitor Information:
+WP Monitor is perfect for any productivity guru or website admin because it shows the important information important for managing a site all in one place, allowing users to manage the site from one place.  The fact that you can monitor your site from the dashboard allows you to use the time that you would have used searching for that information to update and change the site.
+
+Many users of the plugin are website admins who are managing a few sites and do not have time to look through each one everyday.  With WP Monitor, the busy site admins can quickly glance at the monitor display on their dashboard and instantly get the information they need for that entire site.
+
+WP Monitor Information:
 
 * Plugin Updates
 * Theme Updates

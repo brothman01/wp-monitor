@@ -315,37 +315,31 @@ class WPMonitor {
 
 	public function gauge_cell( $title, $gauge_class, $value, $max ) {
 
-				return '<div class="onequarter cell">
+				$content =
+				'<div class="container" style="float: left; margin:0px auto; text-align:center;">';
 
-					<div id="' . $gauge_class . '" class="gauge"></div>
-						<script>
-							var g1;
-							document.addEventListener( "DOMContentLoaded", function( event ) {
-								var g1 = new JustGage( {
-									id: "' . $gauge_class . '",
-									value: ' . $value . ',
-									min: 0,
-									max: ' . $max . ',
-									title: "' . $title . '",
+				$content .= '<h3>' . $title . '</h3>';
 
-									customSectors: {
-									percents: true,
-									ranges: [{
-										color : "#FF0000",
-										lo : 0,
-										hi : 50
-									},{
-										color : "#0000FF",
-										lo : 51,
-										hi : 100
-									}]
-								}
+				  $content .= '<div class="GaugeMeter" id="PreviewGaugeMeter_2" data-percent="' . ( $value / $max ) * 100 . '" data-append="%" data-size="200" data-theme="blue" data-back="RGBa(0,0,0,.5)" data-animate_gauge_colors="1" data-animate_text_colors="1" data-width="15" data-label="Speed" data-style="Arch" data-label_color="#FFF"></div>';
 
-									} );
-							} );
-						</script>
+				$content .= '</div>';
 
-				</div>';
+				$content .= '<script>
+				jQuery(".GaugeMeter").gaugeMeter();
+
+			  var _gaq = _gaq || [];
+			  _gaq.push(["_setAccount", "UA-36251023-1"]);
+			  _gaq.push(["_setDomainName", "jqueryscript.net"]);
+			  _gaq.push(["_trackPageview"]);
+
+			  (function() {
+			    var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
+			    ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
+			    var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
+			  })();
+				</script>';
+
+				return $content;
 
 	}
 
@@ -628,14 +622,11 @@ class WPMonitor {
 		wp_enqueue_style( 'wpm_tabs_css' );
 
 		/* Gauges */
-		wp_register_style( 'wpm_justgage_css',  plugin_dir_url( __FILE__ ) . '/library/css/justgage.css', false, '1.0.0' );
-		wp_enqueue_style( 'wpm_justgage_css' );
+		wp_register_style( 'wpm_gauge_css',  plugin_dir_url( __FILE__ ) . '/library/css/gauge.css', false, '1.0.0' );
+		wp_enqueue_style( 'wpm_gauge_css' );
 
-		wp_register_script( 'wpm_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js' );
-		wp_enqueue_script( 'wpm_raphael' );
-
-		wp_register_script( 'wpm_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
-		wp_enqueue_script( 'wpm_justgage' );
+		wp_register_script( 'wpm_gauge_jquery',  plugin_dir_url( __FILE__ ) . '/library/js/jquery.AshAlom.gaugeMeter-2.0.0.min.js', array( 'jquery' ), '1.0.0' );
+		wp_enqueue_script( 'wpm_gauge_jquery' );
 
 		/* Reveal */
 		 wp_register_script( 'wpm_revealer',  plugin_dir_url( __FILE__ ) . '/library/js/revealer.js', array( 'jquery' ), '1.0.0' );
