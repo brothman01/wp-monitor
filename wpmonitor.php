@@ -29,7 +29,13 @@ class WPMonitor {
 
 		) );
 
-		add_action( 'init', array( $this, 'wpm_check_for_updates' ) );
+		if ( ! function_exists( 'get_plugins' ) ) {
+
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+		}
+
+		add_action( 'plugins_loaded', array( $this, 'wpm_check_for_updates' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 
@@ -50,10 +56,16 @@ class WPMonitor {
 		$option = 1 == $option['wpm_show_monitor'] ? true : false;
 
 		if ( true == $option ) {
-			add_action( 'admin_footer', array( $this, 'wpm_dashboard_widget' ) );
+
+			// add_action( 'admin_notices', array( $this, 'wpm_dashboard_widget' ) );
+
+			add_action( 'load-index.php',
+    function(){
+        add_action( 'admin_notices', array( $this, 'wpm_dashboard_widget' ) );
+    }
+);
+
 		}
-
-
 
 	}
 
@@ -63,32 +75,11 @@ class WPMonitor {
 
 	}
 
+	public function wpm_dashboard_widget() {
 
+		echo $this->wpm_dashboard_callback();
 
-	function wpm_dashboard_widget() {
-
-		if ( get_current_screen()->base !== 'dashboard' ) {
-
-			return;
-
-		}
-	?>
-
-	<div id="custom-id" class="welcome-panel" style="display: none;">
-
-		<?php $this->wpm_dashboard_callback(); ?>
-
-	</div>
-
-	<script>
-		jQuery(document).ready(function($) {
-
-			$('#welcome-panel').after($('#custom-id').show());
-
-		});
-	</script>
-
-<?php }
+ }
 
 
 
@@ -207,7 +198,7 @@ class WPMonitor {
 
 	public function wpm_dashboard_callback() {
 
-			echo '<div id="dashboard_main">';
+			echo '<div id="dashboard_main" class="notice">';
 
 				echo '<div class="twothirds">
 
@@ -321,16 +312,27 @@ class WPMonitor {
 
 				$content .= '<div id="' . $gauge_class . '" class="gauge"></div>
 						<script>
-							var g1;
+							var g1_' . $gauge_class . ';
 							document.addEventListener( "DOMContentLoaded", function( event ) {
-								var g1 = new JustGage( {
+								var g1_' . $gauge_class . ' = new JustGage( {
 									id: "' . $gauge_class . '",
 									value: ' . $value . ',
 									min: 0,
 									max: ' . $max . ',
 									title: "' . $title . '",
 									gaugeWidthScale: 0.6,
-									levelColors: ["#CE1B21", "#D0532A", "#FFC414", "#00FF00"],
+									customSectors: {
+										percents: true,
+										ranges: [{
+											color : "#FF0000",
+											lo : 0,
+											hi : 50
+										},{
+											color : "#00FF00",
+											lo : 51,
+											hi : 100
+										}]
+									},
 									counter: true
 									});
 
