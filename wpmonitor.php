@@ -218,9 +218,9 @@ class WPMonitor {
 
 								echo '<h3>Updates</h3>';
 
-										echo $this->gauge_cell( __( 'Plugins',  'wp-monitor' ), 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
+										echo $this->gauge_cell( __( 'Plugins Up To Date',  'wp-monitor' ), 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
 
-										echo $this->gauge_cell( __( 'Themes',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
+										echo $this->gauge_cell( __( 'Themes Up To Date',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
 										echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress', self::$updates['WordPress'] );
 
@@ -315,9 +315,11 @@ class WPMonitor {
 
 	public function gauge_cell( $title, $gauge_class, $value, $max ) {
 
-				return '<div class="onequarter cell">
+				$content =  '<div class="onequarter cell">';
 
-					<div id="' . $gauge_class . '" class="gauge"></div>
+				$content .= '<h3>' . $title . '</h3>';
+
+				$content .= '<div id="' . $gauge_class . '" class="gauge"></div>
 						<script>
 							var g1;
 							document.addEventListener( "DOMContentLoaded", function( event ) {
@@ -327,25 +329,17 @@ class WPMonitor {
 									min: 0,
 									max: ' . $max . ',
 									title: "' . $title . '",
+									gaugeWidthScale: 0.6,
+									levelColors: ["#CE1B21", "#D0532A", "#FFC414", "#00FF00"],
+									counter: true
+									});
 
-									customSectors: {
-									percents: true,
-									ranges: [{
-										color : "#FF0000",
-										lo : 0,
-										hi : 50
-									},{
-										color : "#0000FF",
-										lo : 51,
-										hi : 100
-									}]
-								}
-
-									} );
 							} );
 						</script>
 
 				</div>';
+
+				return $content;
 
 	}
 
