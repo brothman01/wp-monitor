@@ -213,7 +213,7 @@ class WPMonitor {
 
 										echo $this->gauge_cell( __( 'Themes Up To Date',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
-										echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress', self::$updates['WordPress'] );
+										echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress');
 
 										echo $this->php_cell( __( 'PHP',  'wp-monitor' ) );
 
@@ -223,7 +223,7 @@ class WPMonitor {
 
 								echo '<h3>Summary</h3>';
 
-										echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl', '' );
+										echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl' );
 
 										$final_grade = ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] );
 
@@ -352,10 +352,24 @@ class WPMonitor {
 
 	}
 
-	public function indicator_cell( $title, $prefix, $setting ) {
+	public function indicator_cell( $title, $prefix ) {
 
-				return '<div class="onequarter cell">
-				<h3>' . $title . '</h3>
+		$content = '';
+
+		if ( $prefix == 'wordpress' ) {
+
+			$content = '<div class="onequarter cell">';
+
+		}
+
+		if ( $prefix == 'ssl' ) {
+
+			$content = '<div class="onethird cell">';
+
+		}
+
+
+				$content .= '<h3>' . $title . '</h3>
 
 					<div class="gauge indicator">
 
@@ -365,7 +379,9 @@ class WPMonitor {
 
 					<p id="wpm_' . $prefix . '_message">&nbsp;</p>
 
-								</div>';
+					</div>';
+
+					return $content;
 
 	}
 
