@@ -620,6 +620,7 @@ class WPMonitor {
 
 			'state'	=> self::$updates['php_action'],
 
+			'supported_until' =>	gmdate('m-d-Y', PHPVersioner::$info[$this->php_version( 2 )]['supported_until'] ),
 
 		) );
 		wp_enqueue_script( 'wpm_phpcell' );

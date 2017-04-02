@@ -12,11 +12,15 @@ class PHPVersioner extends WPMonitor {
 
 	public function get_info( $info ) {
 
-		$data_timeout = get_option('_transient_timeout_' . 'wpm_php_info');
-
-		if ($data_timeout < time()) {
+		if ( get_transient( 'wpm_php_info' ) < time()) {
 
 			set_transient( 'wpm_php_info', $info, 16 * HOUR_IN_SECONDS );
+
+			$php_data = get_transient('wpm_php_info');
+
+		} else {
+
+			$php_data = get_transient('wpm_php_info');
 
 		}
 
