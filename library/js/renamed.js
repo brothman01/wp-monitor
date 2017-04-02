@@ -7,7 +7,7 @@ jQuery(document).ready(function() {
 		 'Plugin Updates: ' + wpm_data.plugin_updates + '\n' +
 		 'Theme Updates: ' + wpm_data.theme_updates + '\n' +
 		 'WordPress Updates: ' + wpm_data.wordpress_updates + '\n' +
-		 'PHP Updates: ' + wpm_data.php_updates;
+		 'PHP: ' + wpm_data.php_updates;
 
 		 var grade_message =
 		 'Plugin Updates: ' + ( wpm_data.total_plugins - wpm_data.plugin_updates ) + ' / ' + wpm_data.total_plugins + ' up to date' + '\n' +
@@ -43,9 +43,10 @@ jQuery(document).ready(function() {
 			jQuery('#total_breakdown_link').attr('title', total_message);
 
 
-			jQuery('#grade_breakdown_link').html('<a href="#">Why? (Hover)</a>');
+			jQuery('#grade_breakdown_link').html('<a href="#" style="text-align: center;">Why? (Hover)</a>');
 
 			jQuery('#grade_breakdown_link').attr('title', grade_message);
+
 
 		}, ((time + 1) * 50) );
 

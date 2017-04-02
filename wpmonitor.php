@@ -229,7 +229,9 @@ class WPMonitor {
 
 										echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
 
-										echo $this->counter_cell( __( 'Overall Grade',  'wp-monitor' ), 'grade' );
+										// echo $this->counter_cell( __( 'Overall Grade',  'wp-monitor' ), 'grade' );
+
+										echo $this->gauge_cell( __( 'Overall Grade',  'wp-monitor' ), 'g3', (integer) $this->calculate_grade(), 100 );
 
 							echo '</div>';
 
@@ -337,9 +339,14 @@ class WPMonitor {
 									});
 
 							} );
-						</script>
+						</script>';
 
-				</div>';
+
+						if ( $title == 'Overall Grade' ) {
+							$content .= '<span id="grade_breakdown_link" class="breakdown_link" style="margin-left: 40%;">' . 'Why?' . '</span>';
+						}
+
+				$content .= '</div>';
 
 				return $content;
 
@@ -356,7 +363,7 @@ class WPMonitor {
 
 					</div>
 
-					<p id="wpm_' . $prefix . '_message"></p>
+					<p id="wpm_' . $prefix . '_message">&nbsp;</p>
 
 								</div>';
 
