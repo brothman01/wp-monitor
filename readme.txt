@@ -4,7 +4,7 @@ Donate link: wp-monitor.net
 Tags: productivity, monitor, updates, php, variables, admin
 Requires at least: 4.6
 Tested up to: 4.7
-Stable tag: 1.0.2
+Stable tag: 4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,8 +28,6 @@ WP-Monitor Information:
 * How many Total Updates are needed
 * Final website grade based on the site info gathered in the previous steps
 
-
-Special Thanks to Evan Herman
 
 == Installation ==
 
@@ -55,8 +53,7 @@ The settings page is a sub-item in the 'Tools' menu.
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0 =
 A Plugin is born
 
-= 1.0.1 =
-Made monitor easier to read with breakdowns and indicators
+Special Thanks to Evan Herman

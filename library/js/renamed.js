@@ -70,7 +70,7 @@ jQuery(document).ready(function() {
 
 				jQuery('#ssl_light').css( 'background', '#FF0000' );
 
-				jQuery('#wpm_ssl_message').html( 'SSL Inactive <br /> <a href="http://wp-monitor.net/2017/03/30/why-use-ssl/">Why Use SSL?</a>' );
+				jQuery('#wpm_ssl_message').html( 'SSL Inactive <br /> <a href="http://www.wp-monitor.net/2017/04/04/why-use-ssl/">Why Use SSL?</a>' );
 
 			} else {
 

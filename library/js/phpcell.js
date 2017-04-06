@@ -21,7 +21,7 @@ jQuery(document).ready(function() {
 
 					jQuery('#wpm_php_indicator').val( wpm_data_php.state + '' );
 
-					jQuery('#php_message').html('<a href="http://wp-monitor.net/2017/03/30/why-upgrade-my-php/">Why Upgrade PHP?</a>')
+					jQuery('#php_message').html('<a href="http://www.wp-monitor.net/2017/04/04/why-upgrade-php/">Why Upgrade PHP?</a>')
 
 
 		}, 1000);

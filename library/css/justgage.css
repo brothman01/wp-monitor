@@ -1,34 +1,7 @@
-        .clear:before,
-        .clear:after {
-            content: "";
-            display: table;
-        }
-
-        .clear:after {
-            clear: both;
-        }
-
-        .clear {
-            *zoom: 1;
-        }
-
-
-
-        .size-1 {
-            width: 20%;
-        }
-
-        .size-2 {
-            width: 30%;
-        }
-
-        .size-3 {
-            width: 48%;
-        }
-
-        .h-split {
-            display: block;
-            float: left;
-            width: 1%;
-            min-height: 100px;
-        }
+a:link.button,
+a:active.button,
+a:visited.button,
+a:hover.button {
+		margin: 30px 5px 0 2px;
+		padding: 7px 13px;
+}
