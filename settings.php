@@ -47,14 +47,59 @@ class Settings extends WPMonitor {
 
 	public function wpm_settings_init() {
 
-				add_settings_section(
-					'general_section_id',
-					'General Settings',
-					array( $this, 'wpm_general_section_callback' ),
-					'options_page'
+		add_settings_section(
+			'general_section_id',
+			'General Settings',
+			array( $this, 'wpm_general_section_callback' ),
+			'options_page'
+		);
+
+				register_setting(
+					'wpm_options_group',
+					'wpm_options',
+					[ $this, 'wpm_sanitize' ]
 				);
 
+				register_setting(
+					'wpm_prevent_email_cron',
+					'wpm_prevent_email_cron',
+					[ $this, 'wpm_sanitize' ]
+				);
+
+
+
+								add_settings_field(
+									'wpm_show_monitor',
+									__( 'Show Monitor?', 'admin-tools' ),
+									[ $this, 'wpm_show_monitor_callback' ],
+									'options_page',
+									'general_section_id'
+								);
+
 	}
+
+	public function wpm_sanitize( $input ) {
+
+					$valid = array();
+
+					$valid['wpm_show_monitor'] 	= (bool) empty( $input['wpm_show_monitor'] ) ? false : true;
+
+					return $valid;
+
+	}
+
+
+
+	public function wpm_show_monitor_callback() {
+
+					printf(
+						'<input id="wpm_show_monitor" name="wpm_options[wpm_show_monitor]" type="checkbox" value="1" %1$s />',
+						checked( true, Settings::$options['wpm_show_monitor'], false )
+					);
+
+	}
+
+
 
 
 
