@@ -6,15 +6,15 @@ class PHPVersioner extends WPMonitor {
 
 	public function __construct() {
 
-		self::$info = $this->get_info( $this->wpm_version_info() );
+		self::$info = $this->get_info();
 
 	}
 
-	public function get_info( $info ) {
+	public function get_info() {
 
 		if ( get_transient( 'wpm_php_info' ) < time()) {
 
-			set_transient( 'wpm_php_info', $info, 16 * HOUR_IN_SECONDS );
+			set_transient( 'wpm_php_info', $this->wpm_version_info(), 24 * HOUR_IN_SECONDS );
 
 			$php_data = get_transient('wpm_php_info');
 

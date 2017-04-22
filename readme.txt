@@ -4,7 +4,7 @@ Donate link: wp-monitor.net
 Tags: productivity, monitor, updates, php, variables, admin
 Requires at least: 4.6
 Tested up to: 4.7
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,6 +15,8 @@ A simple WordPress plugin that puts important information on the dashboard.
 A simple WordPress plugin that puts update, important site and important server information in one convenient and easy-to-find place on the dashboard.  Monitor one or multiple websites on the go, this plugin makes your job as a site administrator easier by eliminating the need to look through the site and server for the information that WP Monitor stores all together right on the dashboard.
 
 The display is on the dashboard and the settings page is a sub-item in the 'Tools' menu.
+
+Visit www.wp-monitor.net for more information on the okug-in, add-ons and a knowledge base!
 
 WP-Monitor Information:
 
@@ -48,7 +50,7 @@ Special Thanks to Evan Herman
 
 On the dashboard
 
-= Wherer is the settings page? =
+= Where is the settings page? =
 
 The settings page is a sub-item in the 'Tools' menu.
 

@@ -23,14 +23,12 @@
 .tablesthird {
 	float: left;
 	width: 32%;
-	overflow-x: hidden;
 }
 
 #mail_indicator {
 	position: absolute;
 	top: 25px;
 	left: 5px;
-
 	border-radius: 100%;
 }
 

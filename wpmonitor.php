@@ -2,7 +2,7 @@
 /*
  * Plugin Name: WP Monitor
  * Description: Collects important data from site and displays it on the dashboard
- * Version:     1.0.3
+ * Version:     1.0.4
  * Author:      Ben Rothman
  * Slug:				wp-monitor
  * Author URI:  http://www.BenRothman.org
@@ -25,8 +25,24 @@ class WPMonitor {
 
 			'wpm_send_email' => false,
 
+			'wpm_how_often'	=> 'daily',
+
+			'wpm_send_email' => true,
+
+			'wpm_check_plugins' => true,
+
+			'wpm_check_themes' => true,
+
+			'wpm_check_wordpress' => true,
+
+			'wpm_check_php' => true,
+
+			'wpm_check_ssl' => true,
 
 		) );
+
+		update_option( 'wpm_options', self::$options );
+
 
 		if ( ! function_exists( 'get_plugins' ) ) {
 
@@ -42,21 +58,39 @@ class WPMonitor {
 
 		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
 
-		add_filter( 'wpm_mail_indicator', [ $this, 'wpm_mail_indicator' ] );
-
 	}
 
 	public function init() {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'wpm_enqueue_admin_styles' ) );
 
-		add_action( 'admin_notices', array( $this, 'wpm_dashboard_widget' ) );
+		if ( current_user_can( 'manage_options' ) ) {
+
+			add_action( 'admin_notices', array( $this, 'wpm_dashboard_widget' ) );
+
+		}
+
+		if ( get_option( 'wpm_config' ) !== 'active' ) {
+
+			update_option( 'wpm_config', 'active' );
+
+		}
+
+		register_deactivation_hook( __FILE__, array( $this, 'wpm_deactivate' ) );
+
+	}
+
+	public function wpm_deactivate() {
+
+		update_option( 'wpm_config', 'inactive' );
 
 	}
 
 	public function wpm_mail_indicator() {
 
-		return ! isset( self::$options['wpm_send_email'] ) || false === self::$options['wpm_send_email'] ? '<img title="Email Not Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/no-mail.png', __FILE__ ) . '"  />' : '<img title="Email Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/yes-mail.png', __FILE__ ) . '"  />';
+		//return ! isset( self::$options['wpm_send_email'] ) || false === self::$options['wpm_send_email'] ? 'Email Indicator:  <img title="Email Not Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/no-mail.png', __FILE__ ) . '"  />' : 'Email Indicator:  <img title="Email Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/yes-mail.png', __FILE__ ) . '"  />';
+
+		return '';
 
 	}
 
@@ -71,7 +105,7 @@ class WPMonitor {
 		}
 	?>
 
-	<div id="custom-id" class="welcome-panel" style="display: none;">
+	<div id="wpm_main" class="welcome-panel" style="display: none;">
 
 		<?php $this->wpm_dashboard_callback(); ?>
 
@@ -80,7 +114,7 @@ class WPMonitor {
 	<script>
 		jQuery(document).ready(function($) {
 
-			$('#welcome-panel').after($('#custom-id').show());
+			$('#welcome-panel').after($('#wpm_main').show());
 
 		});
 	</script>
@@ -166,24 +200,9 @@ class WPMonitor {
 
 		foreach ( $all_users as $user ) {
 
-			// 			$response = wp_remote_get( 'http://www.ip-api.com/json/' . get_user_meta( $user->ID, 'last_ip', true ) );
-			//
-			// 			$body = wp_remote_retrieve_body( $response );
-			//
-			// 			$data = json_decode( $body, true );
-			//
-			// 			// Check for error
-			// if ( is_wp_error( $body ) || 'fail' === $data['status'] ) {
-			//
-			// 		$data = array( 'city' => 'Address Doesn\'t exist', 'region' => '' , 'country' => '' );
-			//
-			// 			}
-
 						$timestamp = get_user_meta( $user->ID, 'last_login_timestamp', true ) ? get_user_meta( $user->ID, 'last_login_timestamp', true ) : ' - ';
 
 						$ip = get_user_meta( $user->ID, 'last_ip', true ) ? get_user_meta( $user->ID, 'last_ip', true ) : ' - ';
-
-						//$location = $data['city'] . ' ' . $data['region'] . ' ' . $data['country'];
 
 						echo '<tr>' .
 
@@ -203,11 +222,11 @@ class WPMonitor {
 
 	public function wpm_dashboard_callback() {
 
-			echo '<div id="dashboard_main" class="notice">';
+			echo '<div id="wpm_main">';
 
 				echo '<div class="twothirds">
 
-				<h1 style="text-align: center; background: #F9F9F9;">Site Status:' . '<div style="float: right; font-size: 14px;">Email Indicator: ' . apply_filters( 'wpm_mail_indicator', '' ) . '</div></h1>';
+				<h1 style="text-align: center; background: #F9F9F9;">Site Status:' . '<div style="float: right; font-size: 14px;">' . apply_filters( 'wpm_mail_indicator', '' ) . '</div></h1>';
 
 
 							echo '<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">';
@@ -492,41 +511,43 @@ class WPMonitor {
 
 				$variables = array(
 
-					__( 'WP Version', 'wp-monitor' )	=> get_bloginfo( 'version' ),
+					'Name'				=> get_bloginfo( 'name' ),
 
-					__( 'PHP Version', 'wp-monitor' )	=> phpversion(),
+					'URL'					=> get_bloginfo( 'url' ),
 
-					__( 'Name', 'wp-monitor' )				=> get_bloginfo( 'name' ),
+					'WP Version'	=> get_bloginfo( 'version' ),
 
-					__( 'URL', 'wp-monitor' )					=> get_bloginfo( 'url' ),
+					'PHP Version'	=> phpversion(),
 
-					__( 'Server IP', 'wp-monitor') 	=>	$_SERVER['SERVER_ADDR'],
+					'Server IP' 	=>	$_SERVER['SERVER_ADDR'],
 
-					__( 'Charset', 'wp-monitor' )			=> get_bloginfo( 'charset' ),
+					'Charset'			=> get_bloginfo( 'charset' ),
 
-					__( 'Admin Email', 'wp-monitor' )	=> get_bloginfo( 'admin_email' ),
+					'Admin Email'	=> get_bloginfo( 'admin_email' ),
 
-					__( 'Language', 'wp-monitor' )		=> get_bloginfo( 'language' ),
+					'Language'		=> get_bloginfo( 'language' ),
 
-					__( 'Stylesheet Directory', 'wp-monitor' )	=> get_bloginfo( 'stylesheet_directory' ),
+					'Stylesheet Directory'	=> get_bloginfo( 'stylesheet_directory' ),
 
-					__( 'Uploads Directory ', 'wp-monitor' )	=>	$upload_dir,
+					'Uploads Directory '	=>	$upload_dir,
 
-					__( 'Uploads Directory Size', 'wp-monitor' )	=>	round( $uploads_size / 1048576, 2 ) . ' MB',
+					'Uploads Directory Size'	=>	round( $uploads_size / 1048576, 2 ) . ' MB',
 
-					__( 'Front Page Displays', 'wp-monitor' )			=> get_option( 'show_on_front' ),
+					'Front Page Displays'			=> get_option( 'show_on_front' ),
 
-					__( 'Posts Per Page', 'wp-monitor' )					=> get_option( 'posts_per_page' ),
+					'Posts Per Page'					=> get_option( 'posts_per_page' ),
 
-					__( 'Atom URL', 'wp-monitor' )								=> get_bloginfo( 'atom_url' ),
+					'Atom URL'								=> get_bloginfo( 'atom_url' ),
 
-					__( 'SMTP', 'wp-monitor' )										=> ini_get( 'SMTP' ),
+					'SMTP'										=> ini_get( 'SMTP' ),
 
-					__( 'Discourage Search Engines', 'wp-monitor' )	=> $blog_public,
+					'Discourage Search Engines'	=> $blog_public,
 
-					__( 'PHP Memory Limit', 'wp-monitor' )				=> ini_get( 'memory_limit' ),
+					'PHP Memory Limit'				=> ini_get( 'memory_limit' ),
 
 				);
+
+		update_option( 'wpm_variables', $variables );
 
 		foreach ( $variables as $key => $value ) {
 
