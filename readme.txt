@@ -1,6 +1,6 @@
 === WP Monitor ===
 Contributors: brothman01
-Donate link: wp-monitor.net
+Donate link: https://www.wp-monitor.net
 Tags: productivity, monitor, updates, php, variables, admin
 Requires at least: 4.6
 Tested up to: 4.7
