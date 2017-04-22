@@ -226,7 +226,7 @@ class WPMonitor {
 
 				echo '<div class="twothirds">
 
-				<h1 style="text-align: center; background: #F9F9F9;">Site Status:' . '<div style="float: right; font-size: 14px;">' . apply_filters( 'wpm_mail_indicator', '' ) . '</div></h1>';
+				<h1 style="text-align: center; background: #F9F9F9;">WP Monitor:'; // . '<div style="float: right; font-size: 14px;">' . apply_filters( 'wpm_mail_indicator', '' ) . '</div></h1>';
 
 
 							echo '<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">';

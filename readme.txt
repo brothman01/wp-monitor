@@ -12,11 +12,11 @@ A simple WordPress plugin that puts important information on the dashboard.
 
 == Description ==
 
-A simple WordPress plugin that puts update, important site and important server information in one convenient and easy-to-find place on the dashboard.  Monitor one or multiple websites on the go, this plugin makes your job as a site administrator easier by eliminating the need to look through the site and server for the information that WP Monitor stores all together right on the dashboard.
+A simple WordPress plugin that puts update, important site and important server information in one convenient and easy-to-find place on the dashboard.  Monitor one or multiple sites on the go, this plugin makes your job as a site administrator easier by eliminating the need to look through the site and server for the information that WP Monitor collects and puts all together right on the dashboard.
 
-The display is on the dashboard and the settings page is a sub-item in the 'Tools' menu.
+The display is on the dashboard and the settings page is a sub-item in the 'Tools' menu.  This plugin is great for productivity and easy site monitoring because of how much it speeds up the workflow of any site admin.
 
-Visit www.wp-monitor.net for more information on the okug-in, add-ons and a knowledge base!
+Visit https://www.wp-monitor.net for more information on the plugin, add-ons and a knowledge base!
 
 WP-Monitor Information:
 
