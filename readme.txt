@@ -18,7 +18,7 @@ The display is on the dashboard and the settings page is a sub-item in the 'Tool
 
 Visit https://www.wp-monitor.net for more information on the plugin, add-ons and a knowledge base!
 
-WP-Monitor Information:
+WP Monitor Information:
 
 * Plugin Updates
 * Theme Updates
@@ -62,3 +62,13 @@ A Plugin is born
 
 = 1.0.1 =
 Made monitor easier to read with breakdowns and indicators
+
+= 1.0.2 =
+Changed order of variables in the variable table
+
+= 1.0.3 =
+- Added support for email addon and database addon
+- changed final grade indicator into a gauge
+
+= 1.0.4 =
+added new variables to the cariable table
