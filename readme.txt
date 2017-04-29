@@ -54,6 +54,40 @@ On the dashboard
 
 The settings page is a sub-item in the 'Tools' menu.
 
+= What Does the Plugin gauge show? =
+
+The Plugin gauge fills up to show how many of the total plugins installed on the site have updates out of the total number of plugins installed on the site.  With some subtraction, the number of up-to-date plugins installed on the site is also available:
+total plugins - plugins that need updates = up-to-date plugins.
+
+= What Does the Theme gauge show? =
+
+The Theme gauge fills up to show how many of the total themes installed on the site have updates out of the total number of themes installed on the site.  With some subtraction, the number of up-to-date themes installed on the site is also available:
+total themes - themes that need updates = up-to-date themes.
+
+= What does the PHP gauge show? =
+
+The PHP section shows the things:
+1. The current version: The version of PHP running on the server hosting the website.
+2. The indicator (red/green circle) - This shows at a glance whether the version of PHP run by the server hosting the website is supported.
+3. The 'Supported Until' field: This field shows when the version of PHP currently running on the server hosting the website is supported until as stated by the official PHP website.
+
+= Why Upgrade Running Version of PHP? =
+
+There are several reasons to upgrade your version of PHP:
+
+1. The PHP Group' (the official managers of PHP) support each version of PHP they release for a certain amount of time, so older versions of PHP are less likely to be supported than newer ones.  In a supported version, if a security flaw is found then it is fixed by The PHP Group, whereas if a security flaw is found in an older unsupported version of PHP, nothing happens and hackers have the freedom to exploit that flaw.
+
+2. PHP 7 and newer versions of PHP have higher performance than the older versions.  Whether you are talking about the ability to execute more requests, the less memory used or the platform independent instructions, PHP 7+ just performs better.
+
+3. Higher load capacity.  PHP 7+ allows hosts to serve more clients with the same hardware.  Changes to phpng as well as the new JIT compiler allow PHP to be on par with Facebook HHVM for load capacity.
+
+= Why use SSL? =
+
+This is important because the information you send on the Internet is passed from computer to computer to get to the destination server. Any computer in between you and the server can see your credit card numbers, usernames and passwords, and other sensitive information if it is not encrypted with an SSL certificate.  Using SSL will encrypt the data that is sent so that prying eyes between your user and your server cannot get the information.
+
+= What do the variables in the variables table mean? =
+
+There is a detailed description of each value at http://wp-monitor.net/2017/03/30/what-does-that-value-mean/.
 
 == Changelog ==
 
