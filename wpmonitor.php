@@ -1,8 +1,8 @@
 <?php
 /*
  * Plugin Name: WP Monitor
- * Description: Notify user when updates to WordPress are needed.
- * Version:     1.0.0
+ * Description: Collects important data from site and displays it on the dashboard
+ * Version:     1.0.4
  * Author:      Ben Rothman
  * Slug:				wp-monitor
  * Author URI:  http://www.BenRothman.org
@@ -11,7 +11,7 @@
 
 class WPMonitor {
 
-	public static $updates;
+		public static $updates;
 
 	public static $options;
 
@@ -22,6 +22,10 @@ class WPMonitor {
 		self::$options = get_option( 'wpm_options', array(
 
 			'wpm_how_often'	=> __( 'daily', 'wp-monitor' ),
+
+			'wpm_send_email' => false,
+
+			'wpm_how_often'	=> 'daily',
 
 			'wpm_send_email' => true,
 
@@ -37,7 +41,16 @@ class WPMonitor {
 
 		) );
 
-		add_action( 'init', array( $this, 'wpm_check_for_updates' ) );
+		update_option( 'wpm_options', self::$options );
+
+
+		if ( ! function_exists( 'get_plugins' ) ) {
+
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+		}
+
+		add_action( 'plugins_loaded', array( $this, 'wpm_check_for_updates' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 
@@ -51,7 +64,33 @@ class WPMonitor {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'wpm_enqueue_admin_styles' ) );
 
-		add_action( 'admin_footer', array( $this, 'wpm_dashboard_widget' ) );
+		if ( current_user_can( 'manage_options' ) ) {
+
+			add_action( 'admin_notices', array( $this, 'wpm_dashboard_widget' ) );
+
+		}
+
+		if ( get_option( 'wpm_config' ) !== 'active' ) {
+
+			update_option( 'wpm_config', 'active' );
+
+		}
+
+		register_deactivation_hook( __FILE__, array( $this, 'wpm_deactivate' ) );
+
+	}
+
+	public function wpm_deactivate() {
+
+		update_option( 'wpm_config', 'inactive' );
+
+	}
+
+	public function wpm_mail_indicator() {
+
+		//return ! isset( self::$options['wpm_send_email'] ) || false === self::$options['wpm_send_email'] ? 'Email Indicator:  <img title="Email Not Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/no-mail.png', __FILE__ ) . '"  />' : 'Email Indicator:  <img title="Email Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/yes-mail.png', __FILE__ ) . '"  />';
+
+		return '';
 
 	}
 
@@ -66,7 +105,7 @@ class WPMonitor {
 		}
 	?>
 
-	<div id="custom-id" class="welcome-panel" style="display: none;">
+	<div id="wpm_main" class="welcome-panel" style="display: none;">
 
 		<?php $this->wpm_dashboard_callback(); ?>
 
@@ -75,13 +114,12 @@ class WPMonitor {
 	<script>
 		jQuery(document).ready(function($) {
 
-			$('#welcome-panel').after($('#custom-id').show());
+			$('#welcome-panel').after($('#wpm_main').show());
 
 		});
 	</script>
 
 <?php }
-
 
 
 	public function wpm_check_for_updates() {
@@ -162,29 +200,19 @@ class WPMonitor {
 
 		foreach ( $all_users as $user ) {
 
-						$response = wp_remote_get( 'http://www.ip-api.com/json/' . get_user_meta( $user->ID, 'last_ip', true ) );
+						$timestamp = get_user_meta( $user->ID, 'last_login_timestamp', true ) ? get_user_meta( $user->ID, 'last_login_timestamp', true ) : ' - ';
 
-						$body = wp_remote_retrieve_body( $response );
-
-						$data = json_decode( $body, true );
-
-						// Check for error
-						if ( is_wp_error( $body ) || 'fail' === $data['status'] ) {
-
-							$data = array( 'city' => 'Address Doesn\'t exist', 'region' => '' , 'country' => '' );
-
-						}
-
+						$ip = get_user_meta( $user->ID, 'last_ip', true ) ? get_user_meta( $user->ID, 'last_ip', true ) : ' - ';
 
 						echo '<tr>' .
 
-						'<th>' . $user->user_login . '</th>' .
+						'<td>' . $user->user_login . '</td>' .
 
-						'<th>' . get_user_meta( $user->ID, 'last_login_timestamp', true ) . '</th>' .
+						'<td class="centertext">' . $timestamp . '</td>' .
 
-						'<th>' . get_user_meta( $user->ID, 'last_ip', true ) . '</th>' .
+						'<td class="centertext">' . $ip . '</td>' .
 
-						'<th>' . $data['city'] . ' ' . $data['region'] . ' ' . $data['country'] . '</th>' .
+						'<td class="centertext">' . '<a class="reveal-address" style="color: blue; text-decoration: underline; href="#" data-ip="' . $ip . '">Reveal</a>' . '</td>' .
 
 						'</tr>';
 
@@ -194,21 +222,22 @@ class WPMonitor {
 
 	public function wpm_dashboard_callback() {
 
-			echo '<div id="dashboard_main">';
+			echo '<div id="wpm_main">';
 
 				echo '<div class="twothirds">
 
-				<h1 style="text-align: center; background: #F9F9F9;">Site Status:</h1>';
+				<h1 style="text-align: center; background: #F9F9F9;">WP Monitor:'; // . '<div style="float: right; font-size: 14px;">' . apply_filters( 'wpm_mail_indicator', '' ) . '</div></h1>';
+
 
 							echo '<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">';
 
 								echo '<h3>Updates</h3>';
 
-										echo $this->gauge_cell( __( 'Plugins',  'wp-monitor' ), 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
+										echo $this->gauge_cell( __( 'Plugins Up To Date',  'wp-monitor' ), 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
 
-										echo $this->gauge_cell( __( 'Themes',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
+										echo $this->gauge_cell( __( 'Themes Up To Date',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
-										echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress', self::$updates['WordPress'] );
+										echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress');
 
 										echo $this->php_cell( __( 'PHP',  'wp-monitor' ) );
 
@@ -218,13 +247,13 @@ class WPMonitor {
 
 								echo '<h3>Summary</h3>';
 
-										echo $this->ssl_cell( __( 'SSL',  'wp-monitor' ) );
+										echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl' );
 
 										$final_grade = ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] );
 
 										echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
 
-										echo $this->counter_cell( __( 'Overall Grade',  'wp-monitor' ), 'grade' );
+										echo $this->gauge_cell( __( 'Overall Grade',  'wp-monitor' ), 'g3', (integer) $this->calculate_grade(), 100 );
 
 							echo '</div>';
 
@@ -239,10 +268,16 @@ class WPMonitor {
 						echo '
 						<div id="tabs">
 						  <ul>
+
 						    <li><a href="#tabs-1">' . __( 'Variables',  'wp-monitor' ) . '</a></li>
-						    <li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>
-						  </ul>
-						  <div id="tabs-1">';
+
+						    <li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>';
+
+								echo apply_filters( 'wpm_tabs', '');
+
+						  echo '</ul>';
+
+						  echo '<div id="tabs-1">';
 
 							echo '<table class="wp-list-table widefat fixed striped wpm_table">';
 
@@ -259,24 +294,30 @@ class WPMonitor {
 
 					echo '</table>';
 
-						  echo '</div>
-						  <div id="tabs-2">
+					echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does-that-value-mean/">What Does That Value Mean?</a>';
+
+				echo '</div>';
+
+						  echo '<div id="tabs-2">
 
 									<table class="wp-list-table widefat fixed striped wpm_table">
 
 										<thead>
 											<tr>
 												<th>' . __( 'Username',  'wp-monitor' ) . '</th>
-												<th>' . __( 'Last Login Date/Time',  'wp-monitor' ) . '</th>
+												<th>' . __( 'Date/Time',  'wp-monitor' ) . '</th>
 												<th>' . __( 'Last IP Used',  'wp-monitor' ) . '</th>
 												<th>' . __( 'Location',  'wp-monitor' ) . '</th>
 											</tr>
 										</thead>';
 
-								 $this->list_last_logins();
+								 $this->list_last_logins( 'wpm_table_tab', '' );
 
-							echo '</table>
-						</div>';
+							echo '</table>';
+
+						echo '</div>';
+
+						echo apply_filters( 'wpm_table_tab' , '' );
 
 					echo '</div>
 
@@ -289,44 +330,80 @@ class WPMonitor {
 
 	public function gauge_cell( $title, $gauge_class, $value, $max ) {
 
-				return '<div class="onequarter cell">
+				$content =  '<div class="onequarter cell">';
 
-					<div id="' . $gauge_class . '" class="gauge"></div>
+				$content .= '<h3>' . $title . '</h3>';
+
+				$content .= '<div id="' . $gauge_class . '" class="gauge"></div>
 						<script>
-							var g1;
+							var g1_' . $gauge_class . ';
 							document.addEventListener( "DOMContentLoaded", function( event ) {
-								var g1 = new JustGage( {
+								var g1_' . $gauge_class . ' = new JustGage( {
 									id: "' . $gauge_class . '",
 									value: ' . $value . ',
 									min: 0,
 									max: ' . $max . ',
 									title: "' . $title . '",
-									} );
-							} );
-						</script>
+									gaugeWidthScale: 0.6,
+									customSectors: {
+										percents: true,
+										ranges: [{
+											color : "#FF0000",
+											lo : 0,
+											hi : 50
+										},{
+											color : "#00FF00",
+											lo : 51,
+											hi : 100
+										}]
+									},
+									counter: true
+									});
 
-				</div>';
+							} );
+						</script>';
+
+
+						if ( $title == 'Overall Grade' ) {
+							$content .= '<span id="grade_breakdown_link" class="breakdown_link" style="margin-left: 40%;">' . 'Why?' . '</span>';
+						}
+
+				$content .= '</div>';
+
+				return $content;
 
 	}
 
-	public function indicator_cell( $title, $class_prefix, $setting ) {
+	public function indicator_cell( $title, $prefix ) {
 
-				return '<div class="onequarter cell">
-				<h3>' . $title . '</h3>
+		$content = '';
+
+		if ( $prefix == 'wordpress' ) {
+
+			$content = '<div class="onequarter cell">';
+
+		}
+
+		if ( $prefix == 'ssl' ) {
+
+			$content = '<div class="onethird cell">';
+
+		}
+
+
+				$content .= '<h3>' . $title . '</h3>
 
 					<div class="gauge indicator">
 
-						<div class="inner_indicator">
-
-							<div class="indicator_light" id="' . $class_prefix . '_red_light">&nbsp;</div>
-
-							<div class="indicator_light" id="' . $class_prefix . '_green_light">&nbsp;</div>
-
-						</div>
+							<div class="indicator_light" id="' . $prefix . '_light">&nbsp;</div>
 
 					</div>
 
-								</div>';
+					<p id="wpm_' . $prefix . '_message">&nbsp;</p>
+
+					</div>';
+
+					return $content;
 
 	}
 
@@ -334,82 +411,37 @@ class WPMonitor {
 
 						return '<div class="onequarter cell" style="text-align: center;">
 
-						<h3 style="margin-bottom: 5px;">' . $title . '</h3>
+						<h3>' . $title . '</h3>
 
-							<p>Running Version: ' . $this->php_version( 2 ) . '</p>
+						<div id="wpm_php_indicator" class="indicator_light">&nbsp;</div>
 
-							<p>Supported Until: ' . self::$updates['PHP_supported_until'] . '</p>
+							<p id="wpm_php_version">Running Version: ???</p>
 
-							<input id="php_action_field" type="text" maxlength="14" size="14" style="text-align: center; font-style: bold;" readonly />
+							<p id="wpm_php_support">Supported Until: ' . '??-??-????' . '</p>
 
-							<script>
-
-								document.addEventListener( "DOMContentLoaded", function( event ) {
-
-									var php_action_field = document.getElementById("php_action_field");
-
-
-									setTimeout(function(){
-
-											if ("' . self::$updates['php_action'] . '" == "Up To Date") {
-
-												php_action_field.style.background = "#00CB25";
-
-												php_action_field.value = "' . self::$updates['php_action'] . '";
-
-											} else {
-
-												php_action_field.style.background = "#FF0000";
-
-												php_action_field.style.color = "white";
-
-												php_action_field.value = "' . self::$updates['php_action'] . '";
-
-											}
-
-									}, 1000);
-
-								} );
-							</script>
+							<p id="php_message"></p>
 
 					</div>';
 
 	}
 
-	public function ssl_cell( $title ) {
-
-				return '<div class="onethird cell">
-
-				<h3>' . $title . '</h3>
-
-				<div class="gauge indicator">
-
-					<div class="inner_indicator">
-
-						<div class="indicator_light" id="ssl_red_light">&nbsp;</div>
-
-						<div class="indicator_light" id="ssl_green_light">&nbsp;</div>
-
-					</div>
-
-				</div>
-
-			</div>';
-
-	}
 
 
 	public function counter_cell( $title, $prefix ) {
 
 				return '<div class="onethird cell">
 
-				<h3>' . $title . '</h3>
+				<h3 style="padding-bottom: 5%;">' . $title . '</h3>
 
 					<div class="gauge overall">
 
-						<span class="counter" id="' . $prefix . '_counter">' . '&nbsp;' . '</span>' .
+						<span class="counter" id="' . $prefix . '_counter">' . '&nbsp;' . '</span>
 
-					'</div>
+						<br />
+
+						<span id="' . $prefix . '_breakdown_link" class="breakdown_link">' . '&nbsp;' . '</span>
+
+					</div>
 
 				</div>';
 
@@ -458,38 +490,64 @@ class WPMonitor {
 
 		}
 
+
+		$upload_dir = wp_upload_dir();
+
+		$upload_dir = $upload_dir['path'];
+
+		$upload_dir = strrev( $upload_dir );
+
+		$upload_dir = substr( $upload_dir, strpos( $upload_dir, '/' ), strlen( $upload_dir ) );
+
+		$upload_dir = substr( $upload_dir, strpos( $upload_dir, '/' ) + 1, strlen( $upload_dir ) );
+
+		$upload_dir = substr( $upload_dir, strpos( $upload_dir, '/' ), strlen( $upload_dir ) );
+
+		$upload_dir = substr( $upload_dir, strpos( $upload_dir, '/' ) + 1, strlen( $upload_dir ) );
+
+		$upload_dir = strrev( $upload_dir );
+
+		$uploads_size = $this->wpm_foldersize( $upload_dir );
+
 				$variables = array(
 
-					__( 'WP Version', 'wp-monitor' )	=> get_bloginfo( 'version' ),
+					'Name'				=> get_bloginfo( 'name' ),
 
-					__( 'PHP Version', 'wp-monitor' )	=> phpversion(),
+					'URL'					=> get_bloginfo( 'url' ),
 
-					__( 'Name', 'wp-monitor' )				=> get_bloginfo( 'name' ),
+					'WP Version'	=> get_bloginfo( 'version' ),
 
-					__( 'URL', 'wp-monitor' )					=> get_bloginfo( 'url' ),
+					'PHP Version'	=> phpversion(),
 
-					__( 'Charset', 'wp-monitor' )			=> get_bloginfo( 'charset' ),
+					'Server IP' 	=>	$_SERVER['SERVER_ADDR'],
 
-					__( 'Admin Email', 'wp-monitor' )	=> get_bloginfo( 'admin_email' ),
+					'Charset'			=> get_bloginfo( 'charset' ),
 
-					__( 'Language', 'wp-monitor' )		=> get_bloginfo( 'language' ),
+					'Admin Email'	=> get_bloginfo( 'admin_email' ),
 
-					__( 'Stylesheet Directory', 'wp-monitor' )	=> get_bloginfo( 'stylesheet_directory' ),
+					'Language'		=> get_bloginfo( 'language' ),
 
+					'Stylesheet Directory'	=> get_bloginfo( 'stylesheet_directory' ),
 
-					__( 'Front Page Displays', 'wp-monitor' )			=> get_option( 'show_on_front' ),
+					'Uploads Directory '	=>	$upload_dir,
 
-					__( 'Posts Per Page', 'wp-monitor' )					=> get_option( 'posts_per_page' ),
+					'Uploads Directory Size'	=>	round( $uploads_size / 1048576, 2 ) . ' MB',
 
-					__( 'Atom URL', 'wp-monitor' )								=> get_bloginfo( 'atom_url' ),
+					'Front Page Displays'			=> get_option( 'show_on_front' ),
 
-					__( 'SMTP', 'wp-monitor' )										=> ini_get( 'SMTP' ),
+					'Posts Per Page'					=> get_option( 'posts_per_page' ),
 
-					__( 'Discourage Search Engines', 'wp-monitor' )	=> $blog_public,
+					'Atom URL'								=> get_bloginfo( 'atom_url' ),
 
-					__( 'PHP Memory Limit', 'wp-monitor' )				=> ini_get( 'memory_limit' ),
+					'SMTP'										=> ini_get( 'SMTP' ),
+
+					'Discourage Search Engines'	=> $blog_public,
+
+					'PHP Memory Limit'				=> ini_get( 'memory_limit' ),
 
 				);
+
+		update_option( 'wpm_variables', $variables );
 
 		foreach ( $variables as $key => $value ) {
 
@@ -502,6 +560,42 @@ class WPMonitor {
 		}
 
 				return $all_vars;
+
+	}
+
+	public function wpm_foldersize( $path ) {
+
+		$total_size = 0;
+
+		$files = scandir( $path );
+
+		 $clean_path = rtrim( $path, '/' ) . '/';
+
+		foreach ( $files as $t ) {
+
+			if ( $t <> '.' && $t <> '..' ) {
+
+				$current_file = $clean_path . $t;
+
+				if (is_dir( $current_file )) {
+
+					$size = $this->wpm_foldersize( $current_file );
+
+					$total_size += $size;
+
+				} else {
+
+					$size = filesize( $current_file );
+
+					$total_size += $size;
+
+				}
+
+			}
+
+		}
+
+		return $total_size;
 
 	}
 
@@ -531,25 +625,45 @@ class WPMonitor {
 		wp_register_style( 'wpm_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
 		wp_enqueue_style( 'wpm_admin_css' );
 
-		wp_register_script( 'wpm_indicator', plugin_dir_url( __FILE__ ) . '/library/js/other.js', array( 'jquery' ), '1.0.0' );
-		wp_localize_script('wpm_indicator', 'wpm_data2', array(
-
-			'wordpress'	=> intval( self::$updates['WordPress'] ),
-
-			'ssl'	=> self::$updates['SSL'],
-
-		) );
-		wp_enqueue_script( 'wpm_indicator' );
-
 		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', array( 'jquery' ), '1.0.0' );
-		wp_localize_script( 'wpm_counter', 'wpm_data_counter', array(
+		wp_localize_script( 'wpm_counter', 'wpm_data', array(
 
 			'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['PHP_update'],
 
 			'grade'	=> (integer) $this->calculate_grade(),
 
+			'wordpress'	=> intval( self::$updates['WordPress'] ),
+
+			'ssl'	=> self::$updates['SSL'],
+
+			'plugin_updates' => self::$updates['plugins'],
+
+			'total_plugins'	=>	sizeof ( get_plugins() ),
+
+			'total_themes'	=>	sizeof ( wp_get_themes() ),
+
+			'theme_updates' => self::$updates['themes'],
+
+			'wordpress_updates' => self::$updates['WordPress'],
+
+			'php_updates' => self::$updates['php_action'],
+
+			'ssl' => self::$updates['SSL'] ? 'On' : 'Off',
+
 		) );
 		wp_enqueue_script( 'wpm_counter' );
+
+		wp_register_script( 'wpm_phpcell', plugin_dir_url( __FILE__ ) . 'library/js/phpcell.js', array( 'jquery' ), '1.0.0' );
+		wp_localize_script( 'wpm_phpcell', 'wpm_data_php', array(
+
+			'current_version' => $this->php_version( 2 ),
+
+			'state'	=> self::$updates['php_action'],
+
+			'supported_until' =>	gmdate('m-d-Y', PHPVersioner::$info[$this->php_version( 2 )]['supported_until'] ),
+
+		) );
+		wp_enqueue_script( 'wpm_phpcell' );
 
 		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js', array( 'jquery-ui-tabs' ) );
 		wp_enqueue_script( 'tabs-init' );
@@ -566,6 +680,10 @@ class WPMonitor {
 
 		wp_register_script( 'wpm_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
 		wp_enqueue_script( 'wpm_justgage' );
+
+		/* Reveal */
+		 wp_register_script( 'wpm_revealer',  plugin_dir_url( __FILE__ ) . '/library/js/revealer.js', array( 'jquery' ), '1.0.0' );
+		 wp_enqueue_script( 'wpm_revealer' );
 
 	}
 
