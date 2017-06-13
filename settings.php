@@ -33,13 +33,13 @@ class Settings extends WPMonitor {
 		<form method="post" action="options.php">
 			<?php
 
-				settings_fields( 'wpm_options_group' );
+			settings_fields( 'wpm_options_group' );
 
-				do_settings_sections( 'options_page' );
+			do_settings_sections( 'options_page' );
 
-				submit_button();
+			submit_button();
 
-	?>
+			?>
 		</form>
 	</div>
 <?php
