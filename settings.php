@@ -27,22 +27,22 @@ class Settings extends WPMonitor {
 	}
 
 	public function create_admin_page() {
-							?>
-							<div class="wrap">
-								<h1>WP Monitor</h1>
-								<form method="post" action="options.php">
-									<?php
+			?>
+				<div class="wrap">
+					<h1>WP Monitor</h1>
+					<form method="post" action="options.php">
+						<?php
 
-										settings_fields( 'wpm_options_group' );
+							settings_fields( 'wpm_options_group' );
 
-										do_settings_sections( 'options_page' );
+							do_settings_sections( 'options_page' );
 
-										submit_button();
+							submit_button();
 
-										?>
-									</form>
-								</div>
-								<?php
+						?>
+					</form>
+				</div>
+<?php
 	}
 
 	public function wpm_settings_init() {
@@ -54,62 +54,58 @@ class Settings extends WPMonitor {
 			'options_page'
 		);
 
-				register_setting(
+			register_setting(
 					'wpm_options_group',
 					'wpm_options',
 					[ $this, 'wpm_sanitize' ]
 				);
 
-				register_setting(
+			register_setting(
 					'wpm_prevent_email_cron',
 					'wpm_prevent_email_cron',
 					[ $this, 'wpm_sanitize' ]
 				);
 
 
-								add_settings_field(
-									'wpm_show_monitor',
-									__( 'Show Monitor?', 'admin-tools' ),
-									[ $this, 'wpm_show_monitor_callback' ],
-									'options_page',
-									'general_section_id'
-								);
+						add_settings_field(
+							'wpm_show_monitor',
+							__( 'Show Monitor?', 'admin-tools' ),
+							[ $this, 'wpm_show_monitor_callback' ],
+							'options_page',
+							'general_section_id'
+							);
 
-								add_settings_field(
-									'wpm_how_often',
-									__( 'Show Monitor?', 'admin-tools' ),
-									[ $this, 'wpm_show_monitor_callback' ],
-									'options_page',
-									'general_section_id2'
-								);
+						add_settings_field(
+							'wpm_how_often',
+								__( 'Show Monitor?', 'admin-tools' ),
+							[ $this, 'wpm_show_monitor_callback' ],
+							'options_page',
+							'general_section_id2'
+							);
 
 	}
 
 	public function wpm_sanitize( $input ) {
 
-					$valid = array();
+		$valid = array();
 
-					$valid['wpm_show_monitor'] 	= (bool) empty( $input['wpm_show_monitor'] ) ? false : true;
+		$valid['wpm_show_monitor'] 	= (bool) empty( $input['wpm_show_monitor'] ) ? false : true;
 
-					$valid['wpm_how_often']	= isset( $input['wpm_how_often'] ) ? sanitize_text_field( $input['wpm_how_often'] ) : 'Never';
+		$valid['wpm_how_often']	= isset( $input['wpm_how_often'] ) ? sanitize_text_field( $input['wpm_how_often'] ) : 'Never';
 
-					// $valid['wpm_send_email'] = (bool) empty( $input['wpm_send_email'] ) ? false : true;
+		$valid['wpm_send_email'] = (bool) empty( $input['wpm_send_email'] ) ? false : true;;
 
-					$valid['wpm_send_email'] = (bool) empty( $input['wpm_send_email'] ) ? false : true;;
+		$valid['wpm_check_plugins'] = (bool) empty( $input['wpm_check_plugins'] ) ? false : true;
 
-					$valid['wpm_check_plugins'] = (bool) empty( $input['wpm_check_plugins'] ) ? false : true;
+		$valid['wpm_check_themes'] = (bool) empty( $input['wpm_check_themes'] ) ? false : true;
 
-					$valid['wpm_check_themes'] = (bool) empty( $input['wpm_check_themes'] ) ? false : true;
+		$valid['wpm_check_wordpress'] = (bool) empty( $input['wpm_check_wordpress'] ) ? false : true;
 
-					$valid['wpm_check_wordpress'] = (bool) empty( $input['wpm_check_wordpress'] ) ? false : true;
+		$valid['wpm_check_php'] = (bool) empty( $input['wpm_check_php'] ) ? false : true;
 
-					$valid['wpm_check_php'] = (bool) empty( $input['wpm_check_php'] ) ? false : true;
+		$valid['wpm_check_ssl'] = (bool) empty( $input['wpm_check_ssl'] ) ? false : true;
 
-					$valid['wpm_check_ssl'] = (bool) empty( $input['wpm_check_ssl'] ) ? false : true;
-
-					//update_option( 'wpm_options', self::$options );
-
-					return $valid;
+		return $valid;
 
 	}
 
@@ -133,16 +129,16 @@ class Settings extends WPMonitor {
 		_e( 'Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at', 'wp-monitor' );
 					 echo ' <a href="http://www.wp-monitor.net">www.wp-monitor.net</a>.';
 
-					 printf(
-						 '<br />
-							<h3>%1$s</h3>' .
-							'<select multiple>
-					       <option %2$s>%3$s</option>
-								 </select>',
-						 esc_html__( 'Active Addons', 'wp-monitor' ),
-						 $this->get_color( 'emailaddon' ),
-						 esc_html__( 'Email Notifications', 'wp-monitor' )
-					 );
+		printf(
+			'<br />
+			<h3>%1$s</h3>' .
+			'<select multiple>
+					<option %2$s>%3$s</option>
+				</select>',
+			esc_html__( 'Active Addons', 'wp-monitor' ),
+			$this->get_color( 'emailaddon' ),
+			esc_html__( 'Email Notifications', 'wp-monitor' )
+		);
 
 	}
 
