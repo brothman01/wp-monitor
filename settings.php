@@ -61,11 +61,10 @@ class Settings extends WPMonitor {
 			);
 
 			register_setting(
-					'wpm_prevent_email_cron',
-					'wpm_prevent_email_cron',
-					[ $this, 'wpm_sanitize' ]
-				);
-
+				'wpm_prevent_email_cron',
+				'wpm_prevent_email_cron',
+				[ $this, 'wpm_sanitize' ]
+			);
 
 						add_settings_field(
 							'wpm_show_monitor',
