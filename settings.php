@@ -42,7 +42,7 @@ class Settings extends WPMonitor {
 		?>
 		</form>
 	</div>
-<?php
+	<?php
 	}
 
 	public function wpm_settings_init() {
