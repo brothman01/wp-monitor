@@ -54,33 +54,33 @@ class Settings extends WPMonitor {
 			'options_page'
 		);
 
-			register_setting(
-				'wpm_options_group',
-				'wpm_options',
-				[ $this, 'wpm_sanitize' ]
-			);
+		register_setting(
+			'wpm_options_group',
+			'wpm_options',
+			[ $this, 'wpm_sanitize' ]
+		);
 
-			register_setting(
-				'wpm_prevent_email_cron',
-				'wpm_prevent_email_cron',
-				[ $this, 'wpm_sanitize' ]
-			);
+		register_setting(
+			'wpm_prevent_email_cron',
+			'wpm_prevent_email_cron',
+			[ $this, 'wpm_sanitize' ]
+		);
 
-			add_settings_field(
-				'wpm_show_monitor',
-				__( 'Show Monitor?', 'admin-tools' ),
-				[ $this, 'wpm_show_monitor_callback' ],
-				'options_page',
-				'general_section_id'
-			);
+		add_settings_field(
+			'wpm_show_monitor',
+			__( 'Show Monitor?', 'admin-tools' ),
+			array( $this, 'wpm_show_monitor_callback' ),
+			'options_page',
+			'general_section_id'
+		);
 
-			add_settings_field(
-				'wpm_how_often',
-				__( 'Show Monitor?', 'admin-tools' ),
-				[ $this, 'wpm_show_monitor_callback' ],
-				'options_page',
-				'general_section_id2'
-			);
+		add_settings_field(
+			'wpm_how_often',
+			__( 'Show Monitor?', 'admin-tools' ),
+			array( $this, 'wpm_show_monitor_callback' ),
+			'options_page',
+			'general_section_id2'
+		);
 
 	}
 
