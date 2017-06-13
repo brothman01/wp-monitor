@@ -89,7 +89,7 @@ class Settings extends WPMonitor {
 
 		$valid = array();
 
-		$valid['wpm_show_monitor'] 	= (bool) empty( $input['wpm_show_monitor'] ) ? false : true;
+		$valid['wpm_show_monitor'] = (bool) empty( $input['wpm_show_monitor'] ) ? false : true;
 
 		$valid['wpm_how_often']	= isset( $input['wpm_how_often'] ) ? sanitize_text_field( $input['wpm_how_often'] ) : 'Never';
 
