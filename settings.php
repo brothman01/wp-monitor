@@ -112,10 +112,10 @@ class Settings extends WPMonitor {
 
 	public function wpm_show_monitor_callback() {
 
-					printf(
-						'<input id="wpm_show_monitor" name="wpm_options[wpm_show_monitor]" type="checkbox" value="1" %1$s />',
-						checked( true, Settings::$options['wpm_show_monitor'], false )
-					);
+		printf(
+			'<input id="wpm_show_monitor" name="wpm_options[wpm_show_monitor]" type="checkbox" value="1" %1$s />',
+			checked( true, Settings::$options['wpm_show_monitor'], false )
+		);
 
 	}
 
@@ -126,14 +126,15 @@ class Settings extends WPMonitor {
 	public function wpm_general_section_callback() {
 
 		_e( 'Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at', 'wp-monitor' );
-					 echo ' <a href="http://www.wp-monitor.net">www.wp-monitor.net</a>.';
+
+		echo ' <a href="http://www.wp-monitor.net">www.wp-monitor.net</a>.';
 
 		printf(
 			'<br />
 			<h3>%1$s</h3>' .
 			'<select multiple>
-					<option %2$s>%3$s</option>
-				</select>',
+				<option %2$s>%3$s</option>
+			</select>',
 			esc_html__( 'Active Addons', 'wp-monitor' ),
 			$this->get_color( 'emailaddon' ),
 			esc_html__( 'Email Notifications', 'wp-monitor' )
