@@ -55,10 +55,10 @@ class Settings extends WPMonitor {
 		);
 
 			register_setting(
-					'wpm_options_group',
-					'wpm_options',
-					[ $this, 'wpm_sanitize' ]
-				);
+				'wpm_options_group',
+				'wpm_options',
+				[ $this, 'wpm_sanitize' ]
+			);
 
 			register_setting(
 					'wpm_prevent_email_cron',
