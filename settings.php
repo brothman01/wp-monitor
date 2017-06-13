@@ -66,21 +66,21 @@ class Settings extends WPMonitor {
 				[ $this, 'wpm_sanitize' ]
 			);
 
-						add_settings_field(
-							'wpm_show_monitor',
-							__( 'Show Monitor?', 'admin-tools' ),
-							[ $this, 'wpm_show_monitor_callback' ],
-							'options_page',
-							'general_section_id'
-							);
+			add_settings_field(
+				'wpm_show_monitor',
+				__( 'Show Monitor?', 'admin-tools' ),
+				[ $this, 'wpm_show_monitor_callback' ],
+				'options_page',
+				'general_section_id'
+			);
 
-						add_settings_field(
-							'wpm_how_often',
-								__( 'Show Monitor?', 'admin-tools' ),
-							[ $this, 'wpm_show_monitor_callback' ],
-							'options_page',
-							'general_section_id2'
-							);
+			add_settings_field(
+				'wpm_how_often',
+				__( 'Show Monitor?', 'admin-tools' ),
+				[ $this, 'wpm_show_monitor_callback' ],
+				'options_page',
+				'general_section_id2'
+			);
 
 	}
 
