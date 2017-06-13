@@ -200,21 +200,21 @@ class WPMonitor {
 
 		foreach ( $all_users as $user ) {
 
-						$timestamp = get_user_meta( $user->ID, 'last_login_timestamp', true ) ? get_user_meta( $user->ID, 'last_login_timestamp', true ) : ' - ';
+			$timestamp = get_user_meta( $user->ID, 'last_login_timestamp', true ) ? get_user_meta( $user->ID, 'last_login_timestamp', true ) : ' - ';
 
-						$ip = get_user_meta( $user->ID, 'last_ip', true ) ? get_user_meta( $user->ID, 'last_ip', true ) : ' - ';
+			$ip = get_user_meta( $user->ID, 'last_ip', true ) ? get_user_meta( $user->ID, 'last_ip', true ) : ' - ';
 
-						echo '<tr>' .
+			echo '<tr>' .
 
-						'<td>' . $user->user_login . '</td>' .
+			'<td>' . $user->user_login . '</td>' .
 
-						'<td class="centertext">' . $timestamp . '</td>' .
+			'<td class="centertext">' . $timestamp . '</td>' .
 
-						'<td class="centertext">' . $ip . '</td>' .
+			'<td class="centertext">' . $ip . '</td>' .
 
-						'<td class="centertext">' . '<a class="reveal-address" style="color: blue; text-decoration: underline; href="#" data-ip="' . $ip . '">Reveal</a>' . '</td>' .
+			'<td class="centertext">' . '<a class="reveal-address" style="color: blue; text-decoration: underline; href="#" data-ip="' . $ip . '">Reveal</a>' . '</td>' .
 
-						'</tr>';
+			'</tr>';
 
 		}
 
@@ -222,109 +222,108 @@ class WPMonitor {
 
 	public function wpm_dashboard_callback() {
 
-			echo '<div id="wpm_main">';
+		echo '<div id="wpm_main">';
 
-				echo '<div class="twothirds">
+			echo '<div class="twothirds">
 
-				<h1 style="text-align: center; background: #F9F9F9;">WP Monitor:'; // . '<div style="float: right; font-size: 14px;">' . apply_filters( 'wpm_mail_indicator', '' ) . '</div></h1>';
+			<h1 style="text-align: center; background: #F9F9F9;">WP Monitor:'; // . '<div style="float: right; font-size: 14px;">' . apply_filters( 'wpm_mail_indicator', '' ) . '</div></h1>';
 
+						echo '<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">';
 
-							echo '<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">';
+							echo '<h3>Updates</h3>';
 
-								echo '<h3>Updates</h3>';
+									echo $this->gauge_cell( __( 'Plugins Up To Date',  'wp-monitor' ), 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
 
-										echo $this->gauge_cell( __( 'Plugins Up To Date',  'wp-monitor' ), 'g1', sizeof( get_plugins() ) - self::$updates['plugins'], sizeof( get_plugins() ) );
+									echo $this->gauge_cell( __( 'Themes Up To Date',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
-										echo $this->gauge_cell( __( 'Themes Up To Date',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
+									echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress');
 
-										echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress');
-
-										echo $this->php_cell( __( 'PHP',  'wp-monitor' ) );
-
-							echo '</div>';
-
-							echo '<div id="second_gauge_row" style="width: 100%; background: #F9F9F9; float: left;">';
-
-								echo '<h3>Summary</h3>';
-
-										echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl' );
-
-										$final_grade = ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] );
-
-										echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
-
-										echo $this->gauge_cell( __( 'Overall Grade',  'wp-monitor' ), 'g3', (integer) $this->calculate_grade(), 100 );
-
-							echo '</div>';
-
-							echo '<div id="third_gauge_row">
-
-							</div>';
+									echo $this->php_cell( __( 'PHP',  'wp-monitor' ) );
 
 						echo '</div>';
 
-						echo '<div class="tablesthird" >';
+						echo '<div id="second_gauge_row" style="width: 100%; background: #F9F9F9; float: left;">';
 
-						echo '
-						<div id="tabs">
-						  <ul>
+							echo '<h3>Summary</h3>';
 
-						    <li><a href="#tabs-1">' . __( 'Variables',  'wp-monitor' ) . '</a></li>
+									echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl' );
 
-						    <li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>';
+									$final_grade = ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) + self::$updates['PHP_update'] );
 
-								echo apply_filters( 'wpm_tabs', '');
+									echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
 
-						  echo '</ul>';
-
-						  echo '<div id="tabs-1">';
-
-							echo '<table class="wp-list-table widefat fixed striped wpm_table">';
-
-								echo '<thead>';
-
-									echo '<tr>
-										<th>' . __( 'Variable',  'wp-monitor' ) . '</th>
-										<th>' . __( 'Value',  'wp-monitor' ) . '</th>
-									</tr>';
-
-									echo '</thead>';
-
-								echo $this->variable_table();
-
-					echo '</table>';
-
-					echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does-that-value-mean/">What Does That Value Mean?</a>';
-
-				echo '</div>';
-
-						  echo '<div id="tabs-2">
-
-									<table class="wp-list-table widefat fixed striped wpm_table">
-
-										<thead>
-											<tr>
-												<th>' . __( 'Username',  'wp-monitor' ) . '</th>
-												<th>' . __( 'Date/Time',  'wp-monitor' ) . '</th>
-												<th>' . __( 'Last IP Used',  'wp-monitor' ) . '</th>
-												<th>' . __( 'Location',  'wp-monitor' ) . '</th>
-											</tr>
-										</thead>';
-
-								 $this->list_last_logins( 'wpm_table_tab', '' );
-
-							echo '</table>';
+									echo $this->gauge_cell( __( 'Overall Grade',  'wp-monitor' ), 'g3', (integer) $this->calculate_grade(), 100 );
 
 						echo '</div>';
 
-						echo apply_filters( 'wpm_table_tab' , '' );
+						echo '<div id="third_gauge_row">
 
-					echo '</div>
+						</div>';
+
+					echo '</div>';
+
+					echo '<div class="tablesthird" >';
+
+					echo '
+					<div id="tabs">
+					  <ul>
+
+					    <li><a href="#tabs-1">' . __( 'Variables',  'wp-monitor' ) . '</a></li>
+
+					    <li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>';
+
+							echo apply_filters( 'wpm_tabs', '');
+
+					  echo '</ul>';
+
+					  echo '<div id="tabs-1">';
+
+						echo '<table class="wp-list-table widefat fixed striped wpm_table">';
+
+							echo '<thead>';
+
+								echo '<tr>
+									<th>' . __( 'Variable',  'wp-monitor' ) . '</th>
+									<th>' . __( 'Value',  'wp-monitor' ) . '</th>
+								</tr>';
+
+								echo '</thead>';
+
+							echo $this->variable_table();
+
+				echo '</table>';
+
+				echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does-that-value-mean/">What Does That Value Mean?</a>';
+
+			echo '</div>';
+
+					  echo '<div id="tabs-2">
+
+								<table class="wp-list-table widefat fixed striped wpm_table">
+
+									<thead>
+										<tr>
+											<th>' . __( 'Username',  'wp-monitor' ) . '</th>
+											<th>' . __( 'Date/Time',  'wp-monitor' ) . '</th>
+											<th>' . __( 'Last IP Used',  'wp-monitor' ) . '</th>
+											<th>' . __( 'Location',  'wp-monitor' ) . '</th>
+										</tr>
+									</thead>';
+
+							 $this->list_last_logins( 'wpm_table_tab', '' );
+
+						echo '</table>';
+
+					echo '</div>';
+
+					echo apply_filters( 'wpm_table_tab' , '' );
+
+				echo '</div>
 
 
-						</div>
+					</div>
 
-					</div>';
+				</div>';
 
 	}
 
