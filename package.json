@@ -1,0 +1,33 @@
+{
+	"name": "wp-monitor",
+	"title": "WP Monitor",
+	"description": "Quickly and easily cross check your site with WebPageTest.org.",
+	"version": "1.0.0",
+	"author": "Ben Rothman",
+	"license": "GPL-2.0",
+	"repository": "brothman01/wp-monitor",
+	"homepage": "https://wordpress.org/plugins/wp-monitor/",
+	"bugs": {
+		"url": "https://bitbucket.org/Eherman24/wp-speed-check"
+	},
+	"devDependencies": {
+		"grunt": "^1.0.1",
+		"grunt-contrib-cssmin": "^2.0.0",
+		"grunt-contrib-imagemin": "^1.0.1",
+		"grunt-contrib-jshint": "^1.1.0",
+		"grunt-contrib-uglify": "^2.0.0",
+		"grunt-contrib-watch": "^1.0.0",
+		"grunt-cssjanus": "^0.3.2",
+		"grunt-dev-update": "^2.0.0",
+		"grunt-potomo": "^3.5.0",
+		"grunt-text-replace": "^0.4.0",
+		"grunt-wp-i18n": "^1.0.0",
+		"grunt-wp-deploy": "^1.2.1",
+		"grunt-wp-readme-to-markdown": "^2.0.1",
+		"matchdep": "^1.0.1"
+	},
+	"scripts": {
+		"version": "grunt version && git add -A .",
+		"postversion": "git push && git push --tags"
+	}
+}

@@ -12,11 +12,18 @@ class PHPVersioner extends WPMonitor {
 
 	public function get_info() {
 
-		if ( get_transient( 'wpm_php_info' ) < time()) {
+		if ( false === get_transient( 'wpm_php_info' ) ) {
 
-			set_transient( 'wpm_php_info', $this->wpm_version_info(), 24 * HOUR_IN_SECONDS );
+			try {
+					set_transient( 'wpm_php_info', $this->wpm_version_info(), 24 * HOUR_IN_SECONDS );
 
-			$php_data = get_transient('wpm_php_info');
+					$php_data = get_transient('wpm_php_info');
+
+					print_r( $php_data );
+
+			} catch (Exception $e) {
+				// Could not connect.
+			}
 
 		} else {
 
@@ -24,7 +31,7 @@ class PHPVersioner extends WPMonitor {
 
 		}
 
-		return get_transient( 'wpm_php_info' );
+		return $php_data;
 
 	}
 
@@ -42,7 +49,7 @@ class PHPVersioner extends WPMonitor {
 
 			$tr = $dom->getElementsByTagName( 'tr' );
 
-			$column_text = array();
+			$column_text = [];
 
 			$x = 1;
 
@@ -72,9 +79,7 @@ class PHPVersioner extends WPMonitor {
 				$php_version_info[ $php_info[0] ] = array(
 
 					'released'        => strtotime( $php_info[1] ),
-
 					'supported_until' => strtotime( $php_info[3] ),
-
 					'security_until'  => strtotime( $php_info[5] ),
 				);
 

@@ -32,18 +32,19 @@ jQuery(document).ready(function() {
 
 		setTimeout(function(){
 
-			jQuery('#total_counter').text( wpm_data.total );
 
-			jQuery('#grade_counter').text( wpm_data.grade );
+			jQuery('#total_counter').text( parseInt(wpm_data.plugin_updates , 10 ) +  parseInt(wpm_data.theme_updates , 10 ) + parseInt(wpm_data.wordpress_updates , 10 ) );
+
+			jQuery('#grade_counter').text( parseInt(wpm_data.grade , 10 ) );
 
 
 
-			jQuery('#total_breakdown_link').html('<a href="#">Why? (Hover)</a>');
+			jQuery('#total_breakdown_link').html('<div style="margin: 0px auto; text-align: center;"><a href="#">Why? (Hover)</a></div>');
 
 			jQuery('#total_breakdown_link').attr('title', total_message);
 
 
-			jQuery('#grade_breakdown_link').html('<a href="#" style="text-align: center;">Why? (Hover)</a>');
+			jQuery('#grade_breakdown_link').html('<div style="margin: 0px auto;"><a href="#" style="text-align: center;">Why? (Hover)</a></div>');
 
 			jQuery('#grade_breakdown_link').attr('title', grade_message);
 

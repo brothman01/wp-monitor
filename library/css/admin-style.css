@@ -6,6 +6,10 @@
 	overflow-y: hidden;
 }
 
+h3 {
+	margin-left: 10px;
+}
+
 #welcome-panel {
 	display: none;
 }
@@ -87,9 +91,9 @@
 			text-align: center !important;
 		}
 
-.cell {
+/*.cell {
 	margin-bottom: 1%;
-}
+}*/
 
 	.cell h3 {
 		text-align: center;
@@ -244,6 +248,7 @@ table.widefat th, table.widefat td {
 	.onequarter {
 		float: left;
 		width: 50%;
+		overflow-y: hidden;
 	}
 
 	#gauge {
@@ -284,4 +289,40 @@ table.widefat th, table.widefat td {
 			height: 10px;
 	}
 
+}
+
+/* Style tabs */
+#tabs-dashboard {
+    padding: 0px;
+    background: none;
+    border-width: 0px;
+}
+
+	#tabs-dashboard div {
+			border: none;
+	}
+
+#tabs-dashboard .ui-tabs-nav {
+    padding-left: 0px;
+    border-width: 0px 0px 1px 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
+#tabs-dashboard .ui-tabs-panel {
+    border-width: 0px 1px 1px 1px;
+}
+
+#tabs-dashboard ul li a {
+	color: #0073aa;
+}
+
+.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all,
+.ui-state-default.ui-corner-top {
+	background: white !important;
+	border: none !important;
+}
+
+.ui-state-active {
+	background: red!important;
 }

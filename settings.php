@@ -69,7 +69,7 @@ class Settings extends WPMonitor {
 
 								add_settings_field(
 									'wpm_show_monitor',
-									__( 'Show Monitor?', 'admin-tools' ),
+									__( 'Show Classic Monitor? (not widget)', 'admin-tools' ),
 									[ $this, 'wpm_show_monitor_callback' ],
 									'options_page',
 									'general_section_id'
@@ -77,7 +77,7 @@ class Settings extends WPMonitor {
 
 								add_settings_field(
 									'wpm_how_often',
-									__( 'Show Monitor?', 'admin-tools' ),
+									__( 'Show Classic Monitor?', 'admin-tools' ),
 									[ $this, 'wpm_show_monitor_callback' ],
 									'options_page',
 									'general_section_id2'
