@@ -19,8 +19,6 @@ class PHPVersioner extends WPMonitor {
 
 					$php_data = get_transient('wpm_php_info');
 
-					print_r( $php_data );
-
 			} catch (Exception $e) {
 				// Could not connect.
 			}

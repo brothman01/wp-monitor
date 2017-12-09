@@ -132,43 +132,43 @@ class WPMonitor {
 
 		echo '<tr>
 		<th>Name:</th>
-		<th>' . $wpm_variables['Name'] . '</th>
+		<th>' . esc_attr( $wpm_variables['Name'] ) . '</th>
 	</tr>
 	<tr>
 		<th>URL:</th>
-		<th>' . $wpm_variables['URL'] . '</th>
+		<th>' . esc_attr( $wpm_variables['URL'] ) . '</th>
 	</tr>
 	<tr>
 		<th>Server IP:</th>
-		<th>' . $wpm_variables['Server IP'] . '</th>
+		<th>' . esc_attr( $wpm_variables['Server IP'] ) . '</th>
 	</tr>
 	<tr>
 		<th>WP Version:</th>
-		<th>' . $wpm_variables['WP Version'] . '</th>
+		<th>' . esc_attr( $wpm_variables['WP Version'] ) . '</th>
 	</tr>
 	<tr>
 		<th>PHP Version:</th>
-		<th>' . $wpm_variables['PHP Version'] . '</th>
+		<th>' . esc_attr( $wpm_variables['PHP Version'] ) . '</th>
 	</tr>
 	<tr>
 		<th>Uploads Directory Size:</th>
-		<th>' . $wpm_variables['Uploads Directory Size'] . '</th>
+		<th>' . esc_attr( $wpm_variables['Uploads Directory Size'] ) . '</th>
 	</tr>
 	<tr>
 		<th>SMTP:</th>
-		<th>' . $wpm_variables['SMTP'] . '</th>
+		<th>' . esc_attr( $wpm_variables['SMTP'] ) . '</th>
 	</tr>
 	<tr>
 		<th>Discourage Search Engines:</th>
-		<th>' . $wpm_variables['Discourage Search Engines'] . '</th>
+		<th>' . esc_attr( $wpm_variables['Discourage Search Engines'] ) . '</th>
 	</tr>
 	 <tr>
 		<td>' . __( ' Plugin Update(s)', 'admin-tools' ) . '</td>
-		<td>' . self::$updates['plugins'] . '</td>
+		<td>' . esc_attr( self::$updates['plugins'] ) . '</td>
 	</tr>
 	<tr>
 			<td>' . __( ' Theme Update(s)', 'admin-tools' ) . '</td>
-			<td>' . self::$updates['themes'] . '</td>
+			<td>' . esc_attr( self::$updates['themes'] ) . '</td>
 	</tr>';
 
 
@@ -216,7 +216,7 @@ class WPMonitor {
 
 	public function get_plugins_that_need_updates( $installed_plugins ) {
 
-					$plugins_that_need_updates = array();
+					$plugins_that_need_updates = [];
 
 		foreach ( $installed_plugins as $plugin ) {
 
@@ -249,7 +249,7 @@ class WPMonitor {
 
 			$a_theme = array_slice( $installed_themes, 0, 1 );
 
-			$themes_that_need_updates = array();
+			$themes_that_need_updates = [];
 
 		foreach ( $installed_themes as $theme ) {
 
@@ -313,8 +313,8 @@ public function wpm_dashboard_widget_function() {
 		echo $this->gauge_cell(
 				__( 'Plugins Up To Date', 'wp-monitor' ),
 				'g1w',
-				sizeof( get_plugins() ) - self::$updates['plugins'],
-				sizeof( get_plugins() )
+				esc_attr( sizeof( get_plugins() ) - self::$updates['plugins'] ),
+				esc_attr( sizeof( get_plugins() ) )
 			);
 
 		echo $this->gauge_cell(
