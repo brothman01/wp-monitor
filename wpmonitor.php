@@ -8,6 +8,7 @@
  * Author URI:  http://www.BenRothman.org
  * License:     GPL-2.0+
  */
+if ( ! defined('ABSPATH') ) { die( 'unatuhorized' ); }
 class WPMonitor {
 
 	public static $updates;
@@ -26,9 +27,9 @@ class WPMonitor {
 	public function __construct() {
 
 		self::$options = get_option( 'wpm_options', [
-			'wpm_how_often'	      => __( 'daily', 'wp-monitor' ),
+			'wpm_how_often'       => __( 'daily', 'wp-monitor' ),
 			'wpm_send_email'      => false,
-			'wpm_how_often'	      => 'daily',
+			'wpm_how_often'       => 'daily',
 			'wpm_send_email'      => true,
 			'wpm_check_plugins'   => true,
 			'wpm_check_themes'    => true,
@@ -40,7 +41,6 @@ class WPMonitor {
 		] );
 
 		update_option( 'wpm_options', self::$options );
-
 
 		if ( ! function_exists( 'get_plugins' ) ) {
 
@@ -69,12 +69,11 @@ class WPMonitor {
 
 		if ( current_user_can( 'manage_options' ) ) {
 
-			if( self::$options['wpm_show_monitor'] === true ) {
+			if ( true === self::$options['wpm_show_monitor'] ) {
 
 				add_action( 'admin_notices', [ $this, 'wpm_dashboard_widget' ] );
 
 			}
-
 		}
 
 		if ( get_option( 'wpm_config' ) !== 'active' ) {
@@ -83,7 +82,7 @@ class WPMonitor {
 
 		}
 
-		if( self::$options['wpm_show_monitor'] === false ) {
+		if ( false === self::$options['wpm_show_monitor'] ) {
 			add_action( 'wp_dashboard_setup', [ $this, 'add_dashboard_widget' ] );
 		}
 
@@ -93,9 +92,9 @@ class WPMonitor {
 
 	}
 
-	public function register_newpage(){
-	    add_menu_page( 'Status Page', 'statuspage', 'administrator','statuspage', [ $this, 'wpm_populate_status_page' ] );
-	   remove_menu_page('statuspage');
+	public function register_newpage() {
+		add_menu_page( 'Status Page', 'statuspage', 'administrator','statuspage', [ $this, 'wpm_populate_status_page' ] );
+		 remove_menu_page( 'statuspage' );
 	}
 
 	/**
@@ -106,12 +105,11 @@ class WPMonitor {
 	public function add_dashboard_widget() {
 
 		wp_add_dashboard_widget(
-				'wp_monitor',
-				'WP Monitor ',
-				[ $this, 'wpm_dashboard_widget_function' ] // Display function.
-      );
-
-		}
+			'wp_monitor',
+			'WP Monitor ',
+			[ $this, 'wpm_dashboard_widget_function' ] // Display function.
+		);
+	}
 
 	/**
 	 * Status page code
@@ -330,13 +328,13 @@ public function wpm_dashboard_widget_function() {
 
 		echo '</div>';
 
-    echo '<div id="tabs-dashboard-2" style="min-height: 200px;">';
+		echo '<div id="tabs-dashboard-2" style="min-height: 200px;">';
 
 			echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl' );
 
 			echo $this->php_cell( __( 'PHP',  'wp-monitor' ) );
 
-    echo '</div>';
+		echo '</div>';
 
 		echo '<div id="tabs-dashboard-3" style="min-height: 200px;">';
 
@@ -399,7 +397,7 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 		echo '</div>';
 
 	// echo '<a href="#">Updates</a> (' . ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) ) . ') | ' .
-	    //  '<a href="#">PHP</a> (' . self::$updates['php_action'] . ') | ' .
+			//  '<a href="#">PHP</a> (' . self::$updates['php_action'] . ') | ' .
 			//  '<a href="#">SSL</a> (' . ( is_ssl() ? 'On' : 'Off' ) . ') | ' .
 			//  '<a href="#">Grades</a> | ' .
 			//  '<a href="#">Variables</a> | ' .
@@ -486,7 +484,7 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 			$user_version_info = $php_info[ $current_php_version ];
 			//
-		  $user_version_supported_until = $user_version_info['supported_until'];
+			$user_version_supported_until = $user_version_info['supported_until'];
 			//
 			$current_date = date_create();
 			//
@@ -509,7 +507,7 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 				'themes'	              => $update_data['counts']['themes'],
 				'WordPress'	            => $update_data['counts']['wordpress'],
 				'PHP_supported_until' => $user_version_supported_until,
-       	'php_action'	          => $php_action,
+				'php_action'	          => $php_action,
 				'PHP_update'	        => $php_update,
 		//		'PHP_warning'         => $user_version_info['supported_until'],
 				'SSL'					          => is_ssl() ? 1 : 0,
@@ -625,17 +623,17 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 						echo '
 						<div id="tabs">
-						  <ul>
+							<ul>
 
-						    <li><a href="#tabs-1">' . __( 'Variables',  'wp-monitor' ) . '</a></li>
+								<li><a href="#tabs-1">' . __( 'Variables',  'wp-monitor' ) . '</a></li>
 
-						    <li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>';
+								<li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>';
 
 								echo apply_filters( 'wpm_tabs', '');
 
-						  echo '</ul>';
+							echo '</ul>';
 
-						  echo '<div id="tabs-1">';
+							echo '<div id="tabs-1">';
 
 							echo '<table class="wp-list-table widefat fixed striped wpm_table">';
 
@@ -656,7 +654,7 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 				echo '</div>';
 
-						  echo '<div id="tabs-2">
+							echo '<div id="tabs-2">
 
 									<table class="wp-list-table widefat fixed striped wpm_table">
 
@@ -1041,7 +1039,7 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 		wp_register_script( 'wpm_phpcell', plugin_dir_url( __FILE__ ) . 'library/js/phpcell.js', [ 'jquery' ], '1.0.0' );
 		wp_localize_script( 'wpm_phpcell', 'wpm_data_php', [
 			'current_version'   => $this->php_version( 2 ),
-	 		'state'	            => self::$updates['php_action'],
+			'state'	            => self::$updates['php_action'],
 			'supported_until' =>	gmdate('m-d-Y', PHPVersioner::$info[$this->php_version( 2 )]['supported_until'] ),
 		] );
 
