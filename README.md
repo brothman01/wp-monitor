@@ -12,7 +12,7 @@ A simple WordPress plugin that puts important information on the dashboard.
 
 == Description ==
 
-A simple WordPress plugin that puts update, important site and important server information in one convenient and easy-to-find place on the dashboard.  Monitor one or multiple websites on the go, this plugin makes your job as a site administrator easier by eliminating the need to look through the site and server for the information that WP Monitor stores all together right on the dashboard.
+A simple WordPress plugin that puts update, important site and server information in one convenient and easy-to-find place on the dashboard.  Monitor one or multiple websites on the go, this plugin makes your job as a site administrator easier by eliminating the need to look through the site and server for the information that WP Monitor stores all together right on the dashboard.  Print or save a report of all pertinent site data in a flash, allowing you to cut down your time considerably in administrating sites.
 
 The display is on the dashboard and the settings page is a sub-item in the 'Tools' menu.
 
@@ -21,11 +21,10 @@ WP-Monitor Information:
 * Plugin Updates
 * Theme Updates
 * WordPress Core Updates
-* PHP Version inspection and instructions
+* PHP Version
 * SSL Data
-* Many Important Website Variables
-* User Login Data
-* How many Total Updates are needed
+* Several Important Website Variables
+* User Login Data (last login time + location)
 * Final website grade based on the site info gathered in the previous steps
 
 
@@ -42,9 +41,9 @@ WP-Monitor Information:
 
 = Where is the display? =
 
-On the dashboard
+On the dashboard in a widget or in classic view depending on the user preference set.
 
-= Wherer is the settings page? =
+= Where is the settings page? =
 
 The settings page is a sub-item in the 'Tools' menu.
 

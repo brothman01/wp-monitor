@@ -52,7 +52,7 @@ class WPMonitor {
 
 		add_action( 'plugins_loaded', [ $this, 'init' ] );
 
-		include_once( plugin_dir_path( __FILE__ ) . 'PHPVersioner.php' );
+		include_once( plugin_dir_path( __FILE__ ) . 'class-phpversioner.php' );
 
 		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
 
@@ -320,8 +320,8 @@ public function wpm_dashboard_widget_function() {
 		echo $this->gauge_cell(
 				__( 'Themes Up To Date',  'wp-monitor' ),
 				'gw2',
-				sizeof( wp_get_themes() ) - self::$updates['themes'],
-				sizeof( wp_get_themes() )
+				esc_attr( sizeof( wp_get_themes() ) - self::$updates['themes'] ),
+				esc_attr( sizeof( wp_get_themes() ) )
 			);
 
 			echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress' );
