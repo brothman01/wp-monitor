@@ -4,11 +4,14 @@
  * Description: Collects important data from site and displays it on the dashboard
  * Version:     1.1
  * Author:      Ben Rothman
- * Slug:				wp-monitor
+ * Slug:        wp-monitor
  * Author URI:  http://www.BenRothman.org
  * License:     GPL-2.0+
  */
-if ( ! defined('ABSPATH') ) { die( 'unatuhorized' ); }
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'unatuhorized' );
+}
+
 class WPMonitor {
 
 	public static $updates;
@@ -54,7 +57,7 @@ class WPMonitor {
 
 		include_once( plugin_dir_path( __FILE__ ) . 'class-phpversioner.php' );
 
-		include_once( plugin_dir_path( __FILE__ ) . 'settings.php' );
+		include_once( plugin_dir_path( __FILE__ ) . 'class-settings.php' );
 
 	}
 
@@ -94,6 +97,7 @@ class WPMonitor {
 
 	public function register_newpage() {
 		add_menu_page( 'Status Page', 'statuspage', 'administrator','statuspage', [ $this, 'wpm_populate_status_page' ] );
+
 		 remove_menu_page( 'statuspage' );
 	}
 
@@ -117,8 +121,6 @@ class WPMonitor {
 	 * @since 0.1
 	 */
 	public function wpm_populate_status_page() {
-
-		echo '<script>window.print()</script>';
 
 		$wpm_variables = get_option( 'wpm_variables' );
 
@@ -170,7 +172,6 @@ class WPMonitor {
 			<td>' . __( ' Theme Update(s)', 'admin-tools' ) . '</td>
 			<td>' . esc_attr( self::$updates['themes'] ) . '</td>
 	</tr>';
-
 
 		echo '</table>';
 	}
@@ -280,7 +281,7 @@ class WPMonitor {
 
 	public function get_theme_info( $slug ) {
 
-		$response = wp_remote_post( 'http://api.WordPress.org/themes/info/1.0/', [
+		$response = wp_remote_post( 'http://api.wordpress.org/themes/info/1.0/', [
 			'body' => [
 				'action' => 'theme_information',
 				'request' => serialize( (object) [
@@ -297,34 +298,34 @@ class WPMonitor {
 
 
 
-/**
- * Generates the code for the dashboard widget
- *
- * @since 0.1
- */
-public function wpm_dashboard_widget_function() {
+	/**
+	* Generates the code for the dashboard widget
+	*
+	* @since 0.1
+	*/
+	public function wpm_dashboard_widget_function() {
 
-	echo '<div id="tabs-dashboard">';
+		echo '<div id="tabs-dashboard">';
 
-	echo '<a href="#" class="wpm_printout_link"> <i class="fa fa-print" aria-hidden="true" style="font-size: 2em; margin: 1% 0px 0px 1%;"></i> </a>';
+		echo '<a href="#" class="wpm_printout_link"> <i class="fa fa-print" aria-hidden="true" style="font-size: 2em; margin: 1% 0px 0px 1%;"></i> </a>';
 
-	echo '<div id="tabs-dashboard-1" style="min-height: 200px;">';
-
-		echo $this->gauge_cell(
-				__( 'Plugins Up To Date', 'wp-monitor' ),
-				'g1w',
-				esc_attr( sizeof( get_plugins() ) - self::$updates['plugins'] ),
-				esc_attr( sizeof( get_plugins() ) )
-			);
+		echo '<div id="tabs-dashboard-1" style="min-height: 200px;">';
 
 		echo $this->gauge_cell(
-				__( 'Themes Up To Date',  'wp-monitor' ),
-				'gw2',
-				esc_attr( sizeof( wp_get_themes() ) - self::$updates['themes'] ),
-				esc_attr( sizeof( wp_get_themes() ) )
-			);
+			__( 'Plugins Up To Date', 'wp-monitor' ),
+			'g1w',
+			esc_attr( sizeof( get_plugins() ) - self::$updates['plugins'] ),
+			esc_attr( sizeof( get_plugins() ) )
+		);
 
-			echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress' );
+		echo $this->gauge_cell(
+			__( 'Themes Up To Date',  'wp-monitor' ),
+			'gw2',
+			esc_attr( sizeof( wp_get_themes() ) - self::$updates['themes'] ),
+			esc_attr( sizeof( wp_get_themes() ) )
+		);
+
+			echo $this->indicator_cell( __( 'wordpress Core',  'wp-monitor' ), 'wordpress' );
 
 		echo '</div>';
 
@@ -341,6 +342,7 @@ public function wpm_dashboard_widget_function() {
 		echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
 
 		echo $this->counter_cell( __( 'Overall Grade',  'wp-monitor' ), 'grade' );
+
 
 		echo '</div>';
 
@@ -361,8 +363,7 @@ public function wpm_dashboard_widget_function() {
 
 			echo '</table>';
 
-echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does-that-value-mean/">What Does That Value Mean?</a>';
-
+			echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does-that-value-mean/">What Does That Value Mean?</a>';
 
 		echo '</div>';
 
@@ -379,15 +380,14 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 				echo '</tr>';
 			echo '</thead>';
 
-	 $this->list_last_logins( 'wpm_table_tab', '' );
+			$this->list_last_logins( 'wpm_table_tab', '' );
 
-	echo '</table>';
-
+			echo '</table>';
 
 		echo '</div>';
 
 		echo '<ul>
-				<li><a href="#tabs-dashboard-1">Updates (' . ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) ) . ')</a></li>
+				<li><a href="#tabs-dashboard-1">Updates (' . ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['wordpress'] ) ) . ')</a></li>
 				<li><a href="#tabs-dashboard-2">SSL/PHP (' . (is_ssl() ? 'on' : 'off') . '/' . $this->php_version( 2 ) . ')</a></li>
 				<li><a href="#tabs-dashboard-3">Grades</a></li>
 				<li><a href="#tabs-dashboard-4">Variables (...)</a></li>
@@ -396,14 +396,7 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 		echo '</div>';
 
-	// echo '<a href="#">Updates</a> (' . ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) ) . ') | ' .
-			//  '<a href="#">PHP</a> (' . self::$updates['php_action'] . ') | ' .
-			//  '<a href="#">SSL</a> (' . ( is_ssl() ? 'On' : 'Off' ) . ') | ' .
-			//  '<a href="#">Grades</a> | ' .
-			//  '<a href="#">Variables</a> | ' .
-			//  '<a href="#">Logins</a>';
-
-}
+	}
 
 	/**
 	 * Runs on plugin deactivation
@@ -422,8 +415,6 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 	 * @since 0.1
 	 */
 	public function wpm_mail_indicator() {
-
-		//return ! isset( self::$options['wpm_send_email'] ) || false === self::$options['wpm_send_email'] ? 'Email Indicator:  <img title="Email Not Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/no-mail.png', __FILE__ ) . '"  />' : 'Email Indicator:  <img title="Email Scheduled." style="float: right; margin-right: 15px; width: 24px;" src="' . plugins_url( 'library/images/yes-mail.png', __FILE__ ) . '"  />';
 
 		return '';
 
@@ -446,9 +437,9 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 	<div id="wpm_main" class="welcome-panel" style="display: none;">
 
 		<?php
-			if ( Settings::$options['wpm_show_monitor'] ) {
+		if ( Settings::$options['wpm_show_monitor'] ) {
 				$this->wpm_dashboard_callback();
-			}
+		}
 		?>
 
 	</div>
@@ -461,13 +452,14 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 		});
 	</script>
 
-<?php }
+<?php
+	}
 
-/**
- * Check WordPress site and server for updates
- *
- * @since 0.1
- */
+	/**
+	* Check wordpress site and server for updates
+	*
+	* @since 0.1
+	*/
 	public function wpm_check_for_updates() {
 
 		if ( ! current_user_can( 'install_plugins' ) ) {
@@ -482,8 +474,9 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 			$current_php_version = $this->php_version( 2 );
 
-			$user_version_info = $php_info[ $current_php_version ];
-			//
+			// $user_version_info = $php_info[ $current_php_version ]; // DEBUG
+			$user_version_info = $php_info[ '7.1' ];
+
 			$user_version_supported_until = $user_version_info['supported_until'];
 			//
 			$current_date = date_create();
@@ -503,14 +496,13 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 			$user_version_supported_until = gmdate( 'm-d-Y', $user_version_supported_until );
 
 			self::$updates = [
-				'plugins'	              => $update_data['counts']['plugins'],
-				'themes'	              => $update_data['counts']['themes'],
-				'WordPress'	            => $update_data['counts']['wordpress'],
+				'plugins'             => $update_data['counts']['plugins'],
+				'themes'              => $update_data['counts']['themes'],
+				'wordpress'           => $update_data['counts']['wordpress'],
 				'PHP_supported_until' => $user_version_supported_until,
-				'php_action'	          => $php_action,
-				'PHP_update'	        => $php_update,
-		//		'PHP_warning'         => $user_version_info['supported_until'],
-				'SSL'					          => is_ssl() ? 1 : 0,
+				'php_action'          => $php_action,
+				'PHP_update'          => $php_update,
+				'SSL'                 => is_ssl() ? 1 : 0,
 			];
 
 			update_option( 'wpm_update_info', self::$updates );
@@ -579,7 +571,6 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 				<h1 style="text-align: center; background: #F9F9F9;">WP Monitor: <a href="#" class="wpm_printout_link"> <i class="fa fa-print" aria-hidden="true" style="font-size: 1.2em; margin: 1% 0px 0px 1%;"></i> </a>'; // . '<div style="float: right; font-size: 14px;">' . apply_filters( 'wpm_mail_indicator', '' ) . '</div></h1>';
 
-
 							echo '<div id="first_gauge_row" style="width: 100%; float: left; text-align: left;">';
 
 								echo '<h3>Updates</h3>';
@@ -588,11 +579,11 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 											__( 'Plugins Up To Date', 'wp-monitor' ),
 											'g1',
 											sizeof( get_plugins() ) - self::$updates['plugins'],
-											sizeof( get_plugins() ) );
+										sizeof( get_plugins() ) );
 
 										echo $this->gauge_cell( __( 'Themes Up To Date',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
-										echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress');
+										echo $this->indicator_cell( __( 'wordpress Core',  'wp-monitor' ), 'wordpress' );
 
 										echo $this->php_cell( __( 'PHP',  'wp-monitor' ) );
 
@@ -604,7 +595,7 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 										echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl' );
 
-										$final_grade =  intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] );
+										$final_grade = intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['wordpress'] );
 										// + self::$updates['PHP_update'] );
 
 										echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
@@ -629,7 +620,7 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 								<li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>';
 
-								echo apply_filters( 'wpm_tabs', '');
+								echo apply_filters( 'wpm_tabs', '' );
 
 							echo '</ul>';
 
@@ -699,20 +690,20 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 	 */
 	public function gauge_cell( $title, $gauge_class, $value, $max ) {
 
-				$content =  '<div class="onequarter cell">';
+				$content = '<div class="onequarter cell">';
 
-				$content .= '<h3>' . $title . '</h3>';
+				$content .= '<h3>' . esc_attr( $title ) . '</h3>';
 
-				$content .= '<div id="' . $gauge_class . '" class="gauge"></div>
+				$content .= '<div id="' . esc_attr( $gauge_class ) . '" class="gauge"></div>
 						<script>
-							var g1_' . $gauge_class . ';
+							var g1_' . esc_attr( $gauge_class ) . ';
 							document.addEventListener( "DOMContentLoaded", function( event ) {
-								var g1_' . $gauge_class . ' = new JustGage( {
-									id: "' . $gauge_class . '",
-									value: ' . $value . ',
+								var g1_' . esc_attr( $gauge_class ) . ' = new JustGage( {
+									id: "' . esc_attr( $gauge_class ) . '",
+									value: ' . esc_attr( $value ) . ',
 									min: 0,
-									max: ' . $max . ',
-									title: "' . $title . '",
+									max: ' . esc_attr( $max ) . ',
+									title: "' . esc_attr( $title ) . '",
 									gaugeWidthScale: 0.6,
 									customSectors: {
 										percents: true,
@@ -732,10 +723,9 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 							} );
 						</script>';
 
-
-						if ( $title == 'Overall Grade' ) {
+		if ( 'Overall Grade' == $title ) {
 							$content .= '<div id="grade_breakdown_link" class="breakdown_link" style="margin-left: 0px auto;">' . 'Why?' . '</div>';
-						}
+		}
 
 				$content .= '</div>';
 
@@ -756,13 +746,12 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 		$content = '';
 
-		if ( $prefix === 'wordpress' ) {
+		if ( 'wordpress' === $prefix ) {
 
 			$content = '<div class="onequarter cell">';
-
 		}
 
-		if ( $prefix === 'ssl' ) {
+		if ( 'ssl' === $prefix ) {
 
 			$content = '<div class="onethird cell">';
 
@@ -846,14 +835,14 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 	public function calculate_grade() {
 
 				$grades = [
-						'Plugins'   => ( ( ( count( get_plugins() ) - self::$updates['plugins'] ) / count( get_plugins() ) ) * 100 ),
-						'Themes'    => ( ( ( count( wp_get_themes() ) - self::$updates['themes'] ) / count( wp_get_themes() ) ) * 100 ),
-						'WordPress' => ( 0 == self::$updates['WordPress'] ) ? 100 : 50,
-			//			'PHP'     => ( 0 == self::$updates['PHP_update'] ) ? 100 : 50,
-						'SSL'	      => self::$updates['SSL'] ? 100 : 50,
+					'Plugins'   => ( ( ( count( get_plugins() ) - self::$updates['plugins'] ) / count( get_plugins() ) ) * 100 ),
+					'Themes'    => ( ( ( count( wp_get_themes() ) - self::$updates['themes'] ) / count( wp_get_themes() ) ) * 100 ),
+					'wordpress' => ( 0 == self::$updates['wordpress'] ) ? 100 : 50,
+			//	'PHP'     => ( 0 == self::$updates['PHP_update'] ) ? 100 : 50,
+					'SSL'	      => self::$updates['SSL'] ? 100 : 50,
 				];
 
-			$subtotal = $grades['Plugins'] + $grades['Themes'] + $grades['WordPress'] + /*$grades['PHP'] +*/ $grades['SSL'];
+				$subtotal = $grades['Plugins'] + $grades['Themes'] + $grades['wordpress'] + /*$grades['PHP'] +*/ $grades['SSL'];
 
 				$subtotal = $subtotal / 5;
 
@@ -871,8 +860,6 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 				$all_vars = '';
 
-
-
 		if ( ( get_option( 'blog_public' ) == 0 ) || empty( get_option( 'blog_public' ) ) ) {
 
 					$blog_public = 'true';
@@ -882,7 +869,6 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 					$blog_public = 'false';
 
 		}
-
 
 		$upload_dir = wp_upload_dir();
 
@@ -1021,15 +1007,15 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 
 		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', [ 'jquery' ], '1.0.0' );
 		wp_localize_script( 'wpm_counter', 'wpm_data', [
-			// 'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['PHP_update'],
+			// 'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['wordpress'] + self::$updates['PHP_update'],
 			'grade'	            => (integer) $this->calculate_grade(),
-			'wordpress'	        => intval( self::$updates['WordPress'] ),
+			'wordpress'	        => intval( self::$updates['wordpress'] ),
 			'ssl'	              => self::$updates['SSL'],
 			'plugin_updates'    => self::$updates['plugins'],
 			'total_plugins'	    => count( get_plugins() ),
 			'total_themes'	    => count( wp_get_themes() ),
 			'theme_updates'     => self::$updates['themes'],
-			'wordpress_updates' => self::$updates['WordPress'],
+			'wordpress_updates' => self::$updates['wordpress'],
 			'php_updates' => self::$updates['php_action'],
 			'ssl'               => self::$updates['SSL'] ? 'On' : 'Off',
 		] );
@@ -1040,7 +1026,7 @@ echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does
 		wp_localize_script( 'wpm_phpcell', 'wpm_data_php', [
 			'current_version'   => $this->php_version( 2 ),
 			'state'	            => self::$updates['php_action'],
-			'supported_until' =>	gmdate('m-d-Y', PHPVersioner::$info[$this->php_version( 2 )]['supported_until'] ),
+			'supported_until' =>	gmdate('m-d-Y', PHPVersioner::$info[ '7.1' ]['supported_until'] ), // DEBUG
 		] );
 
 		wp_enqueue_script( 'wpm_phpcell' );

@@ -47,6 +47,7 @@ class PHPVersioner extends WPMonitor {
 
 			$tr = $dom->getElementsByTagName( 'tr' );
 
+
 			$column_text = [];
 
 			$x = 1;
@@ -66,7 +67,7 @@ class PHPVersioner extends WPMonitor {
 
 			$column_text = array_chunk( $column_text, 7 );
 
-			unset( $column_text[3] );
+			array_pop( $column_text[3] );
 
 			$php_version_info = array();
 
@@ -74,12 +75,11 @@ class PHPVersioner extends WPMonitor {
 
 		foreach ( $column_text as $php_info ) {
 
-				$php_version_info[ $php_info[0] ] = array(
-
+				$php_version_info[ $php_info[0] ] = [
 					'released'        => strtotime( $php_info[1] ),
 					'supported_until' => strtotime( $php_info[3] ),
 					'security_until'  => strtotime( $php_info[5] ),
-				);
+				];
 
 				$y++;
 		}
