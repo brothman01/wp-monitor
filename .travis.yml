@@ -7,11 +7,6 @@ notifications:
   slack:
     rooms:
       secure: ISkuHpvJRM7rRsSLtkXIg4eoJK9LYlT2Hm/NssFG/23at1L0C7td5HafjA+LYZFoKY0jyHBwNvPeVvS+J4ut7IEFEVW4WJsgu+62jFvVtBRrU5cHqBMZzH8oYAaPkYTue3TeicXaapA0H+A1HCkGnC3zIQLTFeMSlgUnVj+BABbgoCNuAa8maMavvjW79wkDw4yhE78RI8EKISDXU5cl8cZinkTgbIv0kK++8dC2tr3a2zIvL7FSJ12rArr9WiRA+yjjgYatHENzlEBguESwW1mtH5ejczewzyLrt/4zmneO2FCXrdFl535ttwAIB8o4o12g4uvoKNzm3cKv8jYn5kX2xo3LqvmDIYwQjD5KPXOg4Mb2ajxkA0pKVS7Rjoc6EJAX/dkmIG/MUzTTBMF8sLvO0cptLd5K3yvdCEetfZeXd+qUEJn/G3mksfzERBI9Ts+LZT0yEg720iGWR3b2mOS2kOjC+fUJHO/tpBuMFLnEZpA7wCZkU/aCXa9MTrjBMo0664Kcay0jc+clNaMdXe3r0YbbrUnGse3DHAuKY5pRK3D9bkf9hC9drEyo4ROXvTIR++l0fOaJ0s19/B0TpwHrV+wL662Tt4RjReSuy+vdKggiJfQKT86W56jmUkZ+3yAP5sv8JIsp2UHpq05/MF/nQDIHJCfXib1QPFV+hIo=
-branches:
-  only:
-  - "/^v\\d.*$/"
-  - master
-  - development
 php:
 - 5.6
 - 7.1
