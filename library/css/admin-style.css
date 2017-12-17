@@ -33,6 +33,7 @@ h3 {
 	position: absolute;
 	top: 25px;
 	left: 5px;
+	-webkit-border-radius: 100%;
 	border-radius: 100%;
 }
 
@@ -149,6 +150,7 @@ h3 {
 					width: 35px;
 					height: 35px;
 					background: #EDEBEB;
+					-webkit-border-radius: 100%;
 					border-radius: 100%;
 					margin: 0px auto;
 				}
@@ -305,7 +307,6 @@ table.widefat th, table.widefat td {
 #tabs-dashboard .ui-tabs-nav {
     padding-left: 0px;
     border-width: 0px 0px 1px 0px;
-    -moz-border-radius: 0px;
     -webkit-border-radius: 0px;
     border-radius: 0px;
 }
@@ -325,4 +326,40 @@ table.widefat th, table.widefat td {
 
 .ui-state-active {
 	background: red!important;
+}
+
+
+.clear:before,
+.clear:after {
+    content: "";
+    display: table;
+}
+
+.clear:after {
+    clear: both;
+}
+
+.clear {
+    *zoom: 1;
+}
+
+
+
+.size-1 {
+    width: 20%;
+}
+
+.size-2 {
+    width: 30%;
+}
+
+.size-3 {
+    width: 48%;
+}
+
+.h-split {
+    display: block;
+    float: left;
+    width: 1%;
+    min-height: 100px;
 }

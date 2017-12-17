@@ -20,7 +20,7 @@ jQuery(document).ready(function() {
 	//
 	 	setTimeout(function() {
 
-		var number = Math.floor(Math.random() * 100) + 1
+		var number = Math.floor(Math.random() * 100) + 1;
 
 		jQuery('#total_counter').text(number);
 

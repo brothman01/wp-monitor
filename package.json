@@ -2,16 +2,34 @@
 	"name": "wp-monitor",
 	"title": "WP Monitor",
 	"description": "Quickly and easily cross check your site with WebPageTest.org.",
-	"version": "1.0.0",
+	"version": "1.1.1",
+  "tested_up_to": "4.9",
 	"author": "Ben Rothman",
 	"license": "GPL-2.0",
 	"repository": "brothman01/wp-monitor",
 	"homepage": "https://wordpress.org/plugins/wp-monitor/",
 	"bugs": {
-		"url": "https://bitbucket.org/Eherman24/wp-speed-check"
+		"url": "https://github.com/brothman01/wp-monitor/issues"
 	},
+  "engines": {
+    "node": ">= 7.5.0",
+    "php": ">= 5.2",
+    "wordpress": ">= 4.4"
+  },
+  "badges": [
+    "[![Build Status](https://travis-ci.org/<%= pkg.repository %>.svg?branch=master)](https://travis-ci.org/<%= pkg.repository %>)",
+    "[![devDependencies Status](https://david-dm.org/<%= pkg.repository %>/master/dev-status.svg)](https://david-dm.org/<%= pkg.repository %>/master?type=dev)",
+    "[![License](https://img.shields.io/badge/license-GPL--2.0-brightgreen.svg)](https://github.com/<%= pkg.repository %>/blob/master/license.txt)",
+    "[![PHP <%= pkg.engines.php %>](https://img.shields.io/badge/php-<% print(encodeURI(pkg.engines.php)) %>-8892bf.svg)](https://secure.php.net/supported-versions.php)",
+    "[![WordPress <%= pkg.engines.wordpress %>](https://img.shields.io/badge/wordpress-<% print(encodeURI(pkg.engines.wordpress)) %>-blue.svg)](https://wordpress.org/download/release-archive/)"
+  ],
 	"devDependencies": {
 		"grunt": "^1.0.1",
+		"grunt-contrib-copy": "^1.0.0",
+		"grunt-contrib-clean": "^1.0.0",
+		"grunt-contrib-compress": "^1.4.1",
+		"grunt-banner": "^0.6.0",
+		"grunt-autoprefixer": "^3.0.4",
 		"grunt-contrib-cssmin": "^2.0.0",
 		"grunt-contrib-imagemin": "^1.0.1",
 		"grunt-contrib-jshint": "^1.1.0",

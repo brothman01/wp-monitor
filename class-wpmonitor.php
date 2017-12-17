@@ -1001,8 +1001,9 @@ class WPMonitor {
 			return;
 
 		}
+		$suffix = SCRIPT_DEBUG : '' ? '.min';
 
-		wp_register_style( 'wpm_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
+		wp_register_style( 'wpm_admin_css',  plugin_dir_url( __FILE__ ) . "/library/css/admin-style{$suffix}.css", false, '1.0.0' );
 		wp_enqueue_style( 'wpm_admin_css' );
 
 		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', [ 'jquery' ], '1.0.0' );
@@ -1038,9 +1039,6 @@ class WPMonitor {
 		wp_enqueue_style( 'wpm_tabs_css' );
 
 		/* Gauges */
-		wp_register_style( 'wpm_justgage_css',  plugin_dir_url( __FILE__ ) . '/library/css/justgage.css', false, '1.0.0' );
-		wp_enqueue_style( 'wpm_justgage_css' );
-
 		wp_register_script( 'wpm_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js' );
 		wp_enqueue_script( 'wpm_raphael' );
 
