@@ -1,7 +1,7 @@
 # WP Monitor #
 **Contributors:** [brothman01](https://profiles.wordpress.org/brothman01)  
 **Donate link:** https://www.wp-monitor.net  
-**Tags:** [productivity](https://wordpress.org/themes/tags/productivity/), [monitor](https://wordpress.org/themes/tags/monitor/), [updates](https://wordpress.org/themes/tags/updates/), [php](https://wordpress.org/themes/tags/php/), [variables](https://wordpress.org/themes/tags/variables/), [admin](https://wordpress.org/themes/tags/admin/), [WP Monitor](https://wordpress.org/themes/tags/WP Monitor/), [WPMonitor](https://wordpress.org/themes/tags/WPMonitor/)  
+**Tags:** [productivity](https://wordpress.org/themes/tags/productivity/), [monitor](https://wordpress.org/themes/tags/monitor/), [updates](https://wordpress.org/themes/tags/updates/), [php](https://wordpress.org/themes/tags/php/), [variables](https://wordpress.org/themes/tags/variables/), [admin](https://wordpress.org/themes/tags/admin/), [WP Monitor](https://wordpress.org/themes/tags/WP Monitor/)  
 **Requires at least:** 4.6  
 **Tested up to:** 4.7  
 **Stable tag:** 1.1  

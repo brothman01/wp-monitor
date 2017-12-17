@@ -33,6 +33,10 @@ module.exports = function(grunt) {
 					files: 'library/images/**/*.{gif,jpeg,jpg,png,svg}',
 					tasks: [ 'imagemin' ]
 			},
+			readme: {
+				files: 'readme.txt',
+				tasks: [ 'wp_readme_to_markdown' ]
+			},
 		},
 		uglify: {
 			options: {
