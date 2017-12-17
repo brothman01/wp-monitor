@@ -266,5 +266,8 @@ module.exports = function(grunt) {
 		'build',
 		'wp_deploy'
 	] );
+	grunt.registerTask( 'readme', [
+		'wp_readme_to_markdown'
+	] );
 
 };
