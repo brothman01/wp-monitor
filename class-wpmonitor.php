@@ -1001,7 +1001,7 @@ class WPMonitor {
 			return;
 
 		}
-		$suffix = SCRIPT_DEBUG : '' ? '.min';
+		$suffix = SCRIPT_DEBUG ? '' : '.min';
 
 		wp_register_style( 'wpm_admin_css',  plugin_dir_url( __FILE__ ) . "/library/css/admin-style{$suffix}.css", false, '1.0.0' );
 		wp_enqueue_style( 'wpm_admin_css' );
