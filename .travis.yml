@@ -5,8 +5,7 @@ notifications:
     on_success: never
     on_failure: change
   slack:
-    rooms:
-      secure: ISkuHpvJRM7rRsSLtkXIg4eoJK9LYlT2Hm/NssFG/23at1L0C7td5HafjA+LYZFoKY0jyHBwNvPeVvS+J4ut7IEFEVW4WJsgu+62jFvVtBRrU5cHqBMZzH8oYAaPkYTue3TeicXaapA0H+A1HCkGnC3zIQLTFeMSlgUnVj+BABbgoCNuAa8maMavvjW79wkDw4yhE78RI8EKISDXU5cl8cZinkTgbIv0kK++8dC2tr3a2zIvL7FSJ12rArr9WiRA+yjjgYatHENzlEBguESwW1mtH5ejczewzyLrt/4zmneO2FCXrdFl535ttwAIB8o4o12g4uvoKNzm3cKv8jYn5kX2xo3LqvmDIYwQjD5KPXOg4Mb2ajxkA0pKVS7Rjoc6EJAX/dkmIG/MUzTTBMF8sLvO0cptLd5K3yvdCEetfZeXd+qUEJn/G3mksfzERBI9Ts+LZT0yEg720iGWR3b2mOS2kOjC+fUJHO/tpBuMFLnEZpA7wCZkU/aCXa9MTrjBMo0664Kcay0jc+clNaMdXe3r0YbbrUnGse3DHAuKY5pRK3D9bkf9hC9drEyo4ROXvTIR++l0fOaJ0s19/B0TpwHrV+wL662Tt4RjReSuy+vdKggiJfQKT86W56jmUkZ+3yAP5sv8JIsp2UHpq05/MF/nQDIHJCfXib1QPFV+hIo=
+    secure: m7u+XoneBm6N+VSt8lkpH9Zi8aZMA7vgg7VZgCc7PiP/N0nbUAeoNHIWv6Hi4mc6xfZYuQ31EHSKt4uM3f710rzR8JuYSd97vVAMronP2vMMw2ziP9jaTehTSLVozChUVsf0D6UsN2CXj/7NEirEXnNkiU7H95GJKMP2b+ptcIVfWc6xnNNvIlChGxOchqdQ6wyi4Genoj7HU+L6GZBSlExUI0lBm9jOtsDuf+sAywZRC2m8S/3Y1njqvu/6vfS6SpBkglhcwHKdKYFDDdSBrY1xkogL3uiDJCPUh2GcsiB/WB4Rkzz1vl1YScD8kcW+HOvwtpzeQhawzBSERO9b4BX2oUqEZZRQOyfZgb7++leofYpTTtHkEgfQMVXSxd0kOpTnVK0ukuHGSsU2SesJPyINJtH7GQgz00c1TgiihNzL8968WLqkz2FRhyIuNZN8C5n2GQLbJkOmVBI3n9qS9vocf14uMkP3SESlJDF3MDhPV2JOKjB0WRE1SZwGS08pTGeG+nC8NnInM2bjJ84aF8FN72wISFlGv2J6uYSCL6mHsX7Oar4Pg21Jck9f3/Zw/fAaKQQcFaAwtajXPI/Cp+sS0Scyq4AIHxbWCtUhQ4mq8cl141pqod2BoPzgpBXvTvFQcHzcm/jnNfeCvfk8QZQBiBBVTM0ARwq/bmPZFMc=
 branches:
   only:
   - "/^v\\d.*$/"
@@ -26,18 +25,11 @@ matrix:
   - php: 7.1
     env: WP_VERSION=4.4 WP_MULTISITE=0
 install:
-- export DEV_LIB_PATH=.dev/dev-lib
-- export DEV_LIB_SKIP=codeception,jscs,jshint,yuicompressor,phpunit,xmllint
-- if [ ! -e "$DEV_LIB_PATH" ] && [ -L .travis.yml ]; then export DEV_LIB_PATH=$( dirname
-  $( readlink .travis.yml ) ); fi
-- if [ ! -e "$DEV_LIB_PATH" ]; then git clone https://github.com/xwp/wp-dev-lib.git
-  $DEV_LIB_PATH; fi
-- source $DEV_LIB_PATH/travis.install.sh
-- curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli-nightly.phar
-  > /tmp/wp-cli.phar
-- chmod +x /tmp/wp-cli.phar
-before_script:
-- bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+ - nvm install 6 && nvm use 6
+ - export DEV_LIB_PATH=.dev/dev-lib
+ - if [ ! -e "$DEV_LIB_PATH" ] && [ -L .travis.yml ]; then export DEV_LIB_PATH=$( dirname $( readlink .travis.yml ) ); fi
+ - if [ ! -e "$DEV_LIB_PATH" ]; then git clone https://github.com/xwp/wp-dev-lib.git $DEV_LIB_PATH; fi
+ - source $DEV_LIB_PATH/travis.install.sh
 script:
 - source $DEV_LIB_PATH/travis.script.sh
 after_script:
@@ -50,9 +42,9 @@ deploy:
   api_key:
     secure: hPpen7fwZtgmhfjRBihM6YR3JumgS2k9lMoAISh9kk0pfDHXgaxwwFNuNUt9eJv0224H/+AXpIWPO8RsYjFYwFAnk1rnUo1iElSOl8VUiQFMU0sB7unITI5tAZ94Kn5RyTybi1pGYpUEIJVMM5xqJf59iD4+6ITELzfjWxrLSPujCatt58fGw8Ul3oZHW3shZGeJK3VHIkEyljC2Ezaphu7pcmwfC5Mi7EqxQO8cOIbGPr1A5JA6qcNGnbbsWfkZI2mA2+Huq0ZsCxsn7ry0JJO5AKSHvHiRHj4QXwcdJCZibXXswUGdBD8LkaIC/+CYinBk5JgXvdV/xo/vt2m7FMnLlcKP1W7nLfdFjhy/MumgfrmJdeTQ9pdC8udDsfMWar/stkeaspP369flUp8m2RFmF5ungaivkehtRwYiMFMke7rK7byaj4YJHLJ1wcRcSQcgIV6YN7LciicokuMVumHoZrOuA13QGVAJStdXgRvCF6RfrRPEwqRv1jqzezmNaQhuPzh8VjDtUqSaKJfz5hyWCrPntf6kVKCL4VCYr9H3F681zKiLdS3VLn54f9Od+8QHM4mhca4RkVGbMOBfMNnM4XtfhL/ktuprNNl5HNazGtGeN0rEbTHfFIfz9xORbjy52o2RMYFkQglYOdxMR5u2cG0hJsi281T208J7wwA=
   file_glob: true
-  file: build/wp-monitor-*.zip
+  file: build/BR-Staff-*.zip
   on:
-    repo: brothman01/wp-monitor
+    repo: brothman01/BR-Staff
     tags: true
     php: '7.1'
     condition: "$WP_VERSION=trunk"
