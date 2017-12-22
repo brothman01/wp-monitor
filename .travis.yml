@@ -42,9 +42,9 @@ deploy:
   api_key:
     secure: hPpen7fwZtgmhfjRBihM6YR3JumgS2k9lMoAISh9kk0pfDHXgaxwwFNuNUt9eJv0224H/+AXpIWPO8RsYjFYwFAnk1rnUo1iElSOl8VUiQFMU0sB7unITI5tAZ94Kn5RyTybi1pGYpUEIJVMM5xqJf59iD4+6ITELzfjWxrLSPujCatt58fGw8Ul3oZHW3shZGeJK3VHIkEyljC2Ezaphu7pcmwfC5Mi7EqxQO8cOIbGPr1A5JA6qcNGnbbsWfkZI2mA2+Huq0ZsCxsn7ry0JJO5AKSHvHiRHj4QXwcdJCZibXXswUGdBD8LkaIC/+CYinBk5JgXvdV/xo/vt2m7FMnLlcKP1W7nLfdFjhy/MumgfrmJdeTQ9pdC8udDsfMWar/stkeaspP369flUp8m2RFmF5ungaivkehtRwYiMFMke7rK7byaj4YJHLJ1wcRcSQcgIV6YN7LciicokuMVumHoZrOuA13QGVAJStdXgRvCF6RfrRPEwqRv1jqzezmNaQhuPzh8VjDtUqSaKJfz5hyWCrPntf6kVKCL4VCYr9H3F681zKiLdS3VLn54f9Od+8QHM4mhca4RkVGbMOBfMNnM4XtfhL/ktuprNNl5HNazGtGeN0rEbTHfFIfz9xORbjy52o2RMYFkQglYOdxMR5u2cG0hJsi281T208J7wwA=
   file_glob: true
-  file: build/BR-Staff-*.zip
+  file: build/wp-monitor-*.zip
   on:
-    repo: brothman01/BR-Staff
+    repo: brothman01/wp-monitor
     tags: true
     php: '7.1'
     condition: "$WP_VERSION=trunk"
