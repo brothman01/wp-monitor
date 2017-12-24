@@ -177,13 +177,13 @@ class WPMonitor {
 	}
 
 	public function get_plugin_info( $slug ) {
-		if ( false !== ( $data = get_transient( $slug . '_remote_html' ) ) ) {
+		if ( false !== ( get_transient( $slug . '_remote_html' ) ) ) {
 
 				return $data;
 
 		}
 
-			$response = wp_remote_get( $slug );
+		$response = wp_remote_get( $slug );
 
 		if ( is_wp_error( $response ) ) {
 
@@ -191,7 +191,7 @@ class WPMonitor {
 
 		}
 
-			$data = maybe_unserialize( wp_remote_retrieve_body( $response ) );
+		$data = maybe_unserialize( wp_remote_retrieve_body( $response ) );
 
 		if ( is_wp_error( $data ) ) {
 
@@ -325,7 +325,7 @@ class WPMonitor {
 			esc_attr( sizeof( wp_get_themes() ) )
 		);
 
-			echo $this->indicator_cell( __( 'wordpress Core',  'wp-monitor' ), 'wordpress' );
+			echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'wordpress' );
 
 		echo '</div>';
 
