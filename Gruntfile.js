@@ -128,7 +128,7 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'library/css',
-						src: ['admin-style.css'],
+						src: ['*.css'],
 						dest: 'library/css',
 						ext: '.min.css'
 					}
