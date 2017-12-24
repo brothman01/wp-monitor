@@ -17,15 +17,14 @@ class PHPVersioner extends WPMonitor {
 			try {
 					set_transient( 'wpm_php_info', $this->wpm_version_info(), 24 * HOUR_IN_SECONDS );
 
-					$php_data = get_transient('wpm_php_info');
+				$php_data = get_transient( 'wpm_php_info' );
 
-			} catch (Exception $e) {
+			} catch ( Exception $e ) {
 				// Could not connect.
 			}
-
 		} else {
 
-			$php_data = get_transient('wpm_php_info');
+			$php_data = get_transient( 'wpm_php_info' );
 
 		}
 
@@ -33,6 +32,10 @@ class PHPVersioner extends WPMonitor {
 
 	}
 
+	/**
+ * [wpm_version_info - Get or make transient of the php support data read from the official php site.
+ * @return array 'released', 'supported_until', 'security_until' for each version of php listed on the page.
+ */
 	public function wpm_version_info() {
 
 			$contents = wp_remote_get( 'http://php.net/supported-versions.php' );
@@ -46,7 +49,6 @@ class PHPVersioner extends WPMonitor {
 			$dom->loadHTML( $body );
 
 			$tr = $dom->getElementsByTagName( 'tr' );
-
 
 			$column_text = [];
 
@@ -67,7 +69,7 @@ class PHPVersioner extends WPMonitor {
 
 			$column_text = array_chunk( $column_text, 7 );
 
-			array_pop( $column_text[3] );
+			$column_text = array_slice($column_text, 1, -1);
 
 			$php_version_info = array();
 

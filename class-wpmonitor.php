@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP Monitor
  * Description: Collects important data from site and displays it on the dashboard
- * Version:     1.1
+ * Version:     1.1.1
  * Author:      Ben Rothman
  * Slug:        wp-monitor
  * Author URI:  http://www.BenRothman.org
@@ -456,7 +456,7 @@ class WPMonitor {
 	}
 
 	/**
-	* Check wordpress site and server for updates
+	* Check WordPress site and server for updates
 	*
 	* @since 0.1
 	*/
@@ -470,20 +470,19 @@ class WPMonitor {
 
 			$update_data = wp_get_update_data();
 
-			 $php_info = PHPVersioner::$info;
+			$php_info = PHPVersioner::$info;
 
 			$current_php_version = $this->php_version( 2 );
 
-			// $user_version_info = $php_info[ $current_php_version ]; // DEBUG
-			$user_version_info = $php_info[ '7.1' ];
+			$user_version_info = $php_info[ $current_php_version ];
 
 			$user_version_supported_until = $user_version_info['supported_until'];
-			//
-			$current_date = date_create();
-			//
-			$php_action = ( $user_version_supported_until < date_timestamp_get( $current_date ) ) ? 'Upgrade Now' : 'Up To Date';
 
-		if ( 'Upgrade Now' == $php_action ) {
+			$current_date = date('dmy');
+
+			$php_action = ( $user_version_supported_until < $current_date ) ? 'Upgrade Now' : 'Up To Date';
+
+		if ( 'Upgrade Now' === $php_action ) {
 
 				$php_update = 1;
 
@@ -495,6 +494,8 @@ class WPMonitor {
 
 			$user_version_supported_until = gmdate( 'm-d-Y', $user_version_supported_until );
 
+
+// UPDATES ARRAY HERE
 			self::$updates = [
 				'plugins'             => $update_data['counts']['plugins'],
 				'themes'              => $update_data['counts']['themes'],
@@ -839,7 +840,7 @@ class WPMonitor {
 					'Themes'    => ( ( ( count( wp_get_themes() ) - self::$updates['themes'] ) / count( wp_get_themes() ) ) * 100 ),
 					'wordpress' => ( 0 == self::$updates['wordpress'] ) ? 100 : 50,
 			//	'PHP'     => ( 0 == self::$updates['PHP_update'] ) ? 100 : 50,
-					'SSL'	      => self::$updates['SSL'] ? 100 : 50,
+					'SSL'       => self::$updates['SSL'] ? 100 : 50,
 				];
 
 				$subtotal = $grades['Plugins'] + $grades['Themes'] + $grades['wordpress'] + /*$grades['PHP'] +*/ $grades['SSL'];
@@ -1027,7 +1028,7 @@ class WPMonitor {
 		wp_localize_script( 'wpm_phpcell', 'wpm_data_php', [
 			'current_version'   => $this->php_version( 2 ),
 			'state'	            => self::$updates['php_action'],
-			'supported_until' =>	gmdate('m-d-Y', PHPVersioner::$info[ '7.1' ]['supported_until'] ), // DEBUG
+			'supported_until' =>	gmdate('m-d-Y', PHPVersioner::$info[ $this->php_version( 2 ) ]['supported_until'] ),
 		] );
 
 		wp_enqueue_script( 'wpm_phpcell' );
