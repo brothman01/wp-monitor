@@ -258,7 +258,7 @@ module.exports = function(grunt) {
 
 	require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
 
-	grunt.registerTask('default', ['autoprefixer', 'cssmin', 'usebanner', 'uglify', 'imagemin']); // grunt.registerTask('default', ['autoprefixer', 'cssmin', 'usebanner', 'jshint', 'uglify', 'imagemin']);
+	runt.registerTask('default', ['autoprefixer', 'cssmin', 'usebanner', 'jshint', 'uglify', 'imagemin']);
 	grunt.registerTask('build', ['default', 'clean', 'copy', 'compress']);
 	grunt.registerTask( 'watch-banner', [
 		'uglify',
@@ -273,5 +273,7 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'readme', [
 		'wp_readme_to_markdown'
 	] );
+
+  grunt.registerTask( 'readme', [ 'jshint' ] );
 
 };

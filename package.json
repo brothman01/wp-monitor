@@ -25,11 +25,11 @@
 	],
 	"devDependencies": {
 		"grunt": "^1.0.1",
-		"grunt-contrib-copy": "^1.0.0",
+		"grunt-autoprefixer": "^3.0.4",
+		"grunt-banner": "^0.6.0",
 		"grunt-contrib-clean": "^1.0.0",
 		"grunt-contrib-compress": "^1.4.1",
-		"grunt-banner": "^0.6.0",
-		"grunt-autoprefixer": "^3.0.4",
+		"grunt-contrib-copy": "^1.0.0",
 		"grunt-contrib-cssmin": "^2.0.0",
 		"grunt-contrib-imagemin": "^2.0.1",
 		"grunt-contrib-jshint": "^1.1.0",
@@ -39,13 +39,12 @@
 		"grunt-dev-update": "^2.0.0",
 		"grunt-potomo": "^3.5.0",
 		"grunt-text-replace": "^0.4.0",
-		"grunt-wp-i18n": "^1.0.0",
 		"grunt-wp-deploy": "^1.2.1",
+		"grunt-wp-i18n": "^1.0.0",
 		"grunt-wp-readme-to-markdown": "^2.0.1",
 		"matchdep": "^2.0.0"
 	},
 	"scripts": {
-		"version": "grunt version && git add -A .",
-		"postversion": "git push && git push --tags"
+		"test": "phpcs --standard=WordPress *.php"
 	}
 }
