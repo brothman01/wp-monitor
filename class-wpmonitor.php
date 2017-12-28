@@ -965,17 +965,6 @@ class WPMonitor {
 	}
 
 	/**
-	 * Checks if the website/server is using SSL
-	 *
-	 * @since 0.1
-	 */
-	// public function ssl_check() {
-	//
-	// 	return is_ssl() ? 0 : 1;
-	//
-	// }
-
-	/**
 	 * Callback for the general settings section of the settings page
 	 *
 	 * @since 0.1
