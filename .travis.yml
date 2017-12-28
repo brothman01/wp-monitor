@@ -12,6 +12,7 @@ branches:
   - master
   - development
 php: 7.2
+env: SNIFF=1
 
 matrix:
   include:
