@@ -27,7 +27,6 @@ jQuery(document).ready(function() {
 		jQuery('#grade_counter').text(number);
 
 	}, (time * 50) );
-	//
 	}
 
 		setTimeout(function(){

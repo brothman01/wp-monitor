@@ -5,7 +5,7 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: pkg,
 		jshint: {
-			files: ['library/js/**/*.js', '!library/js/*.min.js', 'Gruntfile.js'],
+			files: ['library/js/**/*.js', '!library/js/justgage.js', '!library/js/*.min.js', 'Gruntfile.js'],
 			options: {
 				globals: {
 					jQuery: true
@@ -258,7 +258,7 @@ module.exports = function(grunt) {
 
 	require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
 
-	runt.registerTask('default', ['autoprefixer', 'cssmin', 'usebanner', 'jshint', 'uglify', 'imagemin']);
+	grunt.registerTask('default', ['autoprefixer', 'cssmin', 'usebanner', 'jshint', 'uglify', 'imagemin']);
 	grunt.registerTask('build', ['default', 'clean', 'copy', 'compress']);
 	grunt.registerTask( 'watch-banner', [
 		'uglify',
