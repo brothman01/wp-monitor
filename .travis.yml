@@ -11,10 +11,7 @@ branches:
   - "/^v\\d.*$/"
   - master
   - development
-php:
-- 5.6
-- 7.1
-- 7.2
+php: 7.2
 
 matrix:
   include:
