@@ -12,8 +12,6 @@ branches:
   - master
   - development
 php: 7.2
-env: SNIFF=1
-
 matrix:
   include:
     # Arbitrary PHP version to run the sniffs against.
@@ -24,11 +22,6 @@ matrix:
     # Arbitrary PHP version to run the sniffs against.
     - php:
       - 7.0
-      env: SNIFF=1
-  include:
-    # Arbitrary PHP version to run the sniffs against.
-    - php:
-      - 7.2
       env: SNIFF=1
 
 before_install:
