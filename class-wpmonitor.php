@@ -12,6 +12,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'unauthorized' );
 }
 
+/**
+ * WP-Monitor.
+ *
+ * @class    WP Monitor
+ * @package  WP Monitor
+ * @category Class
+ * @author   Ben Rothman
+ * @since    1.1.1
+ */
 class WPMonitor {
 
 	public static $updates;
