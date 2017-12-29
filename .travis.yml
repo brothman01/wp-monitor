@@ -19,6 +19,7 @@ env:
     - WP_VERSION=trunk
 
 before_install:
+  - composer global require "squizlabs/php_codesniffer=*"
   - composer global require "wp-coding-standards/wpcs"
   - ${HOME}/.composer/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
   # After CodeSniffer install you should refresh your path.
