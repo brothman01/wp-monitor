@@ -22,7 +22,7 @@ matrix:
 before_install:
   - composer global require "phpunit/phpunit=5.7.*"
   - composer global require "wp-coding-standards/wpcs"
-  - phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
+  - ~/.composer/vendor/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
   # After CodeSniffer install you should refresh your path.
   - phpenv rehash;
 
@@ -32,4 +32,4 @@ script:
   # for example: `--standard=wpcs.xml`.
   # You can use any of the normal PHPCS command line arguments in the command:
   # https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage
-  - phpcs --standard=WordPress-Core --extensions=php --colors -s -p -v ./
+  - ~/.composer/vendor/phpcs --standard=WordPress-Core --extensions=php --colors -s -p -v ./
