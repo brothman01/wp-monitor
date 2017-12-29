@@ -21,8 +21,8 @@ matrix:
 
 before_install:
   - composer global require "wp-coding-standards/wpcs"
-  - phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
   - composer global config bin-dir --absolute
+  - phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
   # After CodeSniffer install you should refresh your path.
   - phpenv rehash;
 
