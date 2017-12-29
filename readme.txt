@@ -8,7 +8,7 @@ Stable tag: 1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A simple WordPress plugin that puts important information on the dashboard.
+A simple WordPress plugin that puts important information on the dashboard. Test.
 
 == Description ==
 
