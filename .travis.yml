@@ -18,6 +18,7 @@ php:
 
 env:
   matrix:
+    fast_finish: true
     - WP_VERSION=4.4
     - WP_VERSION=latest
     - WP_VERSION=trunk
