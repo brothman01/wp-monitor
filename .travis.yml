@@ -18,7 +18,6 @@ php:
 
 env:
   matrix:
-    fast_finish: true
     - WP_VERSION=4.4
     - WP_VERSION=latest
     - WP_VERSION=trunk
@@ -26,8 +25,8 @@ env:
 before_install:
   - composer global require "squizlabs/php_codesniffer=*"
   - composer global require "wp-coding-standards/wpcs"
-  - ls ${HOME}/.composer/vendor
-  - ${HOME}/.composer/vendor/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
+  - ls ${HOME}/.composer/vendor/squizlabs
+  - ${HOME}/.composer/vendor/squizlabs/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
   # After CodeSniffer install you should refresh your path.
   - phpenv rehash;
 
@@ -37,4 +36,4 @@ script:
   # for example: `--standard=wpcs.xml`.
   # You can use any of the normal PHPCS command line arguments in the command:
   # https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage
-  - ${HOME}/.composer/vendor/phpcs --standard=WordPress-Core --extensions=php --colors -s -p -v ./
+  - ${HOME}/.composer/vendor/squizlabs/phpcs --standard=WordPress-Core --extensions=php --colors -s -p -v ./
