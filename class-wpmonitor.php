@@ -105,9 +105,9 @@ class WPMonitor {
 	}
 
 	public function register_newpage() {
-		add_menu_page( 'Status Page', 'statuspage', 'administrator','statuspage', [ $this, 'wpm_populate_status_page' ] );
+		add_menu_page( 'Status Page', 'statuspage', 'administrator', 'statuspage', [ $this, 'wpm_populate_status_page' ] );
 
-		 remove_menu_page( 'statuspage' );
+		remove_menu_page( 'statuspage' );
 	}
 
 	/**
@@ -292,7 +292,7 @@ class WPMonitor {
 
 		$response = wp_remote_post( 'http://api.WordPress.org/themes/info/1.0/', [
 			'body' => [
-				'action' => 'theme_information',
+				'action'  => 'theme_information',
 				'request' => serialize( (object) [
 					'slug' => $slug,
 				] ),
@@ -328,29 +328,29 @@ class WPMonitor {
 		);
 
 		echo $this->gauge_cell(
-			__( 'Themes Up To Date',  'wp-monitor' ),
+			__( 'Themes Up To Date', 'wp-monitor' ),
 			'gw2',
 			esc_attr( sizeof( wp_get_themes() ) - self::$updates['themes'] ),
 			esc_attr( sizeof( wp_get_themes() ) )
 		);
 
-			echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'WordPress' );
+		echo $this->indicator_cell( __( 'WordPress Core', 'wp-monitor' ), 'WordPress' );
 
 		echo '</div>';
 
 		echo '<div id="tabs-dashboard-2" style="min-height: 200px;">';
 
-			echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl' );
+		echo $this->indicator_cell( __( 'SSL', 'wp-monitor' ), 'ssl' );
 
-			echo $this->php_cell( __( 'PHP',  'wp-monitor' ) );
+		echo $this->php_cell( __( 'PHP', 'wp-monitor' ) );
 
 		echo '</div>';
 
 		echo '<div id="tabs-dashboard-3" style="min-height: 200px;">';
 
-		echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
+		echo $this->counter_cell( __( 'Total Updates', 'wp-monitor' ), 'total' );
 
-		echo $this->counter_cell( __( 'Overall Grade',  'wp-monitor' ), 'grade' );
+		echo $this->counter_cell( __( 'Overall Grade', 'wp-monitor' ), 'grade' );
 
 		echo '</div>';
 
@@ -358,20 +358,20 @@ class WPMonitor {
 
 		echo '<table class="wp-list-table widefat fixed striped wpm_table">';
 
-			echo '<thead>';
+		echo '<thead>';
 
-				echo '<tr>
-					<th>' . __( 'Variable',  'wp-monitor' ) . '</th>
-					<th>' . __( 'Value',  'wp-monitor' ) . '</th>
-				</tr>';
+			echo '<tr>
+				<th>' . __( 'Variable', 'wp-monitor' ) . '</th>
+				<th>' . __( 'Value', 'wp-monitor' ) . '</th>
+			</tr>';
 
-				echo '</thead>';
+		echo '</thead>';
 
-				echo $this->variable_table();
+		echo $this->variable_table();
 
-			echo '</table>';
+		echo '</table>';
 
-			echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does-that-value-mean/">What Does That Value Mean?</a>';
+		echo '<a style="color: #0073aa;"href="http://wp-monitor.net/2017/03/30/what-does-that-value-mean/">What Does That Value Mean?</a>';
 
 		echo '</div>';
 
@@ -381,10 +381,10 @@ class WPMonitor {
 
 			echo '<thead>';
 				echo '<tr>';
-					echo '<th>' . __( 'Username',  'wp-monitor' ) . '</th>';
-					echo '<th>' . __( 'Date/Time',  'wp-monitor' ) . '</th>';
-					echo '<th>' . __( 'Last IP Used',  'wp-monitor' ) . '</th>';
-					echo '<th>' . __( 'Location',  'wp-monitor' ) . '</th>';
+					echo '<th>' . __( 'Username', 'wp-monitor' ) . '</th>';
+					echo '<th>' . __( 'Date/Time', 'wp-monitor' ) . '</th>';
+					echo '<th>' . __( 'Last IP Used', 'wp-monitor' ) . '</th>';
+					echo '<th>' . __( 'Location', 'wp-monitor' ) . '</th>';
 				echo '</tr>';
 			echo '</thead>';
 
@@ -395,11 +395,11 @@ class WPMonitor {
 		echo '</div>';
 
 		echo '<ul>
-				<li><a href="#tabs-dashboard-1">Updates (' . ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) ) . ')</a></li>
-				<li><a href="#tabs-dashboard-2">SSL/PHP (' . (is_ssl() ? 'on' : 'off') . '/' . $this->php_version( 2 ) . ')</a></li>
-				<li><a href="#tabs-dashboard-3">Grades</a></li>
-				<li><a href="#tabs-dashboard-4">Variables (...)</a></li>
-				<li><a href="#tabs-dashboard-5">Logins</a></li>
+			<li><a href="#tabs-dashboard-1">Updates (' . ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) ) . ')</a></li>
+			<li><a href="#tabs-dashboard-2">SSL/PHP (' . ( is_ssl() ? 'on' : 'off' ) . '/' . $this->php_version( 2 ) . ')</a></li>
+			<li><a href="#tabs-dashboard-3">Grades</a></li>
+			<li><a href="#tabs-dashboard-4">Variables (...)</a></li>
+			<li><a href="#tabs-dashboard-5">Logins</a></li>
 		</ul>';
 
 		echo '</div>';
@@ -589,11 +589,11 @@ class WPMonitor {
 											sizeof( get_plugins() ) - self::$updates['plugins'],
 										sizeof( get_plugins() ) );
 
-										echo $this->gauge_cell( __( 'Themes Up To Date',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
+										echo $this->gauge_cell( __( 'Themes Up To Date', 'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
-										echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'WordPress' );
+										echo $this->indicator_cell( __( 'WordPress Core', 'wp-monitor' ), 'WordPress' );
 
-										echo $this->php_cell( __( 'PHP',  'wp-monitor' ) );
+										echo $this->php_cell( __( 'PHP', 'wp-monitor' ) );
 
 							echo '</div>';
 
@@ -601,14 +601,14 @@ class WPMonitor {
 
 								echo '<h3 style="text-align: left;">Summary</h3>';
 
-										echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl' );
+										echo $this->indicator_cell( __( 'SSL', 'wp-monitor' ), 'ssl' );
 
 										$final_grade = intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] );
 										// + self::$updates['PHP_update'] );
 
-										echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
+										echo $this->counter_cell( __( 'Total Updates', 'wp-monitor' ), 'total' );
 
-										echo $this->gauge_cell( __( 'Overall Grade',  'wp-monitor' ), 'g3', (integer) $this->calculate_grade(), 100 );
+										echo $this->gauge_cell( __( 'Overall Grade', 'wp-monitor' ), 'g3', (integer) $this->calculate_grade(), 100 );
 
 							echo '</div>';
 
@@ -624,9 +624,9 @@ class WPMonitor {
 						<div id="tabs">
 							<ul>
 
-								<li><a href="#tabs-1">' . __( 'Variables',  'wp-monitor' ) . '</a></li>
+								<li><a href="#tabs-1">' . __( 'Variables', 'wp-monitor' ) . '</a></li>
 
-								<li><a href="#tabs-2">' . __( 'User Logins',  'wp-monitor' ) . '</a></li>';
+								<li><a href="#tabs-2">' . __( 'User Logins', 'wp-monitor' ) . '</a></li>';
 
 								echo apply_filters( 'wpm_tabs', '' );
 
@@ -639,8 +639,8 @@ class WPMonitor {
 								echo '<thead>';
 
 									echo '<tr>
-										<th>' . __( 'Variable',  'wp-monitor' ) . '</th>
-										<th>' . __( 'Value',  'wp-monitor' ) . '</th>
+										<th>' . __( 'Variable', 'wp-monitor' ) . '</th>
+										<th>' . __( 'Value', 'wp-monitor' ) . '</th>
 									</tr>';
 
 									echo '</thead>';
@@ -659,23 +659,22 @@ class WPMonitor {
 
 										<thead>
 											<tr>
-												<th>' . __( 'Username',  'wp-monitor' ) . '</th>
-												<th>' . __( 'Date/Time',  'wp-monitor' ) . '</th>
-												<th>' . __( 'Last IP Used',  'wp-monitor' ) . '</th>
-												<th>' . __( 'Location',  'wp-monitor' ) . '</th>
+												<th>' . __( 'Username', 'wp-monitor' ) . '</th>
+												<th>' . __( 'Date/Time', 'wp-monitor' ) . '</th>
+												<th>' . __( 'Last IP Used', 'wp-monitor' ) . '</th>
+												<th>' . __( 'Location', 'wp-monitor' ) . '</th>
 											</tr>
 										</thead>';
 
-								 $this->list_last_logins( 'wpm_table_tab', '' );
+								$this->list_last_logins( 'wpm_table_tab', '' );
 
 							echo '</table>';
 
 						echo '</div>';
 
-						echo apply_filters( 'wpm_table_tab' , '' );
+					echo apply_filters( 'wpm_table_tab', '' );
 
 					echo '</div>
-
 
 						</div>
 
@@ -945,7 +944,7 @@ class WPMonitor {
 
 		$files = scandir( $path );
 
-		 $clean_path = rtrim( $path, '/' ) . '/';
+		$clean_path = rtrim( $path, '/' ) . '/';
 
 		foreach ( $files as $t ) {
 
@@ -980,7 +979,7 @@ class WPMonitor {
 	 */
 	public function wpm_general_section_callback() {
 
-				echo 'Edit the settings for the plugin here.';
+		echo 'Edit the settings for the plugin here.';
 
 	}
 
@@ -998,7 +997,7 @@ class WPMonitor {
 		}
 		$suffix = SCRIPT_DEBUG ? '' : '.min';
 
-		wp_register_style( 'wpm_admin_css',  plugin_dir_url( __FILE__ ) . "/library/css/admin-style{$suffix}.css", false, '1.0.0' );
+		wp_register_style( 'wpm_admin_css', plugin_dir_url( __FILE__ ) . "/library/css/admin-style{$suffix}.css", false, '1.0.0' );
 		wp_enqueue_style( 'wpm_admin_css' );
 
 		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', [ 'jquery' ], '1.0.0' );
@@ -1020,41 +1019,41 @@ class WPMonitor {
 
 		wp_register_script( 'wpm_phpcell', plugin_dir_url( __FILE__ ) . 'library/js/phpcell.js', [ 'jquery' ], '1.0.0' );
 		wp_localize_script( 'wpm_phpcell', 'wpm_data_php', [
-			'current_version'   => $this->php_version( 2 ),
-			'state'             => self::$updates['php_action'],
-			'supported_until'   => gmdate( 'm-d-Y', PHPVersioner::$info[ $this->php_version( 2 ) ]['supported_until'] ),
+			'current_version' => $this->php_version( 2 ),
+			'state'           => self::$updates['php_action'],
+			'supported_until' => gmdate( 'm-d-Y', PHPVersioner::$info[ $this->php_version( 2 ) ]['supported_until'] ),
 		] );
 
 		wp_enqueue_script( 'wpm_phpcell' );
 
-		wp_register_script( 'tabs-init',  plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js', [ 'jquery-ui-tabs' ] );
+		wp_register_script( 'tabs-init', plugin_dir_url( __FILE__ ) . '/library/js/tabs-init.jquery.js', [ 'jquery-ui-tabs' ] );
 		wp_enqueue_script( 'tabs-init' );
 
-		wp_register_style( 'wpm_tabs_css',  'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css', false, '1.0.0' );
+		wp_register_style( 'wpm_tabs_css', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css', false, '1.0.0' );
 		wp_enqueue_style( 'wpm_tabs_css' );
 
 		/* Gauges */
-		wp_register_script( 'wpm_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js' );
+		wp_register_script( 'wpm_raphael', plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js' );
 		wp_enqueue_script( 'wpm_raphael' );
 
-		wp_register_script( 'wpm_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
+		wp_register_script( 'wpm_justgage', plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
 		wp_enqueue_script( 'wpm_justgage' );
 
 		/* Admin Jquery */
-		wp_register_script( 'wpm_admin',  plugin_dir_url( __FILE__ ) . '/library/js/admin-wpmonitor.js', [ 'jquery' ] );
+		wp_register_script( 'wpm_admin', plugin_dir_url( __FILE__ ) . '/library/js/admin-wpmonitor.js', [ 'jquery' ] );
 		wp_enqueue_script( 'wpm_admin' );
 
 		/* Font Awesome */
 		wp_enqueue_style( 'cp_fontawesome', plugin_dir_url( __FILE__ ) . '/library/fonts/font-awesome-4.7.0/css/font-awesome.min.css', [], false, 'all' );
 
 		/* Reveal */
-		 wp_register_script( 'wpm_revealer',  plugin_dir_url( __FILE__ ) . '/library/js/revealer.js', [ 'jquery' ], '1.0.0' );
-		 wp_enqueue_script( 'wpm_revealer' );
+		wp_register_script( 'wpm_revealer', plugin_dir_url( __FILE__ ) . '/library/js/revealer.js', [ 'jquery' ], '1.0.0' );
+		wp_enqueue_script( 'wpm_revealer' );
 
-		 /* Widget */
+		/* Widget */
 		if ( false === self::$options['wpm_show_monitor'] ) {
 
-			wp_register_script( 'wpm_widget',  plugin_dir_url( __FILE__ ) . '/library/js/widget.js', [ 'jquery' ], '1.0.0' );
+			wp_register_script( 'wpm_widget', plugin_dir_url( __FILE__ ) . '/library/js/widget.js', [ 'jquery' ], '1.0.0' );
 			wp_enqueue_script( 'wpm_widget' );
 
 		}
