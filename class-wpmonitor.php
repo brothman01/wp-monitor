@@ -2,16 +2,25 @@
 /**
  * Plugin Name: WP Monitor
  * Description: Collects important data from site and displays it on the dashboard
- * Version:     1.1
+ * Version:     1.1.1
  * Author:      Ben Rothman
  * Slug:        wp-monitor
  * Author URI:  http://www.BenRothman.org
  * License:     GPL-2.0+
  */
 if ( ! defined( 'ABSPATH' ) ) {
-	die( 'unatuhorized' );
+	die( 'unauthorized' );
 }
 
+/**
+ * WP-Monitor.
+ *
+ * @class    WP Monitor
+ * @package  WP Monitor
+ * @category Class
+ * @author   Ben Rothman
+ * @since    1.1.1
+ */
 class WPMonitor {
 
 	public static $updates;
@@ -36,7 +45,7 @@ class WPMonitor {
 			'wpm_send_email'      => true,
 			'wpm_check_plugins'   => true,
 			'wpm_check_themes'    => true,
-			'wpm_check_wordpress' => true,
+			'wpm_check_WordPress' => true,
 			'wpm_check_php'       => true,
 			'wpm_check_ssl'       => true,
 			'wpm_show_monitor'    => false,
@@ -177,13 +186,13 @@ class WPMonitor {
 	}
 
 	public function get_plugin_info( $slug ) {
-		if ( false !== ( $data = get_transient( $slug . '_remote_html' ) ) ) {
+		if ( false !== ( get_transient( $slug . '_remote_html' ) ) ) {
 
 				return $data;
 
 		}
 
-			$response = wp_remote_get( $slug );
+		$response = wp_remote_get( $slug );
 
 		if ( is_wp_error( $response ) ) {
 
@@ -191,7 +200,7 @@ class WPMonitor {
 
 		}
 
-			$data = maybe_unserialize( wp_remote_retrieve_body( $response ) );
+		$data = maybe_unserialize( wp_remote_retrieve_body( $response ) );
 
 		if ( is_wp_error( $data ) ) {
 
@@ -225,7 +234,7 @@ class WPMonitor {
 
 						$plugin_version = ( null == $plugin['Version'] ) ? '0.0.0' : $plugin['Version'];
 
-						$repo_plugin = $this->get_plugin_info( 'https://api.wordpress.org/plugins/info/1.0/' . $plugin['TextDomain'] );
+						$repo_plugin = $this->get_plugin_info( 'https://api.WordPress.org/plugins/info/1.0/' . $plugin['TextDomain'] );
 
 			if ( ! $repo_plugin ) {
 
@@ -281,7 +290,7 @@ class WPMonitor {
 
 	public function get_theme_info( $slug ) {
 
-		$response = wp_remote_post( 'http://api.wordpress.org/themes/info/1.0/', [
+		$response = wp_remote_post( 'http://api.WordPress.org/themes/info/1.0/', [
 			'body' => [
 				'action' => 'theme_information',
 				'request' => serialize( (object) [
@@ -325,7 +334,7 @@ class WPMonitor {
 			esc_attr( sizeof( wp_get_themes() ) )
 		);
 
-			echo $this->indicator_cell( __( 'wordpress Core',  'wp-monitor' ), 'wordpress' );
+			echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'WordPress' );
 
 		echo '</div>';
 
@@ -342,7 +351,6 @@ class WPMonitor {
 		echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
 
 		echo $this->counter_cell( __( 'Overall Grade',  'wp-monitor' ), 'grade' );
-
 
 		echo '</div>';
 
@@ -387,7 +395,7 @@ class WPMonitor {
 		echo '</div>';
 
 		echo '<ul>
-				<li><a href="#tabs-dashboard-1">Updates (' . ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['wordpress'] ) ) . ')</a></li>
+				<li><a href="#tabs-dashboard-1">Updates (' . ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) ) . ')</a></li>
 				<li><a href="#tabs-dashboard-2">SSL/PHP (' . (is_ssl() ? 'on' : 'off') . '/' . $this->php_version( 2 ) . ')</a></li>
 				<li><a href="#tabs-dashboard-3">Grades</a></li>
 				<li><a href="#tabs-dashboard-4">Variables (...)</a></li>
@@ -456,7 +464,7 @@ class WPMonitor {
 	}
 
 	/**
-	* Check wordpress site and server for updates
+	* Check WordPress site and server for updates
 	*
 	* @since 0.1
 	*/
@@ -470,20 +478,19 @@ class WPMonitor {
 
 			$update_data = wp_get_update_data();
 
-			 $php_info = PHPVersioner::$info;
+			$php_info = PHPVersioner::$info;
 
 			$current_php_version = $this->php_version( 2 );
 
-			// $user_version_info = $php_info[ $current_php_version ]; // DEBUG
-			$user_version_info = $php_info[ '7.1' ];
+			$user_version_info = $php_info[ $current_php_version ];
 
 			$user_version_supported_until = $user_version_info['supported_until'];
-			//
-			$current_date = date_create();
-			//
-			$php_action = ( $user_version_supported_until < date_timestamp_get( $current_date ) ) ? 'Upgrade Now' : 'Up To Date';
 
-		if ( 'Upgrade Now' == $php_action ) {
+			$current_date = date( 'dmy' );
+
+			$php_action = ( $user_version_supported_until < $current_date ) ? 'Upgrade Now' : 'Up To Date';
+
+		if ( 'Upgrade Now' === $php_action ) {
 
 				$php_update = 1;
 
@@ -495,10 +502,11 @@ class WPMonitor {
 
 			$user_version_supported_until = gmdate( 'm-d-Y', $user_version_supported_until );
 
+			// UPDATES ARRAY HERE
 			self::$updates = [
 				'plugins'             => $update_data['counts']['plugins'],
 				'themes'              => $update_data['counts']['themes'],
-				'wordpress'           => $update_data['counts']['wordpress'],
+				'WordPress'           => $update_data['counts']['WordPress'],
 				'PHP_supported_until' => $user_version_supported_until,
 				'php_action'          => $php_action,
 				'PHP_update'          => $php_update,
@@ -583,7 +591,7 @@ class WPMonitor {
 
 										echo $this->gauge_cell( __( 'Themes Up To Date',  'wp-monitor' ), 'g2', sizeof( wp_get_themes() ) - self::$updates['themes'], sizeof( wp_get_themes() ) );
 
-										echo $this->indicator_cell( __( 'wordpress Core',  'wp-monitor' ), 'wordpress' );
+										echo $this->indicator_cell( __( 'WordPress Core',  'wp-monitor' ), 'WordPress' );
 
 										echo $this->php_cell( __( 'PHP',  'wp-monitor' ) );
 
@@ -595,7 +603,7 @@ class WPMonitor {
 
 										echo $this->indicator_cell( __( 'SSL',  'wp-monitor' ), 'ssl' );
 
-										$final_grade = intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['wordpress'] );
+										$final_grade = intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] );
 										// + self::$updates['PHP_update'] );
 
 										echo $this->counter_cell( __( 'Total Updates',  'wp-monitor' ), 'total' );
@@ -746,7 +754,7 @@ class WPMonitor {
 
 		$content = '';
 
-		if ( 'wordpress' === $prefix ) {
+		if ( 'WordPress' === $prefix ) {
 
 			$content = '<div class="onequarter cell">';
 		}
@@ -837,12 +845,12 @@ class WPMonitor {
 				$grades = [
 					'Plugins'   => ( ( ( count( get_plugins() ) - self::$updates['plugins'] ) / count( get_plugins() ) ) * 100 ),
 					'Themes'    => ( ( ( count( wp_get_themes() ) - self::$updates['themes'] ) / count( wp_get_themes() ) ) * 100 ),
-					'wordpress' => ( 0 == self::$updates['wordpress'] ) ? 100 : 50,
-			//	'PHP'     => ( 0 == self::$updates['PHP_update'] ) ? 100 : 50,
-					'SSL'	      => self::$updates['SSL'] ? 100 : 50,
+					'WordPress' => ( 0 == self::$updates['WordPress'] ) ? 100 : 50,
+					'PHP'       => ( 0 == self::$updates['PHP_update'] ) ? 100 : 50,
+					'SSL'       => self::$updates['SSL'] ? 100 : 50,
 				];
 
-				$subtotal = $grades['Plugins'] + $grades['Themes'] + $grades['wordpress'] + /*$grades['PHP'] +*/ $grades['SSL'];
+				$subtotal = $grades['Plugins'] + $grades['Themes'] + $grades['WordPress'] + /*$grades['PHP'] +*/ $grades['SSL'];
 
 				$subtotal = $subtotal / 5;
 
@@ -889,23 +897,23 @@ class WPMonitor {
 		$uploads_size = $this->wpm_foldersize( $upload_dir );
 
 				$variables = [
-					'Name'											=> get_bloginfo( 'name' ),
-					'URL'												=> get_bloginfo( 'url' ),
-					'WP Version'								=> get_bloginfo( 'version' ),
-					'PHP Version'								=> phpversion(),
-					'Server IP' 								=> $_SERVER['SERVER_ADDR'],
-					'Charset'										=> get_bloginfo( 'charset' ),
-					'Admin Email'								=> get_bloginfo( 'admin_email' ),
-					'Language'									=> get_bloginfo( 'language' ),
-					'Stylesheet Directory'			=> get_bloginfo( 'stylesheet_directory' ),
-					'Uploads Directory '				=> $upload_dir,
-					'Uploads Directory Size'		=> round( $uploads_size / 1048576, 2 ) . ' MB',
-					'Front Page Displays'				=> get_option( 'show_on_front' ),
-					'Posts Per Page'						=> get_option( 'posts_per_page' ),
-					'Atom URL'									=> get_bloginfo( 'atom_url' ),
-					'SMTP'											=> ini_get( 'SMTP' ),
-					'Discourage Search Engines'	=> $blog_public,
-					'PHP Memory Limit'					=> ini_get( 'memory_limit' ),
+					'Name'                      => get_bloginfo( 'name' ),
+					'URL'                       => get_bloginfo( 'url' ),
+					'WP Version'                => get_bloginfo( 'version' ),
+					'PHP Version'               => phpversion(),
+					'Server IP'                 => $_SERVER['SERVER_ADDR'],
+					'Charset'                   => get_bloginfo( 'charset' ),
+					'Admin Email'               => get_bloginfo( 'admin_email' ),
+					'Language'                  => get_bloginfo( 'language' ),
+					'Stylesheet Directory'      => get_bloginfo( 'stylesheet_directory' ),
+					'Uploads Directory '        => $upload_dir,
+					'Uploads Directory Size'    => round( $uploads_size / 1048576, 2 ) . ' MB',
+					'Front Page Displays'       => get_option( 'show_on_front' ),
+					'Posts Per Page'            => get_option( 'posts_per_page' ),
+					'Atom URL'                  => get_bloginfo( 'atom_url' ),
+					'SMTP'                      => ini_get( 'SMTP' ),
+					'Discourage Search Engines' => $blog_public,
+					'PHP Memory Limit'          => ini_get( 'memory_limit' ),
 				];
 
 				update_option( 'wpm_variables', $variables );
@@ -958,25 +966,12 @@ class WPMonitor {
 					$total_size += $size;
 
 				}
-
 			}
-
 		}
 
 		return $total_size;
 
 	}
-
-	/**
-	 * Checks if the website/server is using SSL
-	 *
-	 * @since 0.1
-	 */
-	// public function ssl_check() {
-	//
-	// 	return is_ssl() ? 0 : 1;
-	//
-	// }
 
 	/**
 	 * Callback for the general settings section of the settings page
@@ -1001,22 +996,23 @@ class WPMonitor {
 			return;
 
 		}
+		$suffix = SCRIPT_DEBUG ? '' : '.min';
 
-		wp_register_style( 'wpm_admin_css',  plugin_dir_url( __FILE__ ) . '/library/css/admin-style.css', false, '1.0.0' );
+		wp_register_style( 'wpm_admin_css',  plugin_dir_url( __FILE__ ) . "/library/css/admin-style{$suffix}.css", false, '1.0.0' );
 		wp_enqueue_style( 'wpm_admin_css' );
 
 		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', [ 'jquery' ], '1.0.0' );
 		wp_localize_script( 'wpm_counter', 'wpm_data', [
-			// 'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['wordpress'] + self::$updates['PHP_update'],
-			'grade'	            => (integer) $this->calculate_grade(),
-			'wordpress'	        => intval( self::$updates['wordpress'] ),
-			'ssl'	              => self::$updates['SSL'],
+			// 'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['PHP_update'],
+			'grade'             => (integer) $this->calculate_grade(),
+			'WordPress'         => intval( self::$updates['WordPress'] ),
+			'ssl'               => self::$updates['SSL'],
 			'plugin_updates'    => self::$updates['plugins'],
-			'total_plugins'	    => count( get_plugins() ),
-			'total_themes'	    => count( wp_get_themes() ),
+			'total_plugins'     => count( get_plugins() ),
+			'total_themes'      => count( wp_get_themes() ),
 			'theme_updates'     => self::$updates['themes'],
-			'wordpress_updates' => self::$updates['wordpress'],
-			'php_updates' => self::$updates['php_action'],
+			'WordPress_updates' => self::$updates['WordPress'],
+			'php_updates'       => self::$updates['php_action'],
 			'ssl'               => self::$updates['SSL'] ? 'On' : 'Off',
 		] );
 
@@ -1025,8 +1021,8 @@ class WPMonitor {
 		wp_register_script( 'wpm_phpcell', plugin_dir_url( __FILE__ ) . 'library/js/phpcell.js', [ 'jquery' ], '1.0.0' );
 		wp_localize_script( 'wpm_phpcell', 'wpm_data_php', [
 			'current_version'   => $this->php_version( 2 ),
-			'state'	            => self::$updates['php_action'],
-			'supported_until' =>	gmdate('m-d-Y', PHPVersioner::$info[ '7.1' ]['supported_until'] ), // DEBUG
+			'state'             => self::$updates['php_action'],
+			'supported_until'   => gmdate( 'm-d-Y', PHPVersioner::$info[ $this->php_version( 2 ) ]['supported_until'] ),
 		] );
 
 		wp_enqueue_script( 'wpm_phpcell' );
@@ -1038,15 +1034,11 @@ class WPMonitor {
 		wp_enqueue_style( 'wpm_tabs_css' );
 
 		/* Gauges */
-		wp_register_style( 'wpm_justgage_css',  plugin_dir_url( __FILE__ ) . '/library/css/justgage.css', false, '1.0.0' );
-		wp_enqueue_style( 'wpm_justgage_css' );
-
 		wp_register_script( 'wpm_raphael',  plugin_dir_url( __FILE__ ) . '/library/js/raphael-2.1.4.min.js' );
 		wp_enqueue_script( 'wpm_raphael' );
 
 		wp_register_script( 'wpm_justgage',  plugin_dir_url( __FILE__ ) . '/library/js/justgage.js' );
 		wp_enqueue_script( 'wpm_justgage' );
-
 
 		/* Admin Jquery */
 		wp_register_script( 'wpm_admin',  plugin_dir_url( __FILE__ ) . '/library/js/admin-wpmonitor.js', [ 'jquery' ] );
@@ -1055,13 +1047,12 @@ class WPMonitor {
 		/* Font Awesome */
 		wp_enqueue_style( 'cp_fontawesome', plugin_dir_url( __FILE__ ) . '/library/fonts/font-awesome-4.7.0/css/font-awesome.min.css', [], false, 'all' );
 
-
 		/* Reveal */
 		 wp_register_script( 'wpm_revealer',  plugin_dir_url( __FILE__ ) . '/library/js/revealer.js', [ 'jquery' ], '1.0.0' );
 		 wp_enqueue_script( 'wpm_revealer' );
 
 		 /* Widget */
-		 if( self::$options['wpm_show_monitor'] === false ) {
+		if ( false === self::$options['wpm_show_monitor'] ) {
 
 			wp_register_script( 'wpm_widget',  plugin_dir_url( __FILE__ ) . '/library/js/widget.js', [ 'jquery' ], '1.0.0' );
 			wp_enqueue_script( 'wpm_widget' );

@@ -6,13 +6,13 @@ jQuery(document).ready(function() {
 		 var total_message =
 		 'Plugin Updates: ' + wpm_data.plugin_updates + '\n' +
 		 'Theme Updates: ' + wpm_data.theme_updates + '\n' +
-		 'WordPress Updates: ' + wpm_data.wordpress_updates + '\n' +
+		 'WordPress Updates: ' + wpm_data.WordPress_updates + '\n' +
 		 'PHP: ' + wpm_data.php_updates;
 
 		 var grade_message =
 		 'Plugin Updates: ' + ( wpm_data.total_plugins - wpm_data.plugin_updates ) + ' / ' + wpm_data.total_plugins + ' up to date' + '\n' +
 		 'Theme Updates: ' + ( wpm_data.total_themes - wpm_data.theme_updates ) + ' / ' + wpm_data.total_themes + ' up to date' + '\n' +
-		 'WordPress Updates: ' + wpm_data.wordpress_updates + ' updates' + '\n' +
+		 'WordPress Updates: ' + wpm_data.WordPress_updates + ' updates' + '\n' +
 		 'PHP Updates: ' + wpm_data.php_updates + '\n' +
 		 'SSL: ' + wpm_data.ssl;
 
@@ -20,20 +20,19 @@ jQuery(document).ready(function() {
 	//
 	 	setTimeout(function() {
 
-		var number = Math.floor(Math.random() * 100) + 1
+		var number = Math.floor(Math.random() * 100) + 1;
 
 		jQuery('#total_counter').text(number);
 
 		jQuery('#grade_counter').text(number);
 
 	}, (time * 50) );
-	//
 	}
 
 		setTimeout(function(){
 
 
-			jQuery('#total_counter').text( parseInt(wpm_data.plugin_updates , 10 ) +  parseInt(wpm_data.theme_updates , 10 ) + parseInt(wpm_data.wordpress_updates , 10 ) );
+			jQuery('#total_counter').text( parseInt(wpm_data.plugin_updates , 10 ) +  parseInt(wpm_data.theme_updates , 10 ) + parseInt(wpm_data.WordPress_updates , 10 ) );
 
 			jQuery('#grade_counter').text( parseInt(wpm_data.grade , 10 ) );
 
@@ -53,17 +52,17 @@ jQuery(document).ready(function() {
 
 		setTimeout(function(){
 
-			if ( wpm_data.wordpress == 0 ) {
+			if ( wpm_data.WordPress == 0 ) {
 
-				jQuery('#wordpress_light').css( 'background', '#01FC27' );
+				jQuery('#WordPress_light').css( 'background', '#01FC27' );
 
-				jQuery('#wpm_wordpress_message').text( 'Up To Date' );
+				jQuery('#wpm_WordPress_message').text( 'Up To Date' );
 
 			} else {
 
-				jQuery('#wordpress_light').css( 'background', '#FF0000' );
+				jQuery('#WordPress_light').css( 'background', '#FF0000' );
 
-				jQuery('#wpm_wordpress_message').text( 'Update Now!' );
+				jQuery('#wpm_WordPress_message').text( 'Update Now!' );
 
 			}
 

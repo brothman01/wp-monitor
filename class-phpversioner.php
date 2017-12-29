@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * [PHPVersioner - Main class of the main file of the plugin]
+ */
 class PHPVersioner extends WPMonitor {
 
 	public static $info;
@@ -17,15 +20,14 @@ class PHPVersioner extends WPMonitor {
 			try {
 					set_transient( 'wpm_php_info', $this->wpm_version_info(), 24 * HOUR_IN_SECONDS );
 
-					$php_data = get_transient('wpm_php_info');
+				$php_data = get_transient( 'wpm_php_info' );
 
-			} catch (Exception $e) {
+			} catch ( Exception $e ) {
 				// Could not connect.
 			}
-
 		} else {
 
-			$php_data = get_transient('wpm_php_info');
+			$php_data = get_transient( 'wpm_php_info' );
 
 		}
 
@@ -33,20 +35,24 @@ class PHPVersioner extends WPMonitor {
 
 	}
 
+		 /**
+		  * [wpm_version_info - Get or make transient of the php support data read from the official php site.
+		  *
+		  * @return array 'released', 'supported_until', 'security_until' for each version of php listed on the page.
+		  */
 	public function wpm_version_info() {
 
-			$contents = wp_remote_get( 'http://php.net/supported-versions.php' );
+			$contents = vip_safe_wp_remote_get( 'http://php.net/supported-versions.php' );
 
 			$body = str_replace( '<link rel="shortcut icon" href="http://php.net/favicon.ico">', '', wp_remote_retrieve_body( $contents ) );
 
-			$dom = new DOMDocument;
+			$dom = new DOMDocument();
 
 			libxml_use_internal_errors( true );
 
 			$dom->loadHTML( $body );
 
 			$tr = $dom->getElementsByTagName( 'tr' );
-
 
 			$column_text = [];
 
@@ -58,7 +64,7 @@ class PHPVersioner extends WPMonitor {
 
 			foreach ( $columns as $column ) {
 
-				$column_text[ $x ] = trim( str_replace( '*', '', $column->textContent ) );
+				$column_text[ $x ] = trim( str_replace( '*', '', $column->textContent ) ); // @codingStandardsIgnoreLine
 
 					$x++;
 
@@ -67,7 +73,7 @@ class PHPVersioner extends WPMonitor {
 
 			$column_text = array_chunk( $column_text, 7 );
 
-			array_pop( $column_text[3] );
+			$column_text = array_slice( $column_text, 1, -1 );
 
 			$php_version_info = array();
 
