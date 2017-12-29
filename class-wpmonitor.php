@@ -396,7 +396,7 @@ class WPMonitor {
 
 		echo '<ul>
 			<li><a href="#tabs-dashboard-1">Updates (' . ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) ) . ')</a></li>
-			<li><a href="#tabs-dashboard-2">SSL/PHP (' . (is_ssl() ? 'on' : 'off') . '/' . $this->php_version( 2 ) . ')</a></li>
+			<li><a href="#tabs-dashboard-2">SSL/PHP (' . ( is_ssl() ? 'on' : 'off' ) . '/' . $this->php_version( 2 ) . ')</a></li>
 			<li><a href="#tabs-dashboard-3">Grades</a></li>
 			<li><a href="#tabs-dashboard-4">Variables (...)</a></li>
 			<li><a href="#tabs-dashboard-5">Logins</a></li>
@@ -672,7 +672,7 @@ class WPMonitor {
 
 						echo '</div>';
 
-					echo apply_filters( 'wpm_table_tab' , '' );
+					echo apply_filters( 'wpm_table_tab', '' );
 
 					echo '</div>
 
@@ -1047,10 +1047,10 @@ class WPMonitor {
 		wp_enqueue_style( 'cp_fontawesome', plugin_dir_url( __FILE__ ) . '/library/fonts/font-awesome-4.7.0/css/font-awesome.min.css', [], false, 'all' );
 
 		/* Reveal */
-		 wp_register_script( 'wpm_revealer', plugin_dir_url( __FILE__ ) . '/library/js/revealer.js', [ 'jquery' ], '1.0.0' );
-		 wp_enqueue_script( 'wpm_revealer' );
+		wp_register_script( 'wpm_revealer', plugin_dir_url( __FILE__ ) . '/library/js/revealer.js', [ 'jquery' ], '1.0.0' );
+		wp_enqueue_script( 'wpm_revealer' );
 
-		 /* Widget */
+		/* Widget */
 		if ( false === self::$options['wpm_show_monitor'] ) {
 
 			wp_register_script( 'wpm_widget', plugin_dir_url( __FILE__ ) . '/library/js/widget.js', [ 'jquery' ], '1.0.0' );
