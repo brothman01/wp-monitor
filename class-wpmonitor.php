@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP Monitor
  * Description: Collects important data from site and displays it on the dashboard
- * Version: 1.1.2
+ * Version: 1.1.1
  * Author:      Ben Rothman
  * Slug:        wp-monitor
  * Author URI:  http://www.BenRothman.org
@@ -506,7 +506,7 @@ class WPMonitor {
 			self::$updates = [
 				'plugins'             => $update_data['counts']['plugins'],
 				'themes'              => $update_data['counts']['themes'],
-				'WordPress'           => $update_data['counts']['WordPress'],
+				'WordPress'           => $update_data['counts']['wordpress'],
 				'PHP_supported_until' => $user_version_supported_until,
 				'php_action'          => $php_action,
 				'PHP_update'          => $php_update,
@@ -1000,7 +1000,7 @@ class WPMonitor {
 		wp_register_style( 'wpm_admin_css', plugin_dir_url( __FILE__ ) . "/library/css/admin-style{$suffix}.css", false, '1.0.0' );
 		wp_enqueue_style( 'wpm_admin_css' );
 
-		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . "library/js/renamed{$suffix}.js", [ 'jquery' ], '1.0.0' );
+		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', [ 'jquery' ], '1.0.0' );
 		wp_localize_script( 'wpm_counter', 'wpm_data', [
 			// 'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['PHP_update'],
 			'grade'             => (integer) $this->calculate_grade(),
@@ -1017,7 +1017,7 @@ class WPMonitor {
 
 		wp_enqueue_script( 'wpm_counter' );
 
-		wp_register_script( 'wpm_phpcell', plugin_dir_url( __FILE__ ) . "library/js/phpcell{$suffix}.js", [ 'jquery' ], '1.0.0' );
+		wp_register_script( 'wpm_phpcell', plugin_dir_url( __FILE__ ) . 'library/js/phpcell.js', [ 'jquery' ], '1.0.0' );
 		wp_localize_script( 'wpm_phpcell', 'wpm_data_php', [
 			'current_version' => $this->php_version( 2 ),
 			'state'           => self::$updates['php_action'],
