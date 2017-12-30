@@ -6,34 +6,38 @@ notifications:
     on_failure: change
   slack:
     secure: m7u+XoneBm6N+VSt8lkpH9Zi8aZMA7vgg7VZgCc7PiP/N0nbUAeoNHIWv6Hi4mc6xfZYuQ31EHSKt4uM3f710rzR8JuYSd97vVAMronP2vMMw2ziP9jaTehTSLVozChUVsf0D6UsN2CXj/7NEirEXnNkiU7H95GJKMP2b+ptcIVfWc6xnNNvIlChGxOchqdQ6wyi4Genoj7HU+L6GZBSlExUI0lBm9jOtsDuf+sAywZRC2m8S/3Y1njqvu/6vfS6SpBkglhcwHKdKYFDDdSBrY1xkogL3uiDJCPUh2GcsiB/WB4Rkzz1vl1YScD8kcW+HOvwtpzeQhawzBSERO9b4BX2oUqEZZRQOyfZgb7++leofYpTTtHkEgfQMVXSxd0kOpTnVK0ukuHGSsU2SesJPyINJtH7GQgz00c1TgiihNzL8968WLqkz2FRhyIuNZN8C5n2GQLbJkOmVBI3n9qS9vocf14uMkP3SESlJDF3MDhPV2JOKjB0WRE1SZwGS08pTGeG+nC8NnInM2bjJ84aF8FN72wISFlGv2J6uYSCL6mHsX7Oar4Pg21Jck9f3/Zw/fAaKQQcFaAwtajXPI/Cp+sS0Scyq4AIHxbWCtUhQ4mq8cl141pqod2BoPzgpBXvTvFQcHzcm/jnNfeCvfk8QZQBiBBVTM0ARwq/bmPZFMc=
-
 branches:
   only:
-    - master
-    - development
-
+  - master
+  - development
 php:
-  - 5.6
-  - 7.1
-
+- 5.6
+- 7.1
 env:
   matrix:
-    - WP_VERSION=4.4
-    - WP_VERSION=latest
-    - WP_VERSION=trunk
-
+  - WP_VERSION=4.4
+  - WP_VERSION=latest
+  - WP_VERSION=trunk
 before_install:
-  - composer global require "squizlabs/php_codesniffer=*"
-  - composer global require "wp-coding-standards/wpcs"
-  - ls ${HOME}/.composer/vendor/squizlabs/php_codesniffer/bin
-  - ${HOME}/.composer/vendor/squizlabs/php_codesniffer/bin/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
-  # After CodeSniffer install you should refresh your path.
-  - phpenv rehash;
-
+- composer global require "squizlabs/php_codesniffer=*"
+- composer global require "wp-coding-standards/wpcs"
+- ls ${HOME}/.composer/vendor/squizlabs/php_codesniffer/bin
+- "${HOME}/.composer/vendor/squizlabs/php_codesniffer/bin/phpcs --config-set installed_paths
+  ~/.composer/vendor/wp-coding-standards/wpcs"
+- phpenv rehash;
 script:
-  # Run against WordPress Coding Standards.
-  # If you use a custom ruleset, change `--standard=WordPress` to point to your ruleset file,
-  # for example: `--standard=wpcs.xml`.
-  # You can use any of the normal PHPCS command line arguments in the command:
-  # https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage
-  - ${HOME}/.composer/vendor/squizlabs/php_codesniffer/bin/phpcs --standard=WordPress-Core --extensions=php --colors -s -p -v ./
+- "${HOME}/.composer/vendor/squizlabs/php_codesniffer/bin/phpcs --standard=WordPress-Core
+  --extensions=php --colors -s -p -v ./"
+deploy:
+  provider: releases
+  api_key:
+    secure: LZOPFmowNm3JImcMCOniiEyqJeKHmv/gor7ANjDRisgnl/Mthfurx7rQJPlzP3mkGr5IzNXIR5YR6scGc9k/D3Nojj22FRG7dK+hZItqci+8AsZs+4uShvky2c/yc7skwBcpPuPwr24WetQWrp+2DDiB+MoqmS9Q19+4PWhb2NuPAgjQmIzFtThkwqTqhRMDVwOlWpiUwZeWfpnfnxAhzq/jpF/zHq5CNd+KpdifJNdbkIxkut3JKB1GjgVIqdZoqU33zLnPEb/nEwcPkk7zxuyyTEm4zVmP7zBtAbwOIOL7fRfH/vS3LbyyobnZfDLQpaJMy0FxlGKD2UONrFP+11L46WqM4iby2JtmT7QAlEhchjfFkOrvkLRqQBf7X/AU4C0hMniwoVwsNPDJDyQdU2wIFF0PnXkhScvYck5le1FtEffzIANp45mymWQInaHwyN40ojwxPkFC/xM/D4jquYcE9I45la42+rv0XrPK0yJ76SufU5xO9GAZYiL4KrwIOuz9r2iz8l3RMkXrRHSBxZN9njUih6PP2vfuXbfZ2Xp3L/1TjuUenzcxNdjZ2sM5ZK09oNTBJmf6gyBosXcfyqX+9AiSx7lC4/jIyRhiLwqaQyy/rQw3hTA74HqgI8D1E2PmoIVEvpYjsuUlExHiAYe3DgCHoZWM1otpes4nF6k=
+  file_glob: true
+  file: build/wp-monitor-*.zip
+  on:
+    repo: brothman01/wp-monitor
+    tags: true
+    php: '7.1'
+    condition: "$WP_VERSION=trunk"
+  skip_cleanup: true
+  overwrite: true
