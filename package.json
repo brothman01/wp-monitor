@@ -2,7 +2,7 @@
 	"name": "wp-monitor",
 	"title": "WP Monitor",
 	"description": "Quickly and easily cross check your site with WebPageTest.org.",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"tested_up_to": "4.9",
 	"author": "Ben Rothman",
 	"license": "GPL-2.0",
@@ -45,7 +45,7 @@
 		"matchdep": "^2.0.0"
 	},
 	"scripts": {
-		"version": "grunt version && grunt deploy-docs && git add -A .",
+		"version": "grunt version && git add -A .",
 		"postversion": "git push && git push --tags",
 		"test": "phpcs --standard=WordPress *.php"
 	}

@@ -28,6 +28,9 @@ before_install:
 script:
 - "${HOME}/.composer/vendor/squizlabs/php_codesniffer/bin/phpcs --standard=WordPress-Core
   --extensions=php --colors -s -p -v ./"
+before_deploy:
+- npm install
+- grunt build
 deploy:
   provider: releases
   api_key:
