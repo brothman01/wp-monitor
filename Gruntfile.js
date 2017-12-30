@@ -220,6 +220,7 @@ module.exports = function(grunt) {
 		wp_deploy: {
 			deploy: {
 				options: {
+					assets_dir: 'wp-org-assets/',
 					plugin_slug: 'wp-monitor',
 					build_dir: 'build/wp-monitor/',
 					plugin_main_file: 'class-wpmonitor.php',
