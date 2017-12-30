@@ -5,7 +5,7 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: pkg,
 		jshint: {
-			files: ['library/js/**/*.js', '!library/js/justgage.js', '!library/js/*.min.js', 'Gruntfile.js'],
+			files: ['library/js/**/*.js', '!library/js/justgage.js', '!library/js/*.min.js', '!library/js/renamed.js', 'Gruntfile.js'],
 			options: {
 				globals: {
 					jQuery: true
@@ -222,6 +222,7 @@ module.exports = function(grunt) {
 				options: {
 					plugin_slug: 'wp-monitor',
 					build_dir: 'build/wp-monitor/',
+					plugin_main_file: 'class-wpmonitor.php',
 					deploy_trunk: true,
 					deploy_tag: pkg.version,
 					max_buffer: 1024*1024*10
@@ -273,7 +274,6 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'readme', [
 		'wp_readme_to_markdown'
 	] );
-
-  grunt.registerTask( 'readme', [ 'jshint' ] );
-
+  grunt.registerTask( 'jshinter', [ 'jshint' ] );
+	grunt.registerTask( 'version',     [ 'replace', 'readme', 'default', 'clean' ] );
 };
