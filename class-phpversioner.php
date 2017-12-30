@@ -35,11 +35,11 @@ class PHPVersioner extends WPMonitor {
 
 	}
 
-		 /**
-		  * [wpm_version_info - Get or make transient of the php support data read from the official php site.
-		  *
-		  * @return array 'released', 'supported_until', 'security_until' for each version of php listed on the page.
-		  */
+	/**
+	 * [wpm_version_info - Get or make transient of the php support data read from the official php site.
+	 *
+	 * @return array 'released', 'supported_until', 'security_until' for each version of php listed on the page.
+	 */
 	public function wpm_version_info() {
 
 			$contents = vip_safe_wp_remote_get( 'http://php.net/supported-versions.php' );

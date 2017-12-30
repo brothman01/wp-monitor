@@ -145,18 +145,19 @@ class Settings extends WPMonitor {
 	public function wpm_general_section_callback() {
 
 		esc_attr_e( 'Edit the settings for the plugin here.  For support or to check out the cool add-ons available for Admin Tools, visit us at', 'wp-monitor' );
-					 esc_attr_e( '<a href="http://www.wp-monitor.net">www.wp-monitor.net</a>.' );
 
-					printf(
-						'<br />
-							<h3>%1$s</h3>' .
-							'<select multiple>
-					       <option %2$s>%3$s</option>
-								 </select>',
-						esc_html__( 'Active Addons', 'wp-monitor' ),
-						esc_attr( $this->get_color( 'emailaddon' ) ),
-						esc_html__( 'Email Notifications', 'wp-monitor' )
-					);
+		esc_attr_e( '<a href="http://www.wp-monitor.net">www.wp-monitor.net</a>.' );
+
+		printf(
+			'<br />
+			<h3>%1$s</h3>' .
+			'<select multiple>
+				<option %2$s>%3$s</option>
+			</select>',
+			esc_html__( 'Active Addons', 'wp-monitor' ),
+			esc_attr( $this->get_color( 'emailaddon' ) ),
+			esc_html__( 'Email Notifications', 'wp-monitor' )
+		);
 
 	}
 
