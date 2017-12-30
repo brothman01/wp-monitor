@@ -1000,7 +1000,7 @@ class WPMonitor {
 		wp_register_style( 'wpm_admin_css', plugin_dir_url( __FILE__ ) . "/library/css/admin-style{$suffix}.css", false, '1.0.0' );
 		wp_enqueue_style( 'wpm_admin_css' );
 
-		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . 'library/js/renamed.js', [ 'jquery' ], '1.0.0' );
+		wp_register_script( 'wpm_counter', plugin_dir_url( __FILE__ ) . "library/js/renamed{$suffix}.js", [ 'jquery' ], '1.0.0' );
 		wp_localize_script( 'wpm_counter', 'wpm_data', [
 			// 'total'	=> self::$updates['plugins'] + self::$updates['themes'] + self::$updates['WordPress'] + self::$updates['PHP_update'],
 			'grade'             => (integer) $this->calculate_grade(),
@@ -1017,7 +1017,7 @@ class WPMonitor {
 
 		wp_enqueue_script( 'wpm_counter' );
 
-		wp_register_script( 'wpm_phpcell', plugin_dir_url( __FILE__ ) . 'library/js/phpcell.js', [ 'jquery' ], '1.0.0' );
+		wp_register_script( 'wpm_phpcell', plugin_dir_url( __FILE__ ) . "library/js/phpcell{$suffix}.js", [ 'jquery' ], '1.0.0' );
 		wp_localize_script( 'wpm_phpcell', 'wpm_data_php', [
 			'current_version' => $this->php_version( 2 ),
 			'state'           => self::$updates['php_action'],

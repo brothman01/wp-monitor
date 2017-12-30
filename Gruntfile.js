@@ -5,7 +5,7 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: pkg,
 		jshint: {
-			files: ['library/js/**/*.js', '!library/js/justgage.js', '!library/js/*.min.js', 'Gruntfile.js'],
+			files: ['library/js/**/*.js', '!library/js/justgage.js', '!library/js/*.min.js', '!library/js/renamed.js', 'Gruntfile.js'],
 			options: {
 				globals: {
 					jQuery: true
