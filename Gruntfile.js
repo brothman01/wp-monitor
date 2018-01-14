@@ -276,5 +276,13 @@ module.exports = function(grunt) {
 		'wp_readme_to_markdown'
 	] );
   grunt.registerTask( 'jshinter', [ 'jshint' ] );
+
+	grunt.registerTask( 'minify',     [
+		'autoprefixer',
+		'usebanner',
+		'uglify',
+		'imagemin'
+	] );
+	
 	grunt.registerTask( 'version',     [ 'replace', 'readme', 'default', 'clean' ] );
 };
