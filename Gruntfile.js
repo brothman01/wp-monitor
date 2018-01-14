@@ -14,7 +14,7 @@ module.exports = function(grunt) {
 		},
 		watch: {
 			css: {
-				files: [ 'library/css/*.css, ! library/css/*.min.css' ],
+				files: [ 'library/css/*.css', ! 'library/css/*.min.css' ],
 				tasks: [ 'cssmin', 'watch-banner' ],
 				options: {
 					spawn: false,
@@ -283,6 +283,6 @@ module.exports = function(grunt) {
 		'uglify',
 		'imagemin'
 	] );
-	
+
 	grunt.registerTask( 'version',     [ 'replace', 'readme', 'default', 'clean' ] );
 };
