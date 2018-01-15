@@ -14,7 +14,7 @@ module.exports = function(grunt) {
 		},
 		watch: {
 			css: {
-				files: [ 'library/css/*.css, ! library/css/*.min.css' ],
+				files: [ 'library/css/*.css', ! 'library/css/*.min.css' ],
 				tasks: [ 'cssmin', 'watch-banner' ],
 				options: {
 					spawn: false,
@@ -220,6 +220,7 @@ module.exports = function(grunt) {
 		wp_deploy: {
 			deploy: {
 				options: {
+					assets_dir: 'wp-org-assets/',
 					plugin_slug: 'wp-monitor',
 					build_dir: 'build/wp-monitor/',
 					plugin_main_file: 'class-wpmonitor.php',
@@ -275,5 +276,13 @@ module.exports = function(grunt) {
 		'wp_readme_to_markdown'
 	] );
   grunt.registerTask( 'jshinter', [ 'jshint' ] );
+
+	grunt.registerTask( 'minify',     [
+		'autoprefixer',
+		'usebanner',
+		'uglify',
+		'imagemin'
+	] );
+
 	grunt.registerTask( 'version',     [ 'replace', 'readme', 'default', 'clean' ] );
 };
