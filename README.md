@@ -9,7 +9,7 @@
 
 A simple WordPress plugin that puts important information on the dashboard.
 
-[![Build Status](https://travis-ci.org/brothman01/wp-monitor.svg?branch=master)](https://travis-ci.org/brothman01/wp-monitor) [![devDependencies Status](https://david-dm.org/brothman01/wp-monitor/master/dev-status.svg)](https://david-dm.org/brothman01/wp-monitor/master?type=dev) [![License](https://img.shields.io/badge/license-GPL--2.0-brightgreen.svg)](https://github.com/brothman01/wp-monitor/blob/master/license.txt) [![PHP >= 5.2](https://img.shields.io/badge/php-%3E=%205.2-8892bf.svg)](https://secure.php.net/supported-versions.php) [![WordPress >= 4.4](https://img.shields.io/badge/wordpress-%3E=%204.4-blue.svg)](https://wordpress.org/download/release-archive/)  
+[![Build Status](https://travis-ci.org/brothman01/wp-monitor.svg?branch=master)](https://travis-ci.org/brothman01/wp-monitor) [![License](https://img.shields.io/badge/license-GPL--2.0-brightgreen.svg)](https://github.com/brothman01/wp-monitor/blob/master/license.txt) [![PHP >= 5.2](https://img.shields.io/badge/php-%3E=%205.2-8892bf.svg)](https://secure.php.net/supported-versions.php) [![WordPress >= 4.4](https://img.shields.io/badge/wordpress-%3E=%204.4-blue.svg)](https://wordpress.org/download/release-archive/)  
 
 ## Description ##
 
