@@ -44,4 +44,4 @@ deploy:
     php: '7.1'
     condition: "$WP_VERSION=trunk"
   skip_cleanup: true
-  overwrite: true
+  overwrite: truee
