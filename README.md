@@ -13,7 +13,7 @@ A simple WordPress plugin that puts important information on the dashboard.
 
 ## Description ##
 
-A simple WordPress plugin that puts update, important site and server information in one convenient, easy-to-find place on the dashboard.  Monitor one or multiple sites on the go, this plugin makes your job as a site administrator easier by eliminating the need to look through the site and server for the information that WP Monitor collects and puts all together right on the dashboard.  Print a report that tells you exactly how your site is doing in seconds on one or multiple sites making administration easy.
+A simple WordPress plugin that puts update information, important site information and server information on the dashboard in one convenient, easy-to-find place so that a site's health can be assessed at a glance.  Monitor one or multiple sites on the go, this plugin makes your job as a site administrator easier by eliminating the need to look through the site and server for the information that WP Monitor collects and puts all together.  Print a report that tells you exactly how your site is doing in seconds on one or multiple sites making administration easy.
 
 The display is on the dashboard and the settings page is a sub-item in the 'Tools' menu.  This plugin is great for productivity and easy site monitoring because of how much it speeds up the workflow of any site admin.
 
