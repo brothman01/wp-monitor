@@ -1,3 +1,4 @@
+![WP Monitor Logo](/wp-org-assets/banner-772x250.png)
 # WP Monitor #
 **Contributors:** [brothman01](https://profiles.wordpress.org/brothman01)  
 **Tags:** [productivity](https://wordpress.org/themes/tags/productivity/), [monitor](https://wordpress.org/themes/tags/monitor/), [updates](https://wordpress.org/themes/tags/updates/), [php](https://wordpress.org/themes/tags/php/), [variables](https://wordpress.org/themes/tags/variables/), [admin](https://wordpress.org/themes/tags/admin/), [WP Monitor](https://wordpress.org/themes/tags/WP Monitor/)  
@@ -6,8 +7,6 @@
 **Stable tag:** 1.1.4
 **License:** GPLv2 or later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
-
-![This is an image](/wp-org-assets/banner-772x250.png)
 
 A simple WordPress plugin that puts important information on the dashboard.
 
