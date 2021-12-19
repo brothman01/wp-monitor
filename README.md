@@ -7,6 +7,8 @@
 **License:** GPLv2 or later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 
+![This is an image](/wp-org-assets/banner-772x250.png)
+
 A simple WordPress plugin that puts important information on the dashboard.
 
 [![Build Status](https://travis-ci.org/brothman01/wp-monitor.svg?branch=master)](https://travis-ci.org/brothman01/wp-monitor) [![License](https://img.shields.io/badge/license-GPL--2.0-brightgreen.svg)](https://github.com/brothman01/wp-monitor/blob/master/license.txt) [![PHP >= 7.4](https://img.shields.io/badge/php-%3E=%207.4-8892bf.svg)](https://secure.php.net/supported-versions.php) [![WordPress >= 4.4](https://img.shields.io/badge/wordpress-%3E=%204.4-blue.svg)](https://wordpress.org/download/release-archive/)  
