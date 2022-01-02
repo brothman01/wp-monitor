@@ -43,22 +43,22 @@ class Settings extends WPMonitor {
 	 * Creates the admin page where settings for this plugin can be edited.
 	 */
 	public function create_admin_page() {
-							?>
-							<div class="wrap">
-								<h1>WP Monitor</h1>
-								<form method="post" action="options.php">
-									<?php
+		?>
+		<div class="wrap">
+			<h1>WP Monitor</h1>
+			<form method="post" action="options.php">
+				<?php
 
-										settings_fields( 'wpm_options_group' );
+					settings_fields( 'wpm_options_group' );
 
-										do_settings_sections( 'options_page' );
+					do_settings_sections( 'options_page' );
 
-										submit_button();
+					submit_button();
 
-										?>
-									</form>
-								</div>
-								<?php
+					?>
+				</form>
+			</div>
+			<?php
 	}
 
 	/**
@@ -85,21 +85,21 @@ class Settings extends WPMonitor {
 					[ $this, 'wpm_sanitize' ]
 				);
 
-								add_settings_field(
-									'wpm_show_monitor',
-									__( 'Show Classic Monitor? (not widget)', 'admin-tools' ),
-									[ $this, 'wpm_show_monitor_callback' ],
-									'options_page',
-									'general_section_id'
-								);
+				add_settings_field(
+					'wpm_show_monitor',
+					__( 'Show Classic Monitor? (not widget)', 'admin-tools' ),
+					[ $this, 'wpm_show_monitor_callback' ],
+					'options_page',
+					'general_section_id'
+				);
 
-								add_settings_field(
-									'wpm_how_often',
-									__( 'Show Classic Monitor?', 'admin-tools' ),
-									[ $this, 'wpm_show_monitor_callback' ],
-									'options_page',
-									'general_section_id2'
-								);
+				add_settings_field(
+					'wpm_how_often',
+					__( 'Show Classic Monitor?', 'admin-tools' ),
+					[ $this, 'wpm_show_monitor_callback' ],
+					'options_page',
+					'general_section_id2'
+				);
 
 	}
 
@@ -112,18 +112,18 @@ class Settings extends WPMonitor {
 	 */
 	public function wpm_sanitize( $input ) {
 
-					$valid = array();
+		$valid = array();
 
-					$valid['wpm_show_monitor']    = (bool) empty( $input['wpm_show_monitor'] ) ? false : true;
-					$valid['wpm_how_often']       = isset( $input['wpm_how_often'] ) ? sanitize_text_field( $input['wpm_how_often'] ) : 'Never';
-					$valid['wpm_send_email']      = (bool) empty( $input['wpm_send_email'] ) ? false : true;
-					$valid['wpm_check_plugins']   = (bool) empty( $input['wpm_check_plugins'] ) ? false : true;
-					$valid['wpm_check_themes']    = (bool) empty( $input['wpm_check_themes'] ) ? false : true;
-					$valid['wpm_check_wordpress'] = (bool) empty( $input['wpm_check_wordpress'] ) ? false : true;
-					$valid['wpm_check_php']       = (bool) empty( $input['wpm_check_php'] ) ? false : true;
-					$valid['wpm_check_ssl']       = (bool) empty( $input['wpm_check_ssl'] ) ? false : true;
+		$valid['wpm_show_monitor']    = (bool) empty( $input['wpm_show_monitor'] ) ? false : true;
+		$valid['wpm_how_often']       = isset( $input['wpm_how_often'] ) ? sanitize_text_field( $input['wpm_how_often'] ) : 'Never';
+		$valid['wpm_send_email']      = (bool) empty( $input['wpm_send_email'] ) ? false : true;
+		$valid['wpm_check_plugins']   = (bool) empty( $input['wpm_check_plugins'] ) ? false : true;
+		$valid['wpm_check_themes']    = (bool) empty( $input['wpm_check_themes'] ) ? false : true;
+		$valid['wpm_check_wordpress'] = (bool) empty( $input['wpm_check_wordpress'] ) ? false : true;
+		$valid['wpm_check_php']       = (bool) empty( $input['wpm_check_php'] ) ? false : true;
+		$valid['wpm_check_ssl']       = (bool) empty( $input['wpm_check_ssl'] ) ? false : true;
 
-					return $valid;
+		return $valid;
 
 	}
 
@@ -132,10 +132,10 @@ class Settings extends WPMonitor {
 	 */
 	public function wpm_show_monitor_callback() {
 
-					printf(
-						'<input id="wpm_show_monitor" name="wpm_options[wpm_show_monitor]" type="checkbox" value="1" %1$s />',
-						checked( true, Settings::$options['wpm_show_monitor'], false )
-					);
+		printf(
+			'<input id="wpm_show_monitor" name="wpm_options[wpm_show_monitor]" type="checkbox" value="1" %1$s />',
+			checked( true, Settings::$options['wpm_show_monitor'], false )
+		);
 
 	}
 

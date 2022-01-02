@@ -3,14 +3,14 @@
 **Contributors:** [brothman01](https://profiles.wordpress.org/brothman01)  
 **Tags:** [productivity](https://wordpress.org/themes/tags/productivity/), [monitor](https://wordpress.org/themes/tags/monitor/), [updates](https://wordpress.org/themes/tags/updates/), [php](https://wordpress.org/themes/tags/php/), [variables](https://wordpress.org/themes/tags/variables/), [admin](https://wordpress.org/themes/tags/admin/), [WP Monitor](https://wordpress.org/themes/tags/WP Monitor/)  
 **Requires at least:** 4.6  
-**Tested up to:** 4.9  
+**Tested up to:** 5.7  
 **Stable tag:** 1.1.4
 **License:** GPLv2 or later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 
 A simple WordPress plugin that puts important information on the dashboard.
 
-[![Build Status](https://travis-ci.org/brothman01/wp-monitor.svg?branch=master)](https://travis-ci.org/brothman01/wp-monitor) [![License](https://img.shields.io/badge/license-GPL--2.0-brightgreen.svg)](https://github.com/brothman01/wp-monitor/blob/master/license.txt) [![PHP >= 7.4](https://img.shields.io/badge/php-%3E=%207.4-8892bf.svg)](https://secure.php.net/supported-versions.php) [![WordPress >= 4.4](https://img.shields.io/badge/wordpress-%3E=%204.4-blue.svg)](https://wordpress.org/download/release-archive/)  
+[![Build Status](https://travis-ci.org/brothman01/wp-monitor.svg?branch=master)](https://travis-ci.org/brothman01/wp-monitor) [![License](https://img.shields.io/badge/license-GPL--2.0-brightgreen.svg)](https://github.com/brothman01/wp-monitor/blob/master/license.txt) [![PHP >= 7.4](https://img.shields.io/badge/php-%3E=%207.4-8892bf.svg)](https://secure.php.net/supported-versions.php) [![WordPress >= 5.7](https://img.shields.io/badge/wordpress-%3E=%204.4-blue.svg)](https://wordpress.org/download/release-archive/)  
 
 ## Description ##
 
