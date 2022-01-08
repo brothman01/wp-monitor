@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP Monitor
  * Description: Collects important data from site and displays it on the dashboard
- * Version:     1.1.4
+ * Version:     1.2.0
  * Author:      Ben Rothman
  * Slug:        wp-monitor
  * Author URI:  http://www.BenRothman.org
@@ -49,8 +49,10 @@ class WPMonitor {
 			'wpm_check_php'       => true,
 			'wpm_check_ssl'       => true,
 			'wpm_show_monitor'    => false,
+			'wpm_os_version'      => 'null',
 
 		] );
+
 
 		update_option( 'wpm_options', self::$options );
 
@@ -79,6 +81,7 @@ class WPMonitor {
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'wpm_enqueue_admin_styles' ] );
 
+		// if the user is an admin
 		if ( current_user_can( 'manage_options' ) ) {
 
 			if ( true === self::$options['wpm_show_monitor'] ) {
@@ -86,6 +89,7 @@ class WPMonitor {
 				add_action( 'admin_notices', [ $this, 'wpm_dashboard_widget' ] );
 
 			}
+
 		}
 
 		if ( get_option( 'wpm_config' ) !== 'active' ) {
@@ -101,6 +105,7 @@ class WPMonitor {
 		add_action( 'admin_menu', [ $this, 'register_newpage' ] );
 
 		register_deactivation_hook( __FILE__, [ $this, 'wpm_deactivate' ] );
+
 
 	}
 
@@ -394,12 +399,25 @@ class WPMonitor {
 
 		echo '</div>';
 
+		echo '<div id="tabs-dashboard-6" style="min-height: 200px;">';
+
+		echo '<p><b>OS Version:</b> ' . self::$updates['OS_version'] . ' / is latest?</p>';
+		echo '<p>strong passwords enforced?</p>
+								<p>any inactive plugins or themes?</p>
+								<p>security plugins installed?</p>
+								<p>Server Permissions</p>
+								<p>Basic Firewall rules set?</p>
+								<p>Some kind of Capcha?</p>';
+
+		echo '</div>';
+
 		echo '<ul>
 			<li><a href="#tabs-dashboard-1">Updates (' . ( intval( self::$updates['plugins'] ) + intval( self::$updates['themes'] ) + intval( self::$updates['WordPress'] ) ) . ')</a></li>
 			<li><a href="#tabs-dashboard-2">SSL/PHP (' . ( is_ssl() ? 'on' : 'off' ) . '/' . $this->php_version( 2 ) . ')</a></li>
 			<li><a href="#tabs-dashboard-3">Grades</a></li>
 			<li><a href="#tabs-dashboard-4">Variables (...)</a></li>
 			<li><a href="#tabs-dashboard-5">Logins</a></li>
+			<li><a href="#tabs-dashboard-6">Security</a></li>
 		</ul>';
 
 		echo '</div>';
@@ -490,6 +508,12 @@ class WPMonitor {
 
 			$php_action = ( $user_version_supported_until < $current_date ) ? 'Upgrade Now' : 'Up To Date';
 
+			$OS = php_uname('s');
+
+			$OS_VERSION = php_uname('v');
+
+			$OS_INFO = $OS . ' ' . substr( $OS_VERSION, strpos( $OS_VERSION, '~' ) + 1,  strlen($OS_VERSION) );
+
 		if ( 'Upgrade Now' === $php_action ) {
 
 				$php_update = 1;
@@ -511,6 +535,7 @@ class WPMonitor {
 				'php_action'          => $php_action,
 				'PHP_update'          => $php_update,
 				'SSL'                 => is_ssl() ? 1 : 0,
+				'OS_version'          => $OS_INFO,
 			];
 
 			update_option( 'wpm_update_info', self::$updates );
