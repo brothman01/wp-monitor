@@ -402,11 +402,10 @@ class WPMonitor {
 		echo '<div id="tabs-dashboard-6" style="min-height: 200px;">';
 
 		echo '<p><b>OS Version:</b> ' . self::$updates['OS_version'] . ' / is latest?</p>';
-		echo '<p>strong passwords enforced?</p>
-								<p>any inactive plugins or themes?</p>
-								<p>security plugins installed?</p>
+		echo '<p>Strong Passwords Enforced?</p>';
+		echo '<p><b>Inactive plugins: </b>' . print_r( self::$updates['num_active_plugins'] ) . '</p>';
+								echo '<p>security plugins installed?</p>
 								<p>Server Permissions</p>
-								<p>Basic Firewall rules set?</p>
 								<p>Some kind of Capcha?</p>';
 
 		echo '</div>';
@@ -494,26 +493,37 @@ class WPMonitor {
 
 		}
 
-			$update_data = wp_get_update_data();
+		$update_data = wp_get_update_data();
 
-			$php_info = PHPVersioner::$info;
+		$php_info = PHPVersioner::$info;
 
-			$current_php_version = $this->php_version( 2 );
+		$current_php_version = $this->php_version( 2 );
 
-			$user_version_info = $php_info[ $current_php_version ];
+		$user_version_info = $php_info[ $current_php_version ];
 
-			$user_version_supported_until = $user_version_info['supported_until'];
+		$user_version_supported_until = $user_version_info['supported_until'];
 
-			$current_date = date( 'dmy' );
+		$current_date = date( 'dmy' );
 
-			$php_action = ( $user_version_supported_until < $current_date ) ? 'Upgrade Now' : 'Up To Date';
+		$php_action = ( $user_version_supported_until < $current_date ) ? 'Upgrade Now' : 'Up To Date';
 
-			$OS = php_uname('s');
+		$OS = php_uname('s');
 
-			$OS_VERSION = php_uname('v');
+		$OS_VERSION = php_uname('v');
 
-			$OS_INFO = $OS . ' ' . substr( $OS_VERSION, strpos( $OS_VERSION, '~' ) + 1,  strlen($OS_VERSION) );
+		$OS_INFO = $OS . ' ' . substr( $OS_VERSION, strpos( $OS_VERSION, '~' ) + 1,  strlen($OS_VERSION) );
 
+		// subtract active plugins from number of items in the plugins folder to get inactive plugins
+		$num_active_plugins = get_option('active_plugins');
+
+		// if the server uses ubuntu then set the data for if the OS is up to date here
+		if ( 'Ubuntu' === $OS ) {
+			// https://api.launchpad.net/devel/ubuntu/series
+			// ubuntu is the OS, use the above api data to determine if server is using the latest version or not
+			$OS_IS_LATEST = 'unset';
+		}
+
+		// if the determined $php_action is to upgrade then set the $php_update var to 1 else make it 0
 		if ( 'Upgrade Now' === $php_action ) {
 
 				$php_update = 1;
@@ -524,6 +534,8 @@ class WPMonitor {
 
 		}
 
+
+		// store when the currently used version of PHP is supported until.
 			$user_version_supported_until = gmdate( 'm-d-Y', $user_version_supported_until );
 
 			// UPDATES ARRAY HERE
@@ -536,6 +548,8 @@ class WPMonitor {
 				'PHP_update'          => $php_update,
 				'SSL'                 => is_ssl() ? 1 : 0,
 				'OS_version'          => $OS_INFO,
+				'OS_is_latest'        => $OS_IS_LATEST,
+				'num_active_plugins'=> $num_active_plugins,
 			];
 
 			update_option( 'wpm_update_info', self::$updates );
