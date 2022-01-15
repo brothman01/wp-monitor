@@ -404,13 +404,11 @@ class WPMonitor {
 
 		echo '<div id="tabs-dashboard-6" style="min-height: 200px;">';
 
-		echo '<p><b>OS Version:</b> ' . self::$updates['OS_version'] . ' / is latest?</p>';
-		echo '<p>Strong Passwords Enforced?</p>';
+		echo '<p><b>OS Version:</b> ' . self::$updates['OS_version'] . ' / ' . self::$updates['OS_actual_latest'] . '</p>';
 		echo '<p><b>Active Plugins: </b>' . self::$updates['num_active_plugins'] . '</p>';
 		echo '<p><b>Inactive Plugins: </b>' . self::$updates['num_inactive_plugins'];
-		//echo '<p><b>Raw Plugins Folder:</b> ' . print_r( self::$updates['raw_plugins_folder'] ) . '</p>';
-		echo '<p><b>security plugins installed?:</b> ' . self::$has_security_plugins . '</p>
-								<p>Server Permissions</p>';
+		echo '<p><b>security plugins installed?:</b> ' . self::$has_security_plugins . '</p>';
+		echo '<p><b>Server Permissions: </b>' . '<em style="color: red;">' . 'Coming Soon'. '</em>' . '</p>';
 		echo '<p><b>Some kind of Capcha?:</b> ' . self::$has_capcha . '</p>';
 
 		echo '</div>';
@@ -509,9 +507,8 @@ class WPMonitor {
 		$php_action = ( $user_version_supported_until < $current_date ) ? 'Upgrade Now' : 'Up To Date';
 
 		// get the OS info of the server
-		$OS = php_uname('s');
 		$OS_VERSION = php_uname('v');
-		$OS_INFO = $OS . ' ' . substr( $OS_VERSION, strpos( $OS_VERSION, '~' ) + 1,  strlen($OS_VERSION) );
+		$OS_INFO = substr( $OS_VERSION, strpos( $OS_VERSION, '~' ) + 1,  strlen($OS_VERSION) );
 
 
 		// subtract active plugins from number of items in the plugins folder to get inactive plugins
@@ -525,12 +522,17 @@ class WPMonitor {
 		self::$has_capcha = $this->has_capcha( scandir( plugin_dir_path( __DIR__ ) ) );
 
 		// if the server uses ubuntu then set the data for if the OS is up to date here
-		$OS_IS_LATEST = 'set';
-		if ( 'Ubuntu' === $OS ) {
-			// https://api.launchpad.net/devel/ubuntu/series
-			// ubuntu is the OS, use the above api data to determine if server is using the latest version or not
-			$OS_IS_LATEST = 'unset';
+
+
+
+		$OS_ACTUAL_LATEST = 'null';
+		if ( str_contains( $OS_VERSION, 'Ubuntu' ) ) {
+			$ubuntu_info = json_decode( file_get_contents('https://api.launchpad.net/devel/ubuntu/series'), true );
+
+			$OS_ACTUAL_LATEST = $ubuntu_info['entries'][0]['version'];
 		}
+
+
 
 		// if the determined $php_action is to upgrade then set the $php_update var to 1 else make it 0
 		if ( 'Upgrade Now' === $php_action ) {
@@ -557,7 +559,7 @@ class WPMonitor {
 				'PHP_update'          => $php_update,
 				'SSL'                 => is_ssl() ? 1 : 0,
 				'OS_version'          => $OS_INFO,
-				'OS_is_latest'        => $OS_IS_LATEST,
+				'OS_actual_latest'        => $OS_ACTUAL_LATEST,
 				'num_active_plugins'  => $num_active_plugins,
 				'num_inactive_plugins'=> $num_inactive_plugins,
 			];
