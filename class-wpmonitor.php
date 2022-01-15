@@ -27,6 +27,10 @@ class WPMonitor {
 
 	public static $options;
 
+	public static $has_security_plugins;
+
+	public static $has_capcha;
+
 	public static $grades;
 
 	public static $highlight_color;
@@ -49,7 +53,6 @@ class WPMonitor {
 			'wpm_check_php'       => true,
 			'wpm_check_ssl'       => true,
 			'wpm_show_monitor'    => false,
-			'wpm_os_version'      => 'null',
 
 		] );
 
@@ -403,10 +406,12 @@ class WPMonitor {
 
 		echo '<p><b>OS Version:</b> ' . self::$updates['OS_version'] . ' / is latest?</p>';
 		echo '<p>Strong Passwords Enforced?</p>';
-		echo '<p><b>Inactive plugins: </b>' . print_r( self::$updates['num_active_plugins'] ) . '</p>';
-								echo '<p>security plugins installed?</p>
-								<p>Server Permissions</p>
-								<p>Some kind of Capcha?</p>';
+		echo '<p><b>Active Plugins: </b>' . self::$updates['num_active_plugins'] . '</p>';
+		echo '<p><b>Inactive Plugins: </b>' . self::$updates['num_inactive_plugins'];
+		//echo '<p><b>Raw Plugins Folder:</b> ' . print_r( self::$updates['raw_plugins_folder'] ) . '</p>';
+		echo '<p><b>security plugins installed?:</b> ' . self::$has_security_plugins . '</p>
+								<p>Server Permissions</p>';
+		echo '<p><b>Some kind of Capcha?:</b> ' . self::$has_capcha . '</p>';
 
 		echo '</div>';
 
@@ -495,28 +500,32 @@ class WPMonitor {
 
 		$update_data = wp_get_update_data();
 
+		// get the php info from the scraper and compare it to the info for the server
 		$php_info = PHPVersioner::$info;
-
 		$current_php_version = $this->php_version( 2 );
-
 		$user_version_info = $php_info[ $current_php_version ];
-
 		$user_version_supported_until = $user_version_info['supported_until'];
-
 		$current_date = date( 'dmy' );
-
 		$php_action = ( $user_version_supported_until < $current_date ) ? 'Upgrade Now' : 'Up To Date';
 
+		// get the OS info of the server
 		$OS = php_uname('s');
-
 		$OS_VERSION = php_uname('v');
-
 		$OS_INFO = $OS . ' ' . substr( $OS_VERSION, strpos( $OS_VERSION, '~' ) + 1,  strlen($OS_VERSION) );
 
+
 		// subtract active plugins from number of items in the plugins folder to get inactive plugins
-		$num_active_plugins = get_option('active_plugins');
+		$items_in_plugins_folder = $this->exclude_br( scandir( plugin_dir_path( __DIR__ ) ) ); // minus 2 for . and ..
+		$num_active_plugins = count( get_option('active_plugins') );
+		$num_inactive_plugins = $items_in_plugins_folder - $num_active_plugins;
+
+		// look for security software
+		self::$has_security_plugins = $this->has_security_plugins( scandir( plugin_dir_path( __DIR__ ) ) );
+
+		self::$has_capcha = $this->has_capcha( scandir( plugin_dir_path( __DIR__ ) ) );
 
 		// if the server uses ubuntu then set the data for if the OS is up to date here
+		$OS_IS_LATEST = 'set';
 		if ( 'Ubuntu' === $OS ) {
 			// https://api.launchpad.net/devel/ubuntu/series
 			// ubuntu is the OS, use the above api data to determine if server is using the latest version or not
@@ -549,12 +558,75 @@ class WPMonitor {
 				'SSL'                 => is_ssl() ? 1 : 0,
 				'OS_version'          => $OS_INFO,
 				'OS_is_latest'        => $OS_IS_LATEST,
-				'num_active_plugins'=> $num_active_plugins,
+				'num_active_plugins'  => $num_active_plugins,
+				'num_inactive_plugins'=> $num_inactive_plugins,
 			];
 
 			update_option( 'wpm_update_info', self::$updates );
 
 	}
+
+	/**
+	 * Exclude . and .. and index.php from the plugins folder
+	 *
+	 * @param Array $parts - PHP version string split int parts.
+	 *
+	 * @since 1.2.0
+	 */
+	public function exclude_br( $raw ) {
+		$real_files = 0;
+		for ($i = 1; $i <= count( $raw ) - 1; $i++) {
+
+		 if ( $raw[$i] !== '.' && $raw[$i] !== '..' && $raw[$i] !== 'index.php') {
+			 $real_files++;
+		 }
+
+	 }
+
+		return $real_files;
+
+	}
+
+	/**
+	 * Check if the site has a well-known security plugin
+	 *
+	 * @param Array $parts - PHP version string split int parts.
+	 *
+	 * @since 1.2.0
+	 */
+	public function has_security_plugins( $items ) {
+
+		for ($i = 1; $i <= count( $items ) - 1; $i++) {
+
+		 if ( str_contains( $items[$i], 'ithemes' ) || str_contains( $items[$i], 'wordfence') || str_contains( $items[$i], 'securi' ) ) {
+			 return 'yes';
+		 }
+
+	 }
+
+		return 'no';
+	}
+
+	/**
+	 * Check if site uses a capcha plugin
+	 *
+	 * @param Array $parts - PHP version string split int parts.
+	 *
+	 * @since 1.2.0
+	 */
+	public function has_capcha( $items ) {
+
+		for ($i = 1; $i <= count( $items ) - 1; $i++) {
+
+		 if ( str_contains( $items[$i], 'capcha' ) ) {
+			 return 'yes';
+		 }
+
+	 }
+
+		return 'no';
+	}
+
 
 	/**
 	 * Edit the returned PHP version to have 2 or 3 digits
