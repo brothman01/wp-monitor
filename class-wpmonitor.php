@@ -600,7 +600,7 @@ class WPMonitor {
 
 		for ($i = 1; $i <= count( $items ) - 1; $i++) {
 
-		 if ( str_contains( $items[$i], 'ithemes' ) || str_contains( $items[$i], 'wordfence') || str_contains( $items[$i], 'securi' ) ) {
+		 if ( str_contains( $items[$i], 'ithemes' ) || str_contains( $items[$i], 'wordfence') || str_contains( $items[$i], 'securi' ) || str_contains( $items[$i], 'better-wp-security' ) ) {
 			 return 'yes';
 		 }
 
