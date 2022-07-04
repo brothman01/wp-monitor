@@ -1,0 +1,20 @@
+{
+    "name": "ben/wp-monitor",
+    "description": "A simple WordPress plugin that puts update information, important site information and server information on the dashboard in one convenient, easy-to-find place so that a site's health can be assessed at a glance.",
+    "type": "project",
+    "require": {
+        "thatsus/jquery-circle-progress": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ben\\WpMonitor\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ben",
+            "email": "Ben@BenRothman.org"
+        }
+    ],
+    "minimum-stability": "stable"
+}
